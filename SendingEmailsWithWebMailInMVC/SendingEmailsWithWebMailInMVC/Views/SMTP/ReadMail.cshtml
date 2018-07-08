@@ -1,0 +1,55 @@
+﻿@model IEnumerable<SendingEmailsWithWebMailInMVC.ViewModels.POPEmail>
+
+@{
+    ViewBag.Title = "ReadMail";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<h2>Inbox</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MessageNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.From)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Subject)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Body)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateSent)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.MessageNumber)
+        </td>
+        <td>
+            @Html.Raw(item.From)
+           @* @Html.DisplayFor(modelItem => item.From) *@
+        </td>
+        <td>
+            @Html.Raw(item.Subject)
+          @*  @Html.DisplayFor(modelItem => item.Subject) *@
+        </td>
+        <td>
+            @Html.Raw(item.Body)
+           @* @Html.DisplayFor(modelItem => item.Body) *@
+        </td>
+        <td>
+            @Html.Raw(item.DateSent)
+          @*  @Html.DisplayFor(modelItem => item.DateSent) *@
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_audio" dock="fill">
+
+		<groupbox text="audio" dock="top" overflow="visible" margin="3">
+
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@URL|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="330" propname="src"/>
+				<panel dock="left" width="3" />
+				<button dock="left" width="82" height="24"  text="@BROWSE|..">
+					<attach name="click">
+						instance.showuploadfile(self);
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+				<panel dock="left" width="80" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="autoplay" truestring="1" falsestring="" jsml-local="cbautoplay">
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@AUTOPLAY" unselectable="true">
+					<attach name="click,dblclick">
+						cbautoplay.toggle_checked();
+						cbautoplay.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="3" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="loop" truestring="1" falsestring="" jsml-local="cbautoloop">
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@AUTOLOOP" unselectable="true">
+					<attach name="click,dblclick">
+						cbautoloop.toggle_checked();
+						cbautoloop.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="3" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="controls" truestring="1" falsestring="" jsml-local="cbshowcontrols">
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@SHOWCONTROLS" unselectable="true">
+					<attach name="click,dblclick">
+						cbshowcontrols.toggle_checked();
+						cbshowcontrols.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="3" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="preload" truestring="1" falsestring="" jsml-local="cbpreload">
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@PRELOAD" unselectable="true">
+					<attach name="click,dblclick">
+						cbpreload.toggle_checked();
+						cbpreload.invoke_event("change");
+					</attach>
+				</label>
+			</panel>
+
+		</groupbox>
+
+		<groupbox text="@ATTRIBUTES" dock="top" overflow="visible" margin="3">
+
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@CSSCLASS|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="100" propname="class"/>
+				<label dock="left" vertical_align="middle" text="@FLOAT|:" text_align="right" width="140"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:float">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="none" text="@none" />
+				</panel>
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="ID:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="100" propname="id"/>
+				<label dock="left" vertical_align="middle" text="@TEXTALIGN|:" width="140" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-align" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="justify" text="@JUSTIFY" />
+				</panel>
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@COLOR|:" text_align="right" width="80"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="100"/>
+				<label dock="left" vertical_align="middle" text="@BACKGROUNDCOLOR|:" text_align="right" width="140"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="style:background-color" width="100"/>
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@WIDTH|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:width"/>
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@HEIGHT|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:height"/>
+			</panel>
+			<panel margin="10,3,30,3" height="56" dock="top">
+				<label dock="left" vertical_align="middle" text="@TOOLTIP|:" text_align="right" width="80"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="title" width="348">
+					<initialize>
+						self.textbox.set_text_mode("multipleline");
+					</initialize>
+				</panel>
+			</panel>
+		</groupbox>
+
+		<method name="showuploadfile" arguments="anchor">
+			<![CDATA[
+			var img=new $rte.GenericElement("iframe");
+			img.InsertType="Video";
+			img.SetStyle("width","320px");
+			img.SetStyle("height","240px");
+			img.SetStyle("border-width","0px");
+			img.SetAttribute("src",editor.GetPlayerUrl()+"?type=video&file=&autoplay=1&autoloop=1&allowmenu=1&transparency=1&showcontrols=1&allowfullscreen=1");
+			
+			var newoption={width:640,height:420,targetnode:img};
+			newoption.callback=function(res)
+			{
+				if(!res)return;
+				var src=img.GetAttribute("src");
+				var arr=src.split('#')[0].split('?')[1].split('&');
+				for(var i=0;i<arr.length;i++)
+				{
+					if(arr[i].substring(0,5)!="file=")
+						continue;
+					option.targetnode.SetAttribute("src",decodeURIComponent(arr[i].substring(5)));
+					self.invoke_recursive("loadvalue");
+					self.bubble_event("rtepropsaved");
+					break;
+				}
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertvideo.xml"),newoption);
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="properties_audio" />
+
+
+</jsml>

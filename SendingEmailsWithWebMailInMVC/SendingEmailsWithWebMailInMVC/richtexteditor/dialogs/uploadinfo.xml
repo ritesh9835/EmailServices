@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="uploadinfodialog" dock="fill" margin="1" overflow="visible" padding="0,20,0,0">
+		<panel margin="20,3,10,3" dock="top" height="26" overflow="visible">
+			<panel dock="left" width="30" />
+			<panel dock="left" jsml-base="panelbutton" css_class="dialogbutton" jsml-local="uploadbtn" height="26" border_color="#CDCDCD" overflow="visible" back_color="#f7f7f7" padding="4,10,4,10" width="220" >
+				<image dock="left" src="{folder}images/upload.gif" width="24" />
+				<panel dock="left" width="15" />
+				<label dock="left" jsml-local="label" text="@LABEL_SELECTFILESTOUPLOAD" width="180" vertical_align="middle" cursor="pointer" />
+				<initialize>
+					<![CDATA[
+					uploadbtn._element.onmouseover=function(){uploadbtn.invoke_event("mousehover");}
+					uploadbtn._element.onmouseout=function(){uploadbtn.invoke_event("mouseleave");}
+					editor.RegisterUploadButton(uploadbtn._element);
+					]]>
+				</initialize>
+				<attach name="disposing">
+					uploadbtn._element.onmouseover=jsml.empty_function;
+					uploadbtn._element.onmouseout=jsml.empty_function;
+					editor.RemoveUploadButton(uploadbtn._element);
+				</attach>
+				<attach name="mousehover">
+					label.set_text_color('#333333');
+				</attach>
+				<attach name="mouseleave">
+					label.set_text_color('');
+				</attach>
+			</panel>
+		</panel>
+		<panel margin="3,3,1,3" dock="top" height="15" overflow_x="visible">
+			<label dock="left" jsml-local="label2" width="105" text_align="right" text="@LABEL_MAXFILESIZE"/>
+			<panel dock="left" width="8" />
+			<label dock="left" jsml-local="label2v" />
+		</panel>
+		<panel margin="3,3,1,3" dock="top" height="15" overflow_x="visible" jsml-local="panelimage">
+			<label dock="left" jsml-local="label3" width="105" text_align="right" text="@LABEL_MAXDIMENSIONS"/>
+			<panel dock="left" width="8" />
+			<label dock="left" jsml-local="label3v" />
+		</panel>
+		<panel margin="3,3,1,3" dock="top" height="15" overflow_y="visible">
+			<label dock="left" jsml-local="label5" width="105" text_align="right" text="@LABEL_ALLOWEXTENSIONS" />
+			<panel dock="left" width="8" />
+			<label dock="left" jsml-local="label5v" max_width="180" word_wrap="true" />
+		</panel>
+		<panel margin="3,3,1,3" dock="top" height="15" overflow_x="visible">
+			<label dock="left" jsml-local="label4" width="105" text_align="right" text="@LABEL_MAXFOLDERSIZE"/>
+			<panel dock="left" width="8" />
+			<label dock="left" jsml-local="label4v" />
+		</panel>
+		<panel margin="0,3,15,3" dock="top" height="20" overflow_x="visible" horizontal_align="right">
+			<panel dock="left" margin="3,2,5,113" width="160" back_color="white" border_color="gray" border_width="1">
+				<panel dock="left" width="0" jsml-local="percentpanel" back_color="#008000" border_width="0,1,0,0" border_color="gray"/>
+			</panel>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<initialize>
+			<![CDATA[
+			
+			if(option.storage.Category!="Image")
+			{
+				panelimage.set_visible(false);
+			}
+			
+			editor.CallAjax("AjaxGetFolderInfo",self.delegate(self.handlegetfolderinfo),option.storage);
+			]]>
+		</initialize>
+		<method name="handlegetfolderinfo" arguments="res">
+			<![CDATA[
+			var info=res.ReturnValue;
+
+			var p=info.FolderSize/1024/info.MaxFolderSize;
+			var unlimited=editor.GetLangText("UNLIMITED");
+			
+			label2v.set_text(jsml.format_size(info.MaxFileSize*1024));
+			label3v.set_text((info.MaxImageWidth||unlimited)+" x "+(info.MaxImageHeight||unlimited)+" pixels.");
+			label4v.set_text(jsml.format_size(info.MaxFolderSize*1024)+". "+editor.GetLangText("USED")+": "+jsml.format_size(info.FolderSize)+" ("+Math.floor(p*1000)/10+"%)");
+			label5v.set_text(info.Extensions.split(',').join(', '));
+			
+			var par=percentpanel.get_parent();
+			if(!par)return;
+			var pwidth=par.get_current_width();
+			percentpanel.set_width(Math.ceil(pwidth*p))
+			
+			if(p>0.85)label4v.set_text_color("red");
+			
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="uploadinfodialog" />
+
+</jsml>

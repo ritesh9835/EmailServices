@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<!-- TAB BUTTON -->
+
+	<panel jsml-class="properties_style_tabbtn" cursor="pointer" height="22" border_color="#CDCDCD" border_width="1" margin="0,0,5,0">
+		<label jsml-local="label"  dock="fill" text_align="left" vertical_align="middle" cursor="pointer" padding="0,0,0,12"/>
+
+		<attach name="set_text">
+			label.set_text(self.get_text());
+		</attach>
+
+		<attach name="mousehover">
+			label.set_text_color("blue");
+		</attach>
+		<attach name="mouseleave">
+			label.set_text_color("");
+		</attach>
+
+		<attach name="mousedown">
+			self.SetActive();
+		</attach>
+		<method name="SetActive">
+			<![CDATA[
+			var p=this.get_parent();
+			if(!p)return;
+			var cs=p._childs;
+			var isprev=true;
+			for(var i=0;i<cs.length;i++)
+			{
+				var header=cs[i];
+				if(header==self)
+				{
+					isprev=false;
+					if(i==cs.length-1)
+					{
+						if(i==0)
+							header.SetMode("active_full");
+						else
+							header.SetMode("active_end");
+					}
+					else
+					{
+						if(i==0)
+							header.SetMode("active_begin");
+						else
+							header.SetMode("active_middle");
+					}
+				}
+				else
+				{
+					if(i==0)
+						header.SetMode("first");
+					else if(isprev)
+						header.SetMode("prev");
+					else if(i==cs.length-1)
+						header.SetMode("last");
+					else
+						header.SetMode("next");
+				}
+			}
+			]]>
+		</method>
+		<method name="IsActive">
+			return self._isactive;
+		</method>
+		<method name="SetMode" arguments="mode">
+			<![CDATA[
+			if(self._tabmode==mode)
+				return;
+			self._tabmode=mode;
+			self._isactive=mode.substring(0,7)=="active_";
+			switch(mode)
+			{
+				case "active_begin":
+				case "active_end":
+				case "active_middle":
+				case "active_full":
+					label.set_back_color("white");
+					break;
+				case "first":
+				case "prev":
+					label.set_back_color("#F5F5F5");
+					break;
+				case "next":
+				case "last":
+					label.set_back_color("#F5F5F5");
+					break;
+			}
+
+			if(self._isactive)
+				self.invoke_event("active");
+			else
+				self.invoke_event("deactive");
+			if(self._isactive)
+				self.bubble_event("tabactived",self._active_argument,self);
+			]]>
+		</method>
+
+		<property name="active_argument">
+			<get>
+				return self._active_argument;
+			</get>
+			<set>
+				self._active_argument=value;
+			</set>
+		</property>
+	</panel>
+
+	<!-- DIALOG -->
+
+	<panel jsml-class="properties_style_dialog" dock="fill">
+
+		<panel dock="left" overflow="visible" margin="5" jsml-local="tabspanel">
+			<panel dock="top" overflow="visible" jsml-local="tabpanel">
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@FONT" active_argument="font" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@BLOCK" active_argument="block" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@BACKGROUND" active_argument="background" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@BORDER" active_argument="border" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@BOX" active_argument="box" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@POSITION" active_argument="position" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@LAYOUT" active_argument="layout" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@LIST" active_argument="list" />
+				<panel dock="top" jsml-base="properties_style_tabbtn" text="@TABLE" active_argument="table" />
+				<initialize>
+					<![CDATA[
+					switch(option.targetnode.GetNameLower())
+					{
+						case "body":
+							break
+						default:
+							return;
+					}
+					while(true)
+					{
+						var c=self._childs[5];
+						if(!c)break;
+						self.remove_child(c);
+						c.dispose()
+					}
+					]]>
+				</initialize>
+			</panel>
+			<panel dock="fill"  border_width="0" border_color="#CDCDCD">
+			</panel>
+			<attach name="tabactived" arguments="je,arg">
+				<![CDATA[
+				
+				
+				switch(arg)
+				{
+					case "box":
+					case "position":
+					case "layout":
+					case "list":
+					case "table":
+						previewpanel.set_visible(false);
+						break;
+					default:
+						previewpanel.set_visible(true);
+						break;
+				}
+				
+				mainpanel.dispose_children();
+				
+				var urlhandler=function(res,err)
+				{
+					if(!res)
+					{
+						if(err)self.setDelegateTimeout(function(){throw(err)},1);
+						return;
+					}
+				};
+				
+				var processinst=function(inst){
+					mainpanel.append_child(inst);
+					inst.invoke_recursive("editor_ready",editor);
+				};
+				
+				var dialogvars={editor:editor,dialog:dialog,option:option}
+				
+				var file="properties_style_"+arg+".xml";
+				
+				editor._LoadXmlUrl(editor.BuildDialogUrl(file),urlhandler,processinst,dialogvars)
+				
+				je.ReturnValue=false;
+				]]>
+			</attach>
+
+		</panel>
+
+		<groupbox jsml-local="previewpanel" text="@PREVIEW" dock="bottom" overflow="visible" height="60" margin="4">
+			<panel dock="fill" margin="2,6,4,50">
+				<htmlcontrol jsml-local="previewctrl" dock="fill" back_color="white" />
+			</panel>
+		</groupbox>
+
+		<panel jsml-local="mainpanel" dock="fill" border_width="0" border_color="#CDCDCD">
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			self._rtenode=option.targetnode;
+			
+			var title=editor.CreateControlProvider(option.targetnode).GetTitle();
+			
+			var index=0;
+			if(option.styletab)
+			{
+				for(var i=0;i<tabpanel._childs.length;i++)
+				{
+					if(tabpanel._childs[i].get_active_argument()==option.styletab)
+						index=i;
+				}
+			}
+			tabpanel._childs[index].SetActive();
+			
+			if(option.hidetabs)
+			{
+				tabspanel.set_visible(false);
+				mainpanel.set_border_width(0);
+			}
+			
+			self.setDelegateTimeout(function()
+			{
+				editor.PreloadDialogUrl("properties_style_font.xml");
+				editor.PreloadDialogUrl("properties_style_background.xml");
+				editor.PreloadDialogUrl("properties_style_block.xml");
+				editor.PreloadDialogUrl("properties_style_border.xml");
+				editor.PreloadDialogUrl("properties_style_box.xml");
+				editor.PreloadDialogUrl("properties_style_layout.xml");
+				editor.PreloadDialogUrl("properties_style_list.xml");
+				editor.PreloadDialogUrl("properties_style_other.xml");
+				editor.PreloadDialogUrl("properties_style_position.xml");
+				editor.PreloadDialogUrl("properties_style_table.xml");
+			},3000);
+			
+			]]>
+		</initialize>
+
+		<initialize>
+			self.previewspan=document.createElement("DIV");
+			self.previewspan.innerHTML="Sample Text";
+			previewctrl._content.appendChild(self.previewspan);
+			self.invoke_event("loadpropstyle");
+		</initialize>
+
+		<attach name="rtepropsaved,loadpropstyle">
+			var s=self.previewspan.style;
+			s.cssText=self._rtenode.GetAttribute("style");
+			s.left="";s.top="";
+			self.invoke_event("recalcsize");
+		</attach>
+		<attach name="resize,recalcsize">
+			var s=self.previewspan.style;
+			s.width=previewctrl.get_current_width()+"px";
+			s.height=previewctrl.get_current_height()+"px";
+		</attach>
+	</panel>
+
+	<panel jsml-base="properties_style_dialog">
+
+	</panel>
+
+
+
+</jsml>
+

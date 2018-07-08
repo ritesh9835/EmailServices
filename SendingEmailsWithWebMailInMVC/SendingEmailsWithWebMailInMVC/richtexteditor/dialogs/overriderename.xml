@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+  <execute>
+	dialog.set_back_color("#F9F9F9");
+  </execute>
+	<panel jsml-class="promptdialogpanel" dock="fill" margin="0" padding="18" overflow="visible">
+		<panel dock="top" overflow="visible">
+			<label jsml-local="label" dock="fill" margin="4,4,0,4" word_wrap="true" max_width="480" />
+		</panel>
+		<panel dock="top" jsml-local="nextpanel" margin="5">
+			<label dock="right" jsml-local="donextlabel" />
+			<checkbox dock="right" jsml-local="checkbox" />
+		</panel>
+		<panel dock="bottom" margin="18,3,3,3">
+			<panel dock="right" overflow="visible">
+				<button dock="left"  width="82" margin="0,12,0,0" text="@msg_overwrite">
+					<initialize>
+						self.set_visible(option.AllowOverride);
+					</initialize>
+					<attach name="click">
+						option.result="override";
+						option.checked=checkbox.get_checked();
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left"  width="82" margin="0,12,0,0" text="@msg_rename">
+					<attach name="click">
+						option.result="rename";
+						option.checked=checkbox.get_checked();
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left"  width="82" margin="0,12,0,0" text="@msg_skip">
+					<attach name="click">
+						option.result="cancel";
+						option.checked=checkbox.get_checked();
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<initialize>
+			<![CDATA[
+			label.set_text(option.message);
+			if(option.nextmsg)
+				donextlabel.set_text(option.nextmsg);
+			else
+				nextpanel.set_visible(false);
+			checkbox.set_checked(option.lastchecked);
+			]]>
+		</initialize>
+	</panel>
+
+	<object jsml-base="promptdialogpanel">
+
+	</object>
+
+</jsml>

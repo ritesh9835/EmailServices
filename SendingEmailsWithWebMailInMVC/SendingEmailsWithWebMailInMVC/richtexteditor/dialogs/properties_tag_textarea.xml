@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagtextarea" dock="fill">
+	<groupbox text="Textarea" dock="top" overflow="visible" margin="4">
+	<panel dock="left" width="180">
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@rows|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" width="100" jsml-base="rtepropnumupdown" propname="rows" min_value="1">
+		</panel>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@cols|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" width="100" jsml-base="rtepropnumupdown" propname="cols" min_value="1">
+		</panel>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@WIDTH|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropunitbox" propname="style:width" width="100"/>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@HEIGHT|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:height"/>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@ACCESSKEY|:" width="80" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="accesskey" width="100" />
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@TABINDEX|:" text_align="right" width="80"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="tabindex" width="100" />
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@wrap|:" text_align="right" width="80"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropdropdown" propname="wrap" width="100">
+		  <listitem value="" text="@NOTSET" />
+		  <listitem value="soft" text="soft" />
+		  <listitem value="hard" text="hard" />
+		  <listitem value="off" text="off" />
+		</panel>
+	  </panel>
+	</panel>
+	  <panel dock="left" width="30" />
+	<panel dock="left" width="200">
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@NAME|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rteproptextbox" width="100" propname="name"/>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="ID:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rteproptextbox" width="100" propname="id"/>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@CSSCLASS|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rteproptextbox" width="100" propname="class"/>
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="80" text="@disabled|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rtepropcheckbox" width="100" propname="disabled" truestring="1" falsestring="" />
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="80" text="@readonly|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropcheckbox" width="100" propname="readonly" truestring="1" falsestring="" />
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+	  </panel>
+	</panel>
+
+	</groupbox>
+		<groupbox text="@Value" dock="top" overflow="visible" margin="3">
+	  <panel dock="left" width="84" />
+			<textbox  text_mode="multipleline" width="350" dock="left" height="120" margin="5">
+				<initialize>
+					self.set_text(option.targetnode.GetInnerText());
+				</initialize>
+				<attach name="change,keyup">
+					option.targetnode.SetInnerText(self.get_text())
+				</attach>
+			</textbox>
+		</groupbox>
+
+	</panel>
+
+	<panel jsml-base="properties_tagtextarea" />
+
+
+</jsml>

@@ -1,0 +1,94 @@
+﻿@model SendingEmailsWithWebMailInMVC.ViewModels.SMTPemail
+    @{ 
+        Layout = "~/Views/Shared/_Dashboard.cshtml";
+    }
+
+<style>
+    .border-right {
+    border-right: 1px solid black;
+}
+</style>
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>SMTP/POP Configuration</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group col-xs-11">
+       
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder="Enter Your Email" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group col-xs-11">
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder = "Enter Password" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+      
+            <div class="form-group col-xs-5">
+
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ServerName, new { htmlAttributes = new { @class = "form-control", @placeholder = "SMTP Host Server" } })
+                    @Html.ValidationMessageFor(model => model.ServerName, "", new { @class = "text-danger" })
+                    <br />
+                </div>
+
+
+               
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Port, new { htmlAttributes = new { @class = "form-control", @placeholder = "SMTP Port" } })
+                    @Html.ValidationMessageFor(model => model.Port, "", new { @class = "text-danger" })
+                    <br/>
+                </div>
+
+
+
+                
+                <div class="col-md-10">
+                    <label>Enable SSL</label>
+                    @Html.EditorFor(model => model.SSL)
+                    @Html.ValidationMessageFor(model => model.SSL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        
+
+            <div class="form-group col-xs-5">
+                
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PServerName, new { htmlAttributes = new { @class = "form-control", @placeholder = "POP3 Host Server" } })
+                    @Html.ValidationMessageFor(model => model.PServerName, "", new { @class = "text-danger" })
+                <br />
+                </div>
+
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.PPort, new { htmlAttributes = new { @class = "form-control", @placeholder ="POP3 Port" } })
+                    @Html.ValidationMessageFor(model => model.PPort, "", new { @class = "text-danger" })
+               <br />
+                 </div>
+
+
+
+               
+                <div class="col-md-10">
+                    <label>Enable SSL</label>
+                    @Html.EditorFor(model => model.PSSL)
+                    @Html.ValidationMessageFor(model => model.PSSL, "", new { @class = "text-danger" })
+
+                </div>
+            </div>
+
+            <div class="form-group fa-align-right">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Add Now" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+}

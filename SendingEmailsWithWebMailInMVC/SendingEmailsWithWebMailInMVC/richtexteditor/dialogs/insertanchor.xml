@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("insertanchor"));
+	</execute>
+
+	<panel jsml-class="insertanchor_dialog" dock="fill" overflow="visible">
+		<groupbox text="@namedanchor" dock="top" overflow="visible" margin="8">
+			<panel dock="top" margin="6" width="240" height="100" overflow="scroll" border_style="solid" border_width="1" back_color="white" border_color="#cccccc">
+				<htmlcontrol jsml-local="container" dock="fill" margin="2" overflow="visible" css_class="jsml_button" font_size="11">
+				</htmlcontrol>
+			</panel>
+			<panel dock="top" width="240" height="80">
+				<panel dock="bottom" margin="3" padding="6" overflow="visible">
+					<panel dock="right" margin="3" overflow="visible">
+						<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+							<initialize>
+								if(option.oktext)self.set_text(option.oktext);
+							</initialize>
+							<attach name="click">
+								var name=option.targetnode.GetAttribute("name");
+								if(!name)return;
+								option.targetnode.SetAttribute("id",name);
+								dialog.result=true;
+								dialog.close();
+							</attach>
+						</button>
+						<button dock="left" width="82" height="24"  text="@CANCEL">
+							<attach name="click">
+								dialog.close();
+							</attach>
+						</button>
+					</panel>
+				</panel>
+				<panel margin="15,3,1,8" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="@anchorname|:" text_align="right" width="50"/>
+					<panel dock="left" width="4" />
+					<panel jsml-base="rteproptextbox" dock="left" propname="name" width="165" />
+				</panel>
+			</panel>
+		</groupbox>
+
+		<initialize>
+			<![CDATA[
+			self._rtenode=option.targetnode;
+			editor.LoadAnchors(function(group)
+			{
+				self.loadgroupcontent(group,container._content);
+			});
+			]]>
+		</initialize>
+		<jsml-ref name="linktree"/>
+	</panel>
+
+	<panel jsml-base="insertanchor_dialog" />
+
+
+</jsml>

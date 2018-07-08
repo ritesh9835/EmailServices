@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+
+	<panel jsml-class="properties_background" dock="fill">
+		<groupbox text="@LIST" dock="top" overflow="visible" margin="4">
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="list-style-type:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:list-style-type">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="circle" text="@listcircle" />
+					<listitem value="disc" text="@listdisc" />
+					<listitem value="disc" text="@listdisc" />
+					<listitem value="none" text="@none" />
+					<listitem value="square" text="@listsquare" />
+					<listitem value="decimal" text="@listdecimal" />
+					<listitem value="lower-roman" text="@lowerroman" />
+					<listitem value="upper-roman" text="@upperroman" />
+					<listitem value="lower-latin" text="@lowerlatin" />
+					<listitem value="upper-latin" text="@upperlatin" />
+				</panel>
+			</panel>
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="list-style-image:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="240" propname="style:list-style-image">
+					<method name="set_node_value" overrideas="base_set_value">
+						<![CDATA[
+						if(!value)
+						{
+							self.base_set_value("");
+						}
+						else
+						{
+							self.base_set_value("url("+value+")");
+						}
+						]]>
+					</method>
+					<method name="get_node_value" overrideas="base_get_value">
+						var url=self.base_get_value();
+						if(!url)return "";
+						return url.replace(/url\(["']?(.*)["']?\)/gi,"$1");
+					</method>
+				</panel>
+				<panel dock="left" width="4" />
+				<button dock="left" height="24" width="30" text="...">
+					<attach name="click">
+						instance.showuploadfile(self);
+					</attach>
+				</button>
+			</panel>
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="list-style-position:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:list-style-position">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="inside" text="inside" />
+					<listitem value="outside" text="outside" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,30,3" height="18" dock="top">
+			</panel>
+		</groupbox>
+
+
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+
+		<method name="showuploadfile" arguments="anchor">
+			<![CDATA[
+			var img=new $rte.GenericElement("img");
+			var newoption={width:640,height:420,targetnode:img};
+			newoption.nestedmode=true;
+			newoption.callback=function(res)
+			{
+				if(!res)return;
+				option.targetnode.SetStyle("list-style-image","url("+img.GetAttribute("src")+")");
+				self.invoke_recursive("loadvalue");
+				self.bubble_event("rtepropsaved");
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertgallery.xml"),newoption);
+			]]>
+		</method>
+		
+	</panel>
+
+
+	<panel jsml-base="properties_background" />
+
+
+</jsml>

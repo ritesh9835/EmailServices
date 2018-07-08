@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+<head>
+	<title>blank</title>
+	<style>
+	body
+	{
+		border:0px;
+		margin:0px;
+		padding:0px;
+		overflow:hidden;
+		background-color:#FFFFFF;
+		color:white;
+	}
+	.clickbutton
+	{
+		opacity:0.7;
+	}
+	.clickbuttonover
+	{
+		opacity:1.0;
+	}
+	</style>
+</head>
+<body>
+	<table id='loadtable' style="width: 100%; height: 100%; display: none;">
+		<tr>
+			<td style="vertical-align: middle; text-align: center;">
+				<img src="play.png" class="clickbutton" onclick="Init()" style="cursor:pointer;" onmouseover="this.className='clickbuttonover'" onmouseout="this.className='clickbutton'"/>
+			</td>
+		</tr>
+	</table>
+</body>
+
+<script type="text/javascript">
+
+var qmap={};
+var qs=(window.location.href.split('#')[0].split('?')[1]||"").split('&');
+for(var i=0;i<qs.length;i++)
+{
+	var pair=qs[i].split('=');
+	if(pair.length!=2)continue;
+	qmap[pair[0]]=decodeURIComponent(pair[1]);
+}
+
+var type=qmap["type"];
+var file=qmap["file"];
+
+var autoplay=qmap["autoplay"]=="1"
+var autoloop=qmap["autoloop"]=="1"
+var allowmenu=qmap["allowmenu"]=="1"
+var showcontrols=qmap["showcontrols"]=="1"
+var allowfullscreen=qmap["allowfullscreen"]=="1"
+var transparency=qmap["transparency"]=="1"
+var backcolor=qmap["backcolor"];
+
+if(backcolor)
+{
+	document.body.style.backgroundColor=backcolor;
+}
+
+function menueventhandler(e)
+{
+	if(allowmenu)return;
+	e=e||window.event;
+	if(e.button!=2)return;
+	if(e.preventDefault)e.preventDefault();
+	e.returnValue=false;
+	return false;
+}
+
+function InitControl(obj)
+{
+	var w=document.documentElement.clientWidth;
+	var h=document.documentElement.clientHeight;
+	obj.setAttribute("width",w);
+	obj.setAttribute("height",h);
+	obj.style.width=w+"px";
+	obj.style.height=h+"px";
+	obj.onmousedown=menueventhandler;
+	obj.oncontextmenu=menueventhandler;
+}
+
+document.body.onmousedown=menueventhandler;
+document.body.oncontextmenu=menueventhandler;
+
+function Init()
+{
+
+	document.body.innerHTML="";
+
+	
+	if(file.charAt(0)=="/")
+	{
+		var url=window.location.href.split('#')[0].split('?')[0].split('/');
+		url.length=3;
+		file=url.join("/")+file;
+	}
+	else if(file.indexOf("://")==-1)
+	{
+		var url=window.location.href.split('#')[0].split('?')[0].split('/');
+		url[url.length-1]=file;
+		file=url.join('/');
+	}
+	
+	function InsertObjectWMP()
+	{
+		var w=document.documentElement.clientWidth;
+		var h=document.documentElement.clientHeight;
+		var code=[];
+		code.push("<object type='application/x-oleobject' classid='CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95' codebase='http://activex.microsoft.com/activex/ controls/mplayer/en/nsmp2inf.cab#Version=6,0,02,902' width="+w+" height="+h+">");
+		code.push("<param name='src' value='"+file+"'/>");
+		code.push("<param name='showcontrols' value='"+(showcontrols?"1":"0")+"'/>");
+		code.push("<param name='showstatusbar' value='"+(showcontrols?"1":"0")+"'/>");
+		code.push("<param name='autostart' value='1'/>");
+		code.push("<param name='autoloop' value='"+(autoloop?"1":"0")+"'/>");
+		
+		code.push("</object");
+		document.body.innerHTML=code.join("");
+		var obj=document.body.firstChild;
+		InitControl(obj);
+	}
+	function InsertEmbedWMP()
+	{
+		//media player or quick time
+		var embed=document.createElement("embed");
+		InitControl(embed);
+		embed.setAttribute("src",file);
+		embed.setAttribute("type","application/x-mplayer2");
+		embed.setAttribute("pluginspage","http://www.microsoft.com/Windows/MediaPlayer");
+		embed.setAttribute("showcontrols",showcontrols?"1":"0");
+		embed.setAttribute("showstatusbar",showcontrols?"1":"0");
+		embed.setAttribute("autoloop",autoloop?"1":"0");
+		document.body.appendChild(embed);
+	}
+	
+	function InsertFlash(src)
+	{
+		var embed=document.createElement("embed");
+		InitControl(embed);
+		embed.setAttribute("src",src||file);
+		embed.setAttribute("type","application/x-shockwave-flash");
+		embed.setAttribute("pluginspage","http://www.macromedia.com/go/getflashplayer");
+		embed.setAttribute("quality","high");
+		embed.setAttribute("allowScriptAccess","never");
+		embed.setAttribute("allowFullScreen",allowfullscreen?"true":"false");
+		embed.setAttribute("wmode",transparency?"transparent":"opaque");
+		document.body.appendChild(embed);
+	}
+	function InsertBrowser()
+	{
+		var iframe=document.createElement("iframe");
+		InitControl(iframe);
+		iframe.setAttribute("src",file);
+		iframe.setAttribute("border","0");
+		iframe.setAttribute("frameborder","0");
+		iframe.setAttribute("sendbox","sendbox");
+		iframe.onload=function()
+		{
+			iframe.contentWindow.document.documentElement.style.zoom="0.3";
+		}
+		document.body.appendChild(iframe);
+	}
+	function InsertImage()
+	{
+		var image=document.createElement("img");
+		InitControl(image);
+		image.setAttribute("src",file);
+		document.body.appendChild(image);
+	}
+
+	var exts=file.split('#')[0].split('?')[0].split('.');
+	var ext=exts[exts.length-1].toLowerCase();
+	var ua=navigator.userAgent;
+	
+	if(ext=="swf")
+	{
+		InsertFlash();
+		return;
+	}
+	if(ext=="flv")
+	{
+		var url="googleplayer.swf?videourl="+encodeURIComponent(file)+"&playerMode=simple&autoPlay=true";
+		InsertFlash(url);
+		return;
+	}
+	
+	if(ext=="gif"||ext=="jpg"||ext=="jpeg"||ext=="png"||ext=="bmp")
+	{
+		InsertImage();
+		return;
+	}
+	
+	if(type=="template"||ext=="txt"||ext=="htm"||ext=="html"||ext=="doc")
+	{
+		InsertBrowser();
+		return;
+	}
+	
+	if(/MSIE/.test(navigator.userAgent))
+	{
+		InsertObjectWMP()
+		return;
+	}
+	
+	function VideoSupportExt()
+	{	
+		if(ext=="mp4")
+			return /webkit/i.test(ua);
+		if(ext=="ogg")
+			return /chrome|firefox|opera/i.test(ua);
+	}
+
+	if(VideoSupportExt())
+	{
+		var video=document.createElement("video");
+		if(video.play)
+		{
+			InitControl(video);
+			if(autoloop)video.loop=1;
+			if(showcontrols)video.controls=1;
+			video.src=file;
+			document.body.appendChild(video);
+			video.load();
+			video.play();
+			return;
+		}
+	}
+
+	if(type=="document")
+	{
+		document.title="no preview for "+file;
+	}
+	else
+	{
+		InsertEmbedWMP();
+	}
+	
+	//document.body.innerHTML="<p style='text-align:center'>Your browser is not able to play this movie</p>";
+
+}
+
+	
+if(!file)
+{
+	document.body.innerHTML="missing parameter 'file'";
+}
+else if(autoplay)
+{
+	Init();
+}
+else
+{	
+	var table=document.getElementById("loadtable");
+	InitControl(table);
+	table.style.display="";
+}
+
+</script>
+
+</html>

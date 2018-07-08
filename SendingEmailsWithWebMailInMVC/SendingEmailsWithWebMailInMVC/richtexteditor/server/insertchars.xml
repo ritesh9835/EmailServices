@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title(editor.GetLangText("insertchars"));
+	</execute>
+
+	<panel jsml-class="insertchars_dialog" dock="fill" overflow="visible">
+		<htmlcontrol dock="fill" jsml-local="hc">
+		</htmlcontrol>
+		<attach name="attach_dom">
+			<![CDATA[
+			self.setDelegateTimeout(function()
+			{
+				if(self.iframe)return;
+				
+				window.rteinsertcharseditor=editor;
+				window.rteinsertcharsdialog=dialog;
+				
+				dialog.attach_event("closing",function()
+				{
+					window.rteinsertcharseditor=null;
+					window.rteinsertcharsdialog=null;
+				});
+				
+				var iframe=document.createElement("IFRAME");
+				iframe.setAttribute("src","{folder}server/insertchars.htm?{timems}");
+				iframe.setAttribute("frameBorder","0");
+				hc._content.appendChild(iframe);
+				self.iframe=iframe;
+				self.invoke_event("resize");
+			},10);
+			]]>
+		</attach>
+		<attach name="resize">
+			if(!self.iframe)return;
+			self.iframe.style.width=hc.get_client_width()+"px";
+			self.iframe.style.height=hc.get_client_height()+"px";
+		</attach>
+	</panel>
+
+	<panel jsml-base="insertchars_dialog" />
+
+
+</jsml>

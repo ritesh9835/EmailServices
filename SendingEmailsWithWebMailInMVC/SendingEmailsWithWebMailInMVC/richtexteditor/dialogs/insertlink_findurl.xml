@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+	dialog.set_title(editor.GetLangText("internallink"));
+  </execute>
+
+	<panel jsml-class="insertlinkfindurl_dialog" dock="fill" overflow="visible">
+		<groupbox text="@internallink" dock="top" overflow="visible" margin="3">
+			<panel width="280" height="210" overflow="scroll">
+				<htmlcontrol jsml-local="container" dock="fill" margin="2" padding="4" overflow="visible">
+				</htmlcontrol>
+			</panel>
+		</groupbox>
+		<initialize>
+			<![CDATA[
+			editor.LoadLinks(function(group)
+			{
+				self.loadgroupcontent(group,container._content);
+			});
+			]]>
+		</initialize>
+		<jsml-ref name="linktree"/>
+		<attach name="clicklink" arguments="je,link">
+			<![CDATA[
+			if(option.handlehref)
+				option.handlehref(link.href);
+			dialog.close();
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-base="insertlinkfindurl_dialog" />
+
+
+</jsml>

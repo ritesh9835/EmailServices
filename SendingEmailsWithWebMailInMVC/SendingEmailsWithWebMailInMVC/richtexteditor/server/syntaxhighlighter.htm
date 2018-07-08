@@ -1,0 +1,137 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>[[syntaxhighlighter]]</title>
+		<meta http-equiv="Page-Enter" content="blendTrans(Duration=0.1)" />
+		<meta http-equiv="Page-Exit" content="blendTrans(Duration=0.1)" />
+		<link href='resx/dialog.css' type="text/css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="ajaxdiv">
+			<table>
+				<tr>
+					<td width="120"><span langtext='1'>codelanguage</span>:</td>
+					<td><select id="sel_lang"></select></td>
+				</tr>
+				<tr>
+					<td colspan="2"><textarea id="ta_code" name="ta_code_name" style="width:400px;height:300px"></textarea></td>
+				</tr>
+			</table>
+			
+			<div id="container-bottom">
+				<input type="button" langtext='1' value="OK" class="formbutton" onclick="DoHighlight()" />
+				<input type="button" langtext='1' value="Cancel" class="formbutton" onclick="Close()" />
+			</div>					
+		</div>
+	</body>
+	<script type="text/javascript" src="resx/sh_Core.js"></script>
+	<script type="text/javascript" src="resx/shBrushCpp.js"></script>
+	<script type="text/javascript" src="resx/shBrushCSharp.js"></script>
+	<script type="text/javascript" src="resx/shBrushCss.js"></script>
+	<script type="text/javascript" src="resx/shBrushDelphi.js"></script>
+	<script type="text/javascript" src="resx/shBrushJava.js"></script>
+	<script type="text/javascript" src="resx/shBrushJScript.js"></script>
+	<script type="text/javascript" src="resx/shBrushPhp.js"></script>
+	<script type="text/javascript" src="resx/shBrushPhp.js"></script>
+	<script type="text/javascript" src="resx/shBrushPython.js"></script>
+	<script type="text/javascript" src="resx/shBrushRuby.js"></script>
+	<script type="text/javascript" src="resx/shBrushSql.js"></script>
+	<script type="text/javascript" src="resx/shBrushVb.js"></script>
+	<script type="text/javascript" src="resx/shBrushXml.js"></script>
+	<script type="text/javascript" src="resx/shCore.js"></script>
+	<script>
+	
+
+//----------------------------------------------------------------
+//----------------------------------------------------------------
+
+function SetCookie(name,value,seconds)
+{
+	var cookie=name+"="+escape(value)+"; path=/;";
+	if(seconds)
+	{
+		var d=new Date();
+		d.setSeconds(d.getSeconds()+seconds);
+		cookie+=" expires="+d.toUTCString()+";";
+	}
+	document.cookie=cookie;
+}
+function GetCookie(name)
+{
+	var cookies=document.cookie.split(';');
+	for(var i=0;i<cookies.length;i++)
+	{
+		var parts=cookies[i].split('=');
+		if(name==parts[0].replace(/\s/g,''))
+			return unescape(parts[1])
+	}
+	//return undefined..
+}
+
+
+var editor=parent.rtesyntaxhighlightereditor;
+var sel_lang=document.getElementById("sel_lang")
+var ta_code=document.getElementById("ta_code")
+
+
+
+for(var brush in dp.sh.Brushes)
+{
+	var aliases = dp.sh.Brushes[brush].Aliases;
+
+	if(aliases == null)
+		continue;
+	sel_lang.options.add(new Option(aliases,brush));
+	
+	var b=GetCookie("CESHBRUSH")
+	if(b)sel_lang.value=b;
+}
+
+//replace with Regular Expression
+function DoHighlight() {
+	SetCookie("CESHBRUSH",sel_lang.value,3600*24*30);
+	var b=dp.sh.Brushes[sel_lang.value];
+	ta_code.language=b.Aliases[0]+":nocontrols";
+	if(window.opera||!document.all)
+	{
+		ta_code.innerHTML=ta_code.value;//for firefox..
+	}
+	dp.sh.HighlightAll(ta_code.name);
+	ta_code.style.display="";
+	var tag=ta_code.previousSibling
+	//alert(tag.innerHTML)
+	editor.InsertHTML('<div class="dp-highlighter">'+tag.innerHTML+"</div>");
+	tag.parentNode.removeChild(tag);
+	parent.rtesyntaxhighlighterdialog.close();
+}
+function Close()
+{
+	parent.rtesyntaxhighlighterdialog.close();
+}
+
+new function()
+{
+	var ns=document.getElementsByTagName("*");
+	for(var i=0;i<ns.length;i++)
+	{
+		var n=ns[i];
+		if(n.getAttribute('langtext')!="1")continue;
+		var t=n.innerText||n.textContent||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.innerText=t;
+			n.textContent=t;
+		}
+		var t=n.value||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.value=t;
+		}
+	}
+}
+
+
+
+	</script>
+</html>

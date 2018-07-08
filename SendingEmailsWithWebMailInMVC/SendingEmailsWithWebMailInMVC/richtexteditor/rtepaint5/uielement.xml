@@ -1,0 +1,856 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="jsml.xsl"?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../JSML/jsml.xsd">
+	<panel jsml-class="historyitem" dock="top" border_style="solid" border_width="0,0,1,0" border_color="#cecece" height="25" cursor="pointer">
+		<label dock="fill" text_align="center" jsml-local="label1" cursor="pointer" vertical_align="middle"/>
+		<property name="history">
+			<get>
+				return self._history;
+			</get>
+			<set>
+				self._history=value;
+				label1.set_text(value.get_name());
+				this.UpdateSelected();
+			</set>
+		</property>
+		<method name="UpdateSelected">
+			var color=self._history==ImageEditorDocument.get_history()?"#bfd6e6":"";
+			var textcolor=self._history==ImageEditorDocument.get_history()?"black":"#545454";
+			self.set_back_color(color);
+			self.set_text_color(textcolor);
+		</method>
+		<attach name="click">
+			if(self._history!=ImageEditorDocument.get_history())
+				ImageEditorDocument.$086();
+			ImageEditorDocument.set_history(self._history);
+		</attach>
+	</panel>
+	<panel jsml-class="layeritem" dock="bottom" border_style="solid" border_width="1,0,0,0" border_color="#cecece" height="25" cursor="pointer">
+		<image jsml-local="eye" src="images/eye-visible.gif" dock="left" width="20" vertical_align="middle">
+			<attach name="click">
+				var history=ImageEditorDocument.get_history();
+				var hidden=history.$037(instance._layer,"Hidden");
+				history.$041(instance._layer,"Hidden",!hidden);
+				instance.UpdateEye();
+			</attach>
+		</image>
+		<image jsml-local="fx" src="images/layerstyle.gif" tooltip="@Title_Fx" dock="left" width="16" margin="0,5,0,0" vertical_align="middle">
+			<attach name="click">
+				<![CDATA[
+				if(ImageEditorDocument._propertypanel) return;
+				ImageEditorDocument.$096("layerproperty",function(plugin)
+				{
+					if(!plugin.LoadUI)return;
+					plugin.LoadUI(instance);
+					ImageEditorDocument._propertypanel = true;
+					self.setDelegateTimeout(function(){
+						ImageEditorDocument._propertypanel = null;
+					},500);
+				});
+				return;
+ 
+				var propertypanel = jsml.class_create_instance("propertypanel");
+				propertypanel.set_parent(document.body);				
+				propertypanel.set_layeritem(instance);
+				ImageEditorDocument._propertypanel = true;
+				self.setDelegateTimeout(function(){
+					ImageEditorDocument._propertypanel = null;
+				},500);
+				]]>
+			</attach>
+		</image>
+		<label dock="fill" vertical_align="middle" jsml-local="label1" cursor="pointer">
+			<attach name="click" arguments="sender,evt">
+				<![CDATA[
+				ImageEditorDocument.set_layer(instance._layer);
+				if(evt.ctrlKey)
+				{
+					ImageEditorDocument.$013(instance._layer);
+					ImageEditorDocument.set_SelectedTool("select");
+				}
+				]]>
+			</attach>
+			<attach name="mousedown" arguments="sender,evt">
+				<![CDATA[
+				var iscontextmenu = false;
+				if(evt.event.button)
+					iscontextmenu = (evt.event.button==2||evt.event.button==3)?true:false;
+				else
+					iscontextmenu = evt.event.which==3?true:false; 
+				
+				if(!iscontextmenu) return false;
+				
+				sender.jsml_sender.get_element().oncontextmenu = function()
+				{					
+					return false;
+				}				
+				return false;
+				]]>
+			</attach>
+		</label>
+		<property name="layer">
+			<get>
+				return self._layer;
+			</get>
+			<set>
+				self._layer=value;
+				label1.set_text(value.get_name());
+				self.UpdateSelected();
+				self.UpdateEye();
+			</set>
+		</property>
+		<method name="UpdateSelected">
+			var color=self._layer==ImageEditorDocument.get_layer()?"#bfd6e6":"";
+			var textcolor=self._layer==ImageEditorDocument.get_layer()?"black":"#545454";
+			self.set_back_color(color);
+			self.set_text_color(textcolor);
+		</method>
+		<method name="UpdateEye">
+			var history=ImageEditorDocument.get_history();
+			var hidden=history.$037(instance._layer,"Hidden");
+			eye.set_opacity(hidden?30:100);
+			ImageEditorDocument.$0116();
+		</method>
+	</panel>
+	<panel jsml-class="historypanel" border_color="gray" border_width="0">
+		<attach name="attach_dom">
+			<![CDATA[
+			if(self._eventattached)return;
+			self._eventattached=true;
+			self._handleHistoryRefresh=function()
+			{
+				self.RelistHistory();
+				self.RecalcOverflow();
+			}
+			self._handleHistoryAdded=function()
+			{
+				var item=jsml.class_create_instance("historyitem");
+				item.set_history(ImageEditorDocument.get_history());
+				self.append_child(item);
+				self.RecalcOverflow();
+			}
+			self._handleHistorySelected=function()
+			{
+				var arr=self.get_children();
+				for(var i=0;i<arr.length;i++)
+				{
+					arr[i].UpdateSelected();
+				}
+			}
+			ImageEditorDocument.attach_event("HistorySelected",self._handleHistorySelected);
+			ImageEditorDocument.attach_event("HistoryAdded",self._handleHistoryAdded);
+			ImageEditorDocument.attach_event("HistoryRefresh",self._handleHistoryRefresh);
+			]]>
+		</attach>
+		<attach name="detach_dom">
+			self._eventattached=false;
+			ImageEditorDocument.detach_event("HistorySelected",self._handleHistorySelected);
+			ImageEditorDocument.detach_event("HistoryAdded",self._handleHistoryAdded);
+			ImageEditorDocument.detach_event("HistoryRefresh",self._handleHistoryRefresh);
+		</attach>
+		<method name="RecalcOverflow">
+			<![CDATA[
+			var ph = self.get_current_height();
+			var h = self.get_children().length*25;
+
+			if(h>ph && ph>0)
+				self.set_overflow_y("scroll");
+			else
+				self.set_overflow_y("none");
+			]]>
+		</method>
+		<method name="RelistHistory">
+			<![CDATA[
+			while(self.get_children().length)
+				self.remove_child(self.get_children()[0]);
+			arr=ImageEditorDocument.$049();
+			for(var i=0;i<arr.length;i++)
+			{
+				var item=jsml.class_create_instance("historyitem");
+				item.set_history(arr[i]);
+				self.append_child(item);
+			}
+			]]>
+		</method>
+		<attach name="initialize">
+			this.RelistHistory();
+			self.RecalcOverflow();
+		</attach>
+	</panel>
+	<panel jsml-class="layerpanel" border_color="gray" border_width="0">
+		<attach name="attach_dom">
+			<![CDATA[
+			if(self._eventattached)return;
+			self._eventattached=true;
+			self._handleHistoryChanged=function()
+			{
+				self.RelistLayer();
+				self.RecalcOverflow();
+			}
+			self._handleLayerAdded=function()
+			{
+				var item=jsml.class_create_instance("layeritem");
+				item.set_layer(ImageEditorDocument.get_layer());
+				self.append_child(item);
+				self.RecalcOverflow();
+			}
+			self._handleLayerSelected=function()
+			{
+				var arr=self.get_children();
+				for(var i=0;i<arr.length;i++)
+				{
+					arr[i].UpdateSelected();
+				}
+			}
+			ImageEditorDocument.attach_event("HistorySelected",self._handleHistoryChanged);
+			ImageEditorDocument.attach_event("LayerSelected",self._handleLayerSelected);
+			ImageEditorDocument.attach_event("LayerAdded",self._handleLayerAdded);
+			]]>
+		</attach>
+		<attach name="detach_dom">
+			self._eventattached=false;
+			ImageEditorDocument.detach_event("HistorySelected",self._handleHistoryChanged);
+			ImageEditorDocument.detach_event("LayerSelected",self._handleLayerSelected);
+			ImageEditorDocument.detach_event("LayerAdded",self._handleLayerAdded);
+		</attach>
+		<method name="RecalcOverflow">
+			<![CDATA[
+			var ph = self.get_current_height();
+			var h = self.get_children().length*25;
+
+			if(h>ph && ph>0)
+				self.set_overflow_y("scroll");
+			else
+				self.set_overflow_y("none");
+			]]>
+		</method>
+		<method name="RelistLayer">
+			<![CDATA[
+			while(self.get_children().length)
+				self.remove_child(self.get_children()[0]);
+			arr=ImageEditorDocument.$068()
+			for(var i=0;i<arr.length;i++)
+			{
+				var item=jsml.class_create_instance("layeritem");
+				item.set_layer(arr[i]);
+				self.append_child(item);
+			}
+			]]>
+		</method>
+		<attach name="initialize">
+			this.RelistLayer();
+			self.RecalcOverflow();
+		</attach>
+	</panel>
+	<panel jsml-class="colorpickeritem" width="10" height="10" vertical_align="middle" dock="flow" margin="1,1,0,0" cursor="pointer">
+		<property name="hex">
+			<get>
+				return self._rgb;
+			</get>
+			<set>
+				self._rgb = value;
+				self.set_back_color(value);
+				self.set_tooltip(value);
+			</set>
+		</property>
+		<property name="target">
+			<get>
+				return self._target;
+			</get>
+			<set>
+				self._target = value;
+			</set>
+		</property>
+		<property name="owner">
+			<get>
+				return self._owner;
+			</get>
+			<set>
+				self._owner = value;
+			</set>
+		</property>
+		<attach name="mousehover">
+			var o = self.get_owner();
+			var rgba = o.ColorToRgba(self.get_hex());
+			o.Preview(rgba);
+		</attach>
+		<attach name="mouseleave">
+			var o = self.get_owner();
+			o.Restore();
+		</attach>
+		<attach name="click">
+			//hex
+			//self.get_target().SaveColor("rgba("+self.get_rgb()+","+self.get_alpha()+")");
+			var o = self.get_owner();
+			var color = self.get_hex();
+			if(!color) return;
+			color = o.ColorToRgba(color);
+			color = o.SelectColor(color);
+			color = o.ColorToRgba(color);
+			o.get_target().SaveColor(color);
+			o.set_target(null);
+			o.set_visible(0);
+		</attach>
+	</panel>
+	<panel jsml-class="colorpickerpanel" width="223" height="187" border_width="1" border_color="gray" back_color="#eeeeee" css_text="">
+		<panel dock="bottom" height="26" padding="2">
+			<label dock="left" vertical_align="middle" text="@Tool_ColorPicker_Value" width="50" margin="0,5,0,5"></label>
+			<textbox dock="left" margin="2,0,2,0" width="100" jsml-local="colorvalue" tooltip="@Title_ColorPickerValue">
+				<attach name="keydown" arguments="sender,evt">
+					<![CDATA[
+					if (evt.keyCode == 13)
+					{
+						var color = colorvalue.get_text();
+						if(!color)
+							return;
+						instance.SelectColor(color);
+						color = colorvalue.get_text();
+						color = instance.ColorToRgba(color);
+						if(!color)
+						{
+							alert(ImageEditorDocument.Text["InvalidColor"]);
+							return;
+						}
+					
+						instance.get_target().SaveColor(color);
+						instance.set_target(null);
+						instance.set_visible(0);
+					}
+					]]>
+				</attach>
+			</textbox>
+			<button dock="left" text="@Btn_Ok" width="40" margin="2,0,2,5" css_text="border:solid #999999 1px; background:#f3f3f3;color:#333333;border-radius:2px; -webkit-border-radius:2px;">
+				<attach name="click">
+					<![CDATA[
+					var color = colorvalue.get_text();
+					if(!color)
+						return;
+					instance.SelectColor(color);
+					color = colorvalue.get_text();
+					color = instance.ColorToRgba(color);
+					if(!color)
+					{
+						alert(ImageEditorDocument.Text["InvalidColor"]);
+						return;
+					}
+					
+					instance.get_target().SaveColor(color);
+					instance.set_target(null);
+					instance.set_visible(0);
+					]]>
+				</attach>
+			</button>
+		</panel>
+		<panel dock="bottom" height="24" vertical_align="middle">
+			<label dock="left" vertical_align="middle" text="@Tool_ColorPicker_Opacity" width="50" margin="0,5,0,5"></label>
+			<panel jsml-local="alphascrollbar" jsml-base="scrollbarbase" min="0.1" max="1" vertical_align="middle" height="20" default="1" dock="left" width="110" margin="4,0,0,0">
+				<initialize>
+					<![CDATA[
+					function DoScale(scale)
+					{
+						instance.ChangeAlpha(scale+"");
+					}
+					self.set_action(DoScale);
+					]]>
+				</initialize>
+			</panel>
+			<dropdown jsml-local="alphaselector" dock="left" height="20" jsml-enable="0">
+				<attach name="click">
+					<![CDATA[
+					var arr = container.get_children();
+					for(var i=0;i<arr.length;i++)
+						arr[i].set_alpha(self.get_text());
+					]]>
+				</attach>
+				<listitem value="1" text="100%"></listitem>
+				<listitem value="0.9" text="90%"></listitem>
+				<listitem value="0.8" text="80%"></listitem>
+				<listitem value="0.7" text="70%"></listitem>
+				<listitem value="0.6" text="60%"></listitem>
+				<listitem value="0.5" text="50%"></listitem>
+				<listitem value="0.4" text="40%"></listitem>
+				<listitem value="0.3" text="30%"></listitem>
+				<listitem value="0.2" text="20%"></listitem>
+				<listitem value="0.1" text="10%"></listitem>
+			</dropdown>
+			<panel jsml-local="previewpanel" dock="left" width="20" margin="2,0,2,10"></panel>
+		</panel>
+		<panel jsml-local="container" dock="fill" margin="1" back_color="black">
+			 
+		</panel>
+		<attach name="click" arguments="sender,evt">
+			ImageEditorDocument.CancelBubble(evt);
+			return false;
+		</attach>
+		<method name="Preview" arguments="val,direct">
+			<![CDATA[
+			var alpha = self.get_alpha();
+			var rgba = val; 
+			 if(!direct)
+				rgba = self.CombineRgba(val,alpha);
+			previewpanel.set_back_color(rgba);
+			self.SelectColor(rgba);			
+			]]>
+		</method>
+		<method name="Restore">
+			var color = previewpanel._oldval;
+			self.Preview(color,true);
+			self.SelectColor(color);
+		</method>
+		<method name="SelectColor" arguments="val,direct">
+			<![CDATA[
+			var namedHex = {"black":"#000000","navy":"#000080","darkblue":"#00008b","mediumblue":"#0000cd","blue":"#0000ff","darkgreen":"#006400","green":"#008000","teal":"#008080","darkcyan":"#008b8b","deepskyblue":"#00bfff","darkturquoise":"#00ced1","mediumspringgreen":"#00fa9a","lime":"#00ff00","springgreen":"#00ff7f","aqua":"#00ffff","cyan":"#00ffff","midnightblue":"#191970","dodgerblue":"#1e90ff","lightseagreen":"#20b2aa","forestgreen":"#228b22","seagreen":"#2e8b57","darkslategray":"#2f4f4f","darkslategrey":"#2f4f4f","limegreen":"#32cd32","mediumseagreen":"#3cb371","turquoise":"#40e0d0","royalblue":"#4169e1","steelblue":"#4682b4","darkslateblue":"#483d8b","mediumturquoise":"#48d1cc","indigo":"#4b0082","darkolivegreen":"#556b2f","cadetblue":"#5f9ea0","cornflowerblue":"#6495ed","mediumaquamarine":"#66cdaa","dimgray":"#696969","dimgrey":"#696969","slateblue":"#6a5acd","olivedrab":"#6b8e23","slategray":"#708090","slategrey":"#708090","lightslategray":"#778899","lightslategrey":"#778899","mediumslateblue":"#7b68ee","lawngreen":"#7cfc00","chartreuse":"#7fff00","aquamarine":"#7fffd4","maroon":"#800000","purple":"#800080","olive":"#808000","gray":"#808080","grey":"#808080","skyblue":"#87ceeb","lightskyblue":"#87cefa","blueviolet":"#8a2be2","darkred":"#8b0000","darkmagenta":"#8b008b","saddlebrown":"#8b4513","darkseagreen":"#8fbc8f","lightgreen":"#90ee90","mediumpurple":"#9370d8","darkviolet":"#9400d3","palegreen":"#98fb98","darkorchid":"#9932cc","yellowgreen":"#9acd32","sienna":"#a0522d","brown":"#a52a2a","darkgray":"#a9a9a9","darkgrey":"#a9a9a9","lightblue":"#add8e6","greenyellow":"#adff2f","paleturquoise":"#afeeee","lightsteelblue":"#b0c4de","powderblue":"#b0e0e6","firebrick":"#b22222","darkgoldenrod":"#b8860b","mediumorchid":"#ba55d3","rosybrown":"#bc8f8f","darkkhaki":"#bdb76b","silver":"#c0c0c0","mediumvioletred":"#c71585","indianred":"#cd5c5c","peru":"#cd853f","chocolate":"#d2691e","tan":"#d2b48c","lightgray":"#d3d3d3","lightgrey":"#d3d3d3","palevioletred":"#d87093","thistle":"#d8bfd8","orchid":"#da70d6","goldenrod":"#daa520","crimson":"#dc143c","gainsboro":"#dcdcdc","plum":"#dda0dd","burlywood":"#deb887","lightcyan":"#e0ffff","lavender":"#e6e6fa","darksalmon":"#e9967a","violet":"#ee82ee","palegoldenrod":"#eee8aa","lightcoral":"#f08080","khaki":"#f0e68c","aliceblue":"#f0f8ff","honeydew":"#f0fff0","azure":"#f0ffff","sandybrown":"#f4a460","wheat":"#f5deb3","beige":"#f5f5dc","whitesmoke":"#f5f5f5","mintcream":"#f5fffa","ghostwhite":"#f8f8ff","salmon":"#fa8072","antiquewhite":"#faebd7","linen":"#faf0e6","lightgoldenrodyellow":"#fafad2","oldlace":"#fdf5e6","red":"#ff0000","fuchsia":"#ff00ff","magenta":"#ff00ff","deeppink":"#ff1493","orangered":"#ff4500","tomato":"#ff6347","hotpink":"#ff69b4","coral":"#ff7f50","darkorange":"#ff8c00","lightsalmon":"#ffa07a","orange":"#ffa500","lightpink":"#ffb6c1","pink":"#ffc0cb","gold":"#ffd700","peachpuff":"#ffdab9","navajowhite":"#ffdead","moccasin":"#ffe4b5","bisque":"#ffe4c4","mistyrose":"#ffe4e1","blanchedalmond":"#ffebcd","papayawhip":"#ffefd5","lavenderblush":"#fff0f5","seashell":"#fff5ee","cornsilk":"#fff8dc","lemonchiffon":"#fffacd","floralwhite":"#fffaf0","snow":"#fffafa","yellow":"#ffff00","lightyellow":"#ffffe0","ivory":"#fffff0","white":"#ffffff"};
+			var alpha = self.get_alpha();
+			if(val.indexOf("rgba(")==-1)
+			{	
+				if(val.substr(0,1)=="#")
+				{
+					val = self.ColorToRgba(val);
+				}
+				else
+				{
+					var cv = namedHex[val.toLowerCase()];
+					if(typeof(cv)=="undefined")
+						cv = "#000000";
+					val = self.ColorToRgba(cv);
+				}
+			}
+			
+			var rgba = val;
+			if(!direct)
+				rgba = self.CombineRgba(val,alpha);
+			var hex = self.ColorToHex(rgba);
+			previewpanel.set_back_color(rgba);
+			//previewpanel._oldval = rgba;
+			colorvalue.set_text(hex);
+			return hex;
+			]]>
+		</method>
+		<method name="CombineRgba" arguments="rgba,alpha">
+			<![CDATA[
+			var arr = rgba.split(",");
+			if(arr.length!=4)
+				return rgba;
+			return arr[0]+","+arr[1]+","+arr[2]+","+alpha+")";
+			]]>
+		</method>
+		<method name="ChangeAlpha" arguments="val">
+			<![CDATA[
+			self.set_alpha(val);
+			self.SelectColor(previewpanel._oldval);
+			]]>
+		</method>
+		<method name="ColorToRgba" arguments="hex">
+			<![CDATA[
+			if(hex.indexOf("rgb(")==0)
+			{
+				var arr = hex.split(",");
+				if(arr.length!=3)
+					return "rgba(0,0,0,1)";
+				return "rgba(" + arr[0].split("(")[1] + "," + arr[1] + ","+arr[2].split(")")[0] + ",1)";
+			}
+			if (hex.substr(0, 1) != '#')
+			{
+				return hex;
+			}
+			if(hex.length!=7 && hex.length!=9)
+				return "";
+			var r = 0;
+			var g = 0;
+			var b = 0;
+			var a = 1;
+			if(hex.length==7)
+			{
+				r = parseInt(hex.substr(1,2),16);
+				g = parseInt(hex.substr(3,2),16);
+				b = parseInt(hex.substr(5,2),16);
+			}
+			else
+			{
+				a = parseInt(hex.substr(1,2),16)/255;
+				r = parseInt(hex.substr(3,2),16);
+				g = parseInt(hex.substr(5,2),16);
+				b = parseInt(hex.substr(7,2),16);
+			}
+			stra = a+"";
+			var stra = stra.length>3?a.toFixed(2):stra;
+			return "rgba("+r+","+g+","+b+","+stra+")";
+			]]>
+		</method>
+		<method name="ColorToHex" arguments="color">
+			<![CDATA[			
+			function padLeft(s,c,l)
+			{
+				var sl=s.length;
+				if(sl>=l)
+					return s;
+				for(var i=0;i<l-sl;i++)
+					s = c + s;
+				return s;
+			}
+			
+			if (color.substr(0, 1) === '#') {
+				return color;
+			}
+			if(color.indexOf(",")==-1)
+				return color;
+			var digits = color.split(",");
+			if(digits.length==1)
+				return color;
+			var red = parseInt(digits[0].split("(")[1]);
+			var green = parseInt(digits[1]);
+			var blue = parseInt(digits[2]);
+			var alpha = 1;
+			if(digits.length>3)
+				alpha = parseFloat(digits[3].split(")")[0]);
+			if(alpha<=1)
+				alpha = alpha*255;
+			alpha = parseInt(alpha);
+	
+			var rgba = padLeft(alpha.toString(16),"0",2) + padLeft(red.toString(16),"0",2)+
+				padLeft(green.toString(16),"0",2)+padLeft(blue.toString(16),"0",2);
+			return '#' + rgba.toUpperCase();
+			]]>
+		</method>
+		<property name="alpha">
+			<get>
+				return self._alpha || "1";
+			</get>
+			<set>
+				self._alpha = value;
+			</set>
+		</property>
+		<property name="target">
+			<get>
+				return self._target;
+			</get>
+			<set>
+				<![CDATA[
+				self._target = value;
+				if(!value) return;
+				
+				self.set_alpha("1");
+				var clrval = value.get_back_color();	 
+				self.SelectColor(clrval,true); 
+				previewpanel._oldval = self.ColorToHex(clrval);		
+				colorvalue.set_text(self.ColorToHex(clrval));
+				
+				//alphaselector.set_text("1");
+				alphascrollbar.set_default(1);
+				alphascrollbar.CalcScrollbarPos();
+				
+				while(container.get_children().length)
+					self.remove_child(container.get_children()[0]);
+				var x = ['00','33','66','99','CC','FF']; 
+				var y = ['000000','333333','666666','999999','CCCCCC','FFFFFF','FF0000','00FF00','0000FF','FFFF00','00FFFF','FF00FF'];
+				i=0; 
+				for (d=0;d<2;d++) { 
+					for (c=0;c<6;c++) { 
+						var item=jsml.class_create_instance("colorpickeritem");
+						item.set_hex("#"+y[i]);
+						item.set_owner(self);
+						item.set_target(value);
+						item.set_margin("1,10,0,1");
+						container.append_child(item);
+						i++;
+						for (b=0;b<3;b++) { 
+							for (a=0;a<6;a++) { 
+								r=x[b+3*d]+x[a]+x[c]; 
+								var item=jsml.class_create_instance("colorpickeritem");
+								item.set_hex("#"+ r);
+								item.set_owner(self);
+								item.set_target(value);
+								container.append_child(item);
+							} 
+						} 
+					}
+				}
+				]]>
+			</set>
+		</property>
+	</panel>
+	<panel jsml-class="lineselectoritem" width="26" height="16" vertical_align="middle" dock="flow" margin="2" cursor="pointer">
+		<panel jsml-local="line" width="26" back_color="Black">
+		</panel>
+		<property name="linewidth">
+			<get>
+				return self._linewidth;
+			</get>
+			<set>
+				self._linewidth = value;
+				self.set_tooltip(value+"px");
+				line.set_height(value);
+			</set>
+		</property>
+		<property name="target">
+			<get>
+				return self._target;
+			</get>
+			<set>
+				self._target = value;
+			</set>
+		</property>
+		<property name="owner">
+			<get>
+				return self._owner;
+			</get>
+			<set>
+				self._owner = value;
+			</set>
+		</property>
+		<attach name="click">
+			ImageEditorDocument.SetOption("Ctx_LineWidth",self.get_linewidth());
+			self.get_owner().set_target(null);
+			self.get_owner().Close();
+		</attach>
+	</panel>
+	<panel jsml-class="lineselectorpanel" width="183" height="42">
+		<property name="target">
+			<get>
+				return self._target;
+			</get>
+			<set>
+				<![CDATA[
+				self._target = value;
+				if(!value) return;
+				
+				while(self.get_children().length)
+					self.remove_child(self.get_children()[0]);
+				var arr = [1,2,3,4,5,6,7,8,9,10,11,12];
+				for(var i=0;i<arr.length;i++)
+				{
+					var item=jsml.class_create_instance("lineselectoritem");
+					item.set_linewidth(arr[i]);
+					item.set_owner(self);
+					item.set_target(value);
+					self.append_child(item);
+				}
+				]]>
+			</set>
+		</property>
+		<method name="Close">
+			<![CDATA[
+				if(self._box) self._box.dispose();
+				else self.dispose();
+			]]>
+		</method>
+	</panel>
+	<image jsml-class="toolbutton" margin="2" vertical_align="middle" horizontal_align="center" back_color="white" border_color="#8f8f8f" border_width="1" width="26" height="25" cursor="pointer" css_text="border-radius:2px;">
+		<initialize>
+		</initialize>
+		<property name="ToolName">
+			<get>
+				return self._toolname;
+			</get>
+			<set>
+				self._toolname=value;
+				self.set_src("images/"+value+".png");
+			</set>
+		</property>
+		<attach name="mousehover">
+			<![CDATA[
+			if(ImageEditorDocument.get_SelectedTool() && ImageEditorDocument.get_SelectedTool()==self._toolname)
+				return;
+			self.set_back_color("#bfd6e6");
+			self.set_border_color("#4290d9");
+			]]>
+		</attach>
+		<attach name="mouseleave">
+			<![CDATA[
+			if(ImageEditorDocument.get_SelectedTool() && ImageEditorDocument.get_SelectedTool()==self._toolname)
+				return;
+			self.set_back_color("white");
+			self.set_border_color("#8f8f8f");
+			]]>
+		</attach>
+		<attach name="click">
+			<![CDATA[			
+			if(self.get_opacity()=="5")
+				return;
+			if(self._toolname!="text" && ImageEditorDocument.get_SelectedTool() && ImageEditorDocument.get_SelectedTool()=="text")
+				ImageEditorDocument.$0116();	
+			if(self._toolname!="crop")
+			{
+				if(!ImageEditorDocument._cropcomp._cropdiv.style.display)
+					ImageEditorDocument.$0116();
+				ImageEditorDocument._cropcomp._cropdiv.style.display = "none";
+			}
+			if(self._toolname!="freesize")
+				ImageEditorDocument._freecomp._cropdiv.style.display = "none";
+			ImageEditorDocument.set_SelectedTool(self._toolname);
+			]]>
+		</attach>
+		<attach name="attach_dom">
+			<![CDATA[
+			if(self._eventattached)return;
+			self._eventattached=true;
+			self._handleToolChanged=function()
+			{
+				if(ImageEditorDocument.get_SelectedTool()==self._toolname)
+				{
+					self.set_back_color("#bfd6e6");
+					self.set_border_color("#4290d9");
+				}
+				else
+				{
+					self.set_back_color("white");
+					self.set_border_color("#8f8f8f");
+				}
+			}
+			ImageEditorDocument.attach_event("SelectedToolChanged",self._handleToolChanged);
+			]]>
+		</attach>
+		<attach name="detach_dom">
+			self._eventattached=false;
+			ImageEditorDocument.detach_event("SelectedToolChanged",self._handleToolChanged);
+		</attach>
+	</image>
+	<panel jsml-class="menuitem">
+		<image jsml-local="img_menu" dock="top" height="36" vertical_align="middle" horizontal_align="center"></image>
+		
+		<label jsml-local="lb_menuname" dock="fill" text_align="center" vertical_align="middle"></label>
+		<property name="menuname">
+			<get>
+				return lb_menuname.get_text();
+			</get>
+			<set arguments="val">
+				lb_menuname.set_text(val);
+			</set>
+		</property>
+		<property name="menuimg">
+			<get>
+				return self._menuimg;
+			</get>
+			<set arguments="val">
+				self._menuimg = val;
+				img_menu.set_src(val);
+			</set>
+		</property>
+		<attach name="mousehover">
+			//self.set_text_color("#333333");
+			self.set_back_color("#e1e4e7");
+		</attach>
+		<attach name="mouseleave">
+			//self.set_text_color("");
+			self.set_back_color("");
+		</attach>
+		<attach name="click">
+			<![CDATA[
+				if(self.get_opacity()==50)
+					return;
+				if(ImageEditorDocument.get_SelectedTool() && ImageEditorDocument.get_SelectedTool()=="text")
+					ImageEditorDocument.$0116();	
+				ImageEditorDocument._cropcomp._cropdiv.style.display = "none";
+				ImageEditorDocument._freecomp._cropdiv.style.display = "none";
+			]]>
+		</attach>
+	</panel>
+	<panel jsml-class="scrollbarbase" height="20">
+		<panel dock="fill" vertical_align="middle">
+			<panel height="2" jsml-local="scrollback" back_color="#b0b0b0">
+			</panel>
+		</panel>
+		<panel jsml-local="scrollbox" width="10" background="url(images/scrollbar.gif) no-repeat">
+			<attach name="mousedown" arguments="jevent,devent">
+				self.set_cursor("default");
+				ImageEditorDocument.$071(instance, jevent);
+				self._startleft = self.get_left();
+				instance._startpos = ImageEditorDocument.$088(devent,instance);
+				return ImageEditorDocument.CancelBubble(devent);
+			</attach>
+		</panel>
+		<method name="$035" arguments="evt">
+			<![CDATA[
+			var currpos = ImageEditorDocument.$088(evt,instance);
+			var ml = currpos.x - self._startpos.x;
+			var l = scrollbox._startleft + ml;
+			if(l<0 || l>self.get_width()-scrollbox.get_width())
+				return;
+			scrollbox.set_left(l);			
+			scrollbox._element.style.left = l + "px";
+			self.Fire();
+			]]>
+		</method>
+		<method name="$08">
+			<![CDATA[
+			var radio = self.GetValue();
+			var action = self.get_release();
+			if(action) action.apply(self,[radio]);
+			]]>
+		</method>
+		<method name="$020">
+			<![CDATA[
+			]]>
+		</method>
+		<initialize>
+			<![CDATA[
+				self.setDelegateTimeout(function(){
+					scrollback.set_width(self.get_width());
+					self.CalcScrollbarPos();
+				 },100);
+				]]>
+		</initialize>
+		<property name="default">
+			<get>
+				return parseFloat(self._default || 0.5);
+			</get>
+			<set>
+				self._default = value;
+			</set>
+		</property>
+		<property name="min">
+			<get>
+				return parseFloat(self._min || 0);
+			</get>
+			<set>
+				self._min = value;
+			</set>
+		</property>
+		<property name="max">
+			<get>
+				return parseFloat(self._max || 1);
+			</get>
+			<set>
+				self._max = value;
+			</set>
+		</property>
+		<property name="action">
+			<get>
+				return self._action;
+			</get>
+			<set>
+				self._action = value;
+			</set>
+		</property>
+		<property name="release">
+			<get>
+				return self._release;
+			</get>
+			<set>
+				self._release = value;
+			</set>
+		</property>
+		<method name="CalcScrollbarPos">
+			<![CDATA[
+			var l = (self.get_width()-scrollbox.get_width()) * (self.get_default()-self.get_min()) / (self.get_max()-self.get_min());
+			l = Math.floor(l);
+			scrollbox.set_left(l);
+			scrollbox._element.style.left = l + "px";
+			]]>
+		</method>
+		<method name="GetValue">
+			<![CDATA[
+			var radio = self.get_min() + (self.get_max()-self.get_min())*scrollbox.get_left()/(self.get_width()-scrollbox.get_width());
+			return radio;
+			]]>
+		</method>
+		<method name="Fire">
+			<![CDATA[
+			var action = self.get_action();
+			var radio = self.GetValue();
+			if(action) action.apply(self,[radio]);
+			]]>
+		</method>
+	</panel>
+</jsml>

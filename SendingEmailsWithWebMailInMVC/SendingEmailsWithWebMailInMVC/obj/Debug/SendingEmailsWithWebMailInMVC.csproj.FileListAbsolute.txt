@@ -1,0 +1,150 @@
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\csc.exe
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Collections.Immutable.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Reflection.Metadata.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\vbc.exe
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe.config
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll.config
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.pdb
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Web.Infrastructure.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Deployment.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Razor.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Deployment.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Razor.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.xml
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.csprojResolveAssemblyReference.cache
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.dll
+C:\VS 2015 Projects\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.pdb
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\csc.exe
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CSharp.Core.targets
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.VisualBasic.Core.targets
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Collections.Immutable.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Reflection.Metadata.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\vbc.exe
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe.config
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll.config
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.pdb
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Web.Infrastructure.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Deployment.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Razor.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Deployment.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Webpages.Razor.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.xml
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.csprojResolveAssemblyReference.cache
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.dll
+E:\Solutions\Asp.Net\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.pdb
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\csc.exe
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.CSharp.Core.targets
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\Microsoft.VisualBasic.Core.targets
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Collections.Immutable.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\System.Reflection.Metadata.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\vbc.exe
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\roslyn\VBCSCompiler.exe.config
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll.config
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\SendingEmailsWithWebMailInMVC.pdb
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\EntityFramework.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\EntityFramework.SqlServer.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.Core.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.Owin.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Host.HttpListener.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Host.SystemWeb.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Hosting.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Security.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Web.Infrastructure.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Newtonsoft.Json.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\OpenPop.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Owin.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Net.Http.Formatting.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Http.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Http.Owin.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.Deployment.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.Razor.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Authorization.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Mvc.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Http.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Routing.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.Logging.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Net.Http.Headers.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.MemoryPool.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Http.Features.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.OptionsModel.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.FileProviders.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Hosting.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.Primitives.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.PlatformAbstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Diagnostics.DiagnosticSource.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.Http.Extensions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.WebEncoders.Core.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.Configuration.Abstractions.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Extensions.Configuration.Binder.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\EntityFramework.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\EntityFramework.SqlServer.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.Core.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.Owin.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Host.HttpListener.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Host.SystemWeb.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Hosting.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Microsoft.Owin.Security.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Newtonsoft.Json.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Net.Http.Formatting.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Helpers.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Http.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Http.Owin.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Mvc.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.Razor.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.Deployment.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\System.Web.WebPages.Razor.xml
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.csprojResolveAssemblyReference.cache
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\obj\Debug\SendingEmailsWithWebMailInMVC.pdb
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Antlr3.Runtime.dll
+E:\Solutions\Asp.Net\CN\SendingEmailsWithWebMailInMVC\SendingEmailsWithWebMailInMVC\bin\Antlr3.Runtime.pdb

@@ -1,0 +1,16 @@
+<styles>
+	<!--
+	These attributes will execute the config.format_%attrname%
+	
+	value='any value' :
+	subscript,superscript,bold,italic,underline,linethrough,overline,
+	
+	value='specified value' :
+	forecolor,backcolor,fontsize,fontname,cssclass,cssstyle,
+	-->
+	<style name="@clearstyle" />
+	<style name="Comment" italic="1" cssstyle="color:darkgreen;" />
+	<style name="Highlight" cssstyle="background-color:yellow;" />
+  <style name="cssclass1" cssclass="cssclass1" />
+  <style name="cssclass2" cssclass="cssclass2" />
+</styles>

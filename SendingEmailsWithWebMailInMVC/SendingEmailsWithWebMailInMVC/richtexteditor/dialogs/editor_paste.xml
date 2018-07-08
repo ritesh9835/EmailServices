@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title("Paste")
+	</execute>
+
+	<panel dock="fill" margin="6" padding="6" jsml-class="pastedialog" >
+
+		<label dock="top" jsml-local="labeltitle" text="@PASTETITLE" />
+
+		<panel jsml-local="keeplinepanel" right="0" overflow="visible" padding="0,6,0,0">
+			<checkbox dock="left" jsml-local="cbkeepline" checked="1" />
+			<label dock="fill" text="@keeplinebreaks" vertical_align="middle"/>
+		</panel>
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="top" height="20" margin="0,0,6,0">
+				<label dock="right" text="@closeafterpaste" text_color="gray" vertical_align="middle" />
+				<checkbox dock="right" width="20" jsml-local="checkbox" checked="true">
+					<attach name="click">
+						instance._focustodiv();
+					</attach>
+				</checkbox>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<button dock="left" width="82" height="24"  text="OK" margin="0,12,0,0">
+					<attach name="click">
+						instance._tryreturn();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="Cancel">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+		<panel dock="fill" margin="6" padding="6" border_width="1" border_color="#cccccc" border_style="solid" cursor="text">
+			<htmlcontrol jsml-local="thectrl" dock="fill" css_text="normal 11px Arial">
+
+			</htmlcontrol>
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			
+			if(option.command=="pasteword")
+				labeltitle.set_text(editor.GetLangText("pastewordtitle"));
+			else if(option.command=="pastetext")
+				labeltitle.set_text(editor.GetLangText("pastetexttitle"));
+			else
+				labeltitle.set_text(editor.GetLangText("pastetitle"));
+			
+			self._thediv=document.createElement(option.puretextmode?"TEXTAREA":"DIV");
+			self._thediv.style.resize="none";
+			thectrl._content.appendChild(self._thediv);
+			if(!option.puretextmode)
+			{
+				self._thediv.setAttribute("contenteditable","true")
+				self._thediv.contentEditable=true;
+			}
+			else
+			{
+				self._thediv.onkeyup=self.delegate(self._thedivkeyup);
+			}
+			
+			if(window._rtecliphtml)
+				self._thediv.innerHTML=window._rtecliphtml;
+			 
+			if(option.command!="pastetext")
+				keeplinepanel.set_visible(false);
+			self._thediv.style.outline="none";
+			self._thediv.style.borderWidth="0px";
+			self._setdivsize();
+			self.setDelegateTimeout(function()
+			{
+				self._setdivsize();
+				self._focustodiv();
+			},123);
+			]]>
+		</initialize>
+		<attach name="disposing">
+			self._thediv.onkeyup=null;
+		</attach>
+		<method name="_focustodiv">
+			<![CDATA[
+			window.focus();
+			self._thediv.focus();
+			if(!option.puretextmode)
+			{
+				editor._browserSetPointInside(window,self._thediv,0);
+			}
+			]]>
+		</method>
+		<method name="_setdivsize">
+			<![CDATA[
+			var w=thectrl.get_client_width()-6;
+			var h=thectrl.get_client_height()-6;
+			if(w<10)w=10;
+			if(h<10)h=10;
+			self._thediv.style.width=w+"px";
+			self._thediv.style.height=h+"px";
+			]]>
+		</method>
+		<attach name="resize">
+			self._setdivsize();
+		</attach>
+
+		<method name="_tryreturn">
+			<![CDATA[
+			var html=self._thediv.innerHTML;
+			if(option.command=="pastehtml")
+			{
+				html=self._thediv.value;
+			}
+			if(option.command=="pastetext")
+			{
+				var tabhtc=editor._config.pastetext_tabspaces;
+				var usepre=editor._config.pastetext_whitespace;
+				if(usepre=='auto')usepre=jsml.html5;
+				
+				var lines=self._thediv.value.split('\r').join('').split('\n');
+				for(var i=0;i<lines.length;i++)
+				{
+					var code=lines[i];
+					code=code.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\x22/g,"&quot;").replace(/\x27/g,"&#39;");
+					if(usepre&&code.indexOf('\t')!=-1)
+						code="<span style='white-space:pre'>"+code+"</span>";
+					else
+						code=code.split('\t').join(tabhtc).replace(/\s/g,"&nbsp;");
+					lines[i]=code;
+				}
+				if(cbkeepline.get_checked())
+					html=lines.join("<br/>");
+				else
+					html=lines.join(" ");
+			}
+			if(html.length==0)return;
+			dialog.result=html;
+			dialog.close();
+			]]>
+		</method>
+		<attach name="keydown,divkeyup" arguments="je,e">
+			<![CDATA[
+			if(e.keyCode==27)
+			{
+				dialog.close();
+				return;
+			}
+			
+			if(e.ctrlKey&&e.keyCode==86)
+			{
+				if(checkbox.get_checked())
+				{
+					self.setDelegateTimeout(self.delegate(self._tryreturn),100);
+				}
+			}
+			]]>
+		</attach>
+		<method name="_thedivkeyup" arguments="e">
+			self.invoke_event("divkeyup",e||window.event);
+		</method>
+	</panel>
+
+	<panel jsml-base="pastedialog" width="360" height="240" />
+
+</jsml>

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<include src="{folder}dialogs/browsedialogbase.xml?{timems}" />
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTGALLERY"));
+	</execute>
+
+
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+		class insertgalleryrow/insertgalleryfolder/insertgalleryfile
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+
+	<panel jsml-class="insertgalleryrow" height="84" padding="3,3,0,3">
+		<jsml-ref name="browsedialogoncontextmenu"/>
+	</panel>
+
+	<panel jsml-class="insertgalleryfolder" jsml-base="insertgalleryrow" cursor="pointer">
+		<panel dock="fill" jsml-local="panel" border_width="1" border_color="transparent">
+			<panel dock="bottom" height="20" margin="0,2,0,2">
+				<checkbox dock="left" jsml-local="checkbox" opacity="3" width="20" padding="1,0,-1,0">
+					<attach name="change">
+						instance._item.IsChecked=self.get_checked();
+					</attach>
+				</checkbox>
+				<image dock="right" width="20" jsml-local="editbtn" opacity="3" jsml-base="imagebutton" src="{folder}images/edit.gif" padding="2"  overflow="none">
+					<attach name="click">
+						option.dialogcontrol.startedititem(instance._item,instance);
+					</attach>
+				</image>
+				<label dock="fill" jsml-local="lname" vertical_align="middle" horizontal_align="center" cursor="pointer">
+					<attach name="click">
+						option.dialogcontrol.select_item(instance._item);
+					</attach>
+				</label>
+			</panel>
+			<label dock="bottom" jsml-local="lsize" vertical_align="middle" text_align="center" visible="false" />
+			<image dock="fill" jsml-local="theicon" src="{folder}images/folder.png" vertical_align="middle" horizontal_align="center" margin="2" padding="2">
+				<attach name="click">
+					option.dialogcontrol.select_item(instance._item);
+				</attach>
+			</image>
+		</panel>
+
+		<attach name="mousehover">
+			checkbox.set_opacity(100);
+			editbtn.set_opacity(100);
+			panel.set_back_color('#eeeeee');
+			panel.set_border_color('#CCCCEE');
+		</attach>
+		<attach name="mouseleave">
+			if(!checkbox.get_checked())checkbox.set_opacity(3);
+			editbtn.set_opacity(3);
+			panel.set_back_color('');
+			panel.set_border_color('transparent');
+		</attach>
+
+		<method name="update_check">
+			if(self._item)checkbox.set_checked(!!self._item.IsChecked);
+			if(checkbox.get_checked())checkbox.set_opacity(100);
+		</method>
+		<method name="bind_item">
+			<![CDATA[
+			self._item=value;
+			
+			checkbox.set_checked(!!value.IsChecked);
+			if(checkbox.get_checked())checkbox.set_opacity(100);
+			
+			lsize.set_text(String(value.Size));
+			lname.set_text(value.Text||value.Name);
+
+			if(value.Name=="..")
+			{
+				checkbox.set_visible(false);
+				editbtn.set_visible(false);
+				theicon.set_src("{folder}images/folder_up.png");
+			}
+			
+			self.set_tooltip(value.Name+" , "+editor.GetLangText("numitems",value.Size));
+			
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-class="insertgalleryfile" jsml-base="insertgalleryrow" cursor="pointer">
+		<panel dock="fill" jsml-local="panel" border_width="1" border_color="transparent">
+			<panel dock="bottom" height="20" margin="0,2,0,2">
+				<checkbox dock="left" jsml-local="checkbox" opacity="3" width="20" padding="1,0,-1,0">
+					<attach name="change">
+						instance._item.IsChecked=self.get_checked();
+					</attach>
+				</checkbox>
+				<image dock="right" width="20" jsml-local="editbtn" opacity="3" jsml-base="imagebutton" src="{folder}images/edit.gif" padding="2"  overflow="none">
+					<attach name="click">
+						option.dialogcontrol.startedititem(instance._item,instance);
+					</attach>
+				</image>
+				<label dock="fill" jsml-local="lname" vertical_align="middle" horizontal_align="center" cursor="pointer">
+					<attach name="click">
+						option.dialogcontrol.select_item(instance._item,true);
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</label>
+			</panel>
+			<image dock="fill" jsml-local="theicon" zoom="out" vertical_align="middle" horizontal_align="center" margin="3,0,3,0" padding="3">
+				<initialize>
+					self._content.style.border='solid 1px #dddddd';
+					self._content.style.padding='2px';
+					self._element.overflow='visible';
+				</initialize>
+				<attach name="click">
+					option.dialogcontrol.select_item(instance._item,true);
+					dialog.result=true;
+					dialog.close();
+				</attach>
+			</image>
+		</panel>
+
+		<attach name="mousehover">
+			checkbox.set_opacity(100);
+			editbtn.set_opacity(100);
+			panel.set_back_color('#EEEEEE');
+			panel.set_border_color('#CCCCEE');
+		</attach>
+		<attach name="mouseleave">
+			if(!checkbox.get_checked())checkbox.set_opacity(3);
+			editbtn.set_opacity(3);
+			panel.set_back_color('');
+			panel.set_border_color('transparent');
+		</attach>
+
+
+		<method name="update_check">
+			if(self._item)checkbox.set_checked(!!self._item.IsChecked);
+			if(checkbox.get_checked())checkbox.set_opacity(100);
+		</method>
+		<method name="bind_item" arguments="value,inst">
+			<![CDATA[
+			var MAX_STRING_LENGTH=9
+			
+			self._item=value;
+			checkbox.set_checked(!!value.IsChecked);
+			if(checkbox.get_checked())checkbox.set_opacity(100);
+			
+			var src=value.Thumbnail;
+			if(value.Thumbnail)
+				src=inst._folderitem.UrlPrefix+inst._currdir+value.Thumbnail;
+			else
+				src=inst._folderitem.UrlPrefix+inst._currdir+value.Name;
+
+			theicon.set_src(src);
+
+			var str=value.Text||value.Name;
+			var len=0;
+			for(var i=0;i<str.length;i++)
+			{
+				len++;
+				if(str.charCodeAt(i)>256)
+					len++;
+				if(len>MAX_STRING_LENGTH&&i+2<str.length)
+				{
+					//lname.set_tooltip(str);
+					str=str.substring(0,i)+"..";
+					break;
+				}
+			}
+			lname.set_text(str);
+			
+			var text=editor.GetLangText("NAME")+": "+self._item.Name+"\r\n"+editor.GetLangText("SIZE")+": "+jsml.format_size(self._item.Size);
+			if(self._item.Width&&self._item.Height)
+				text+="\r\n"+editor.GetLangText("DIMENSIONS")+": "+self._item.Width+" x "+self._item.Height;
+			if(self._item.Time)
+			{
+				var date=new Date(self._item.Time)
+				var dval=date.getFullYear()*10000+(date.getMonth()+1)*100+date.getDate();
+				dval=dval*1000000+date.getHours()*10000+date.getMinutes()*100+date.getSeconds();
+				var dstr=String(dval).replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,"$1-$2-$3 $4:$5")
+				text+="\r\n"+editor.GetLangText("DATECREATED")+": "+dstr;
+			}
+			
+			if(true)
+				self.itemtooltiptext=text;
+			else
+				self.set_tooltip(text);
+			]]>
+		</method>
+
+		<jsml-ref name="browsedialogitemtooltip"/>
+
+	</panel>
+
+
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+			class insertgallerydialog
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+	<panel jsml-class="insertgallerydialog" jsml-base="browsedialogbase" dock="fill" margin="3">
+
+		<panel dock="fill" margin="6" back_color="white" border_width="1" border_color="#EFEFEF">
+			<!-- Items List -->
+			<panel  jsml-local="itemspanel" jsml-base="scrollitemspanel" dock="fill" itemwidth="120" itemheight="84">
+			</panel>
+			<label dock="fill" jsml-local="noitemlabel" visible="false" text="@empty" vertical_align="middle" horizontal_align="center">
+			</label>
+			<panel dock="over" visible="false" jsml-local="loadingmask">
+				<image dock="fill" vertical_align="middle" horizontal_align="center"  src="{folder}images/loading5.gif" />
+				<panel dock="over"  opacity="10" back_color="gray" jsml-enable="0"></panel>
+			</panel>
+		</panel>
+
+
+		<!-- # # # # # # # # # # # # # # # # 
+			dialog code
+		 # # # # # # # # # # # # # # # # -->
+
+		<method name="setisloading">
+			loadingmask.set_visible(value);
+		</method>
+		
+		<attach name="updateui_itemcount">
+			noitemlabel.set_visible(self.itemcount==0);
+		</attach>
+		<attach name="updateui_itemscheck">
+			<![CDATA[
+			itemspanel.foreach_slot(function(ctrl)
+			{
+				ctrl.update_check();
+			});
+			]]>
+		</attach>
+		<method name="clearitemcontrols">
+			itemspanel.reset_items();
+		</method>
+		<method name="additemcontrols" arguments="arr">
+			<![CDATA[
+			itemspanel.add_items(arr,function(item)
+			{
+				var ctrl;
+				if(item.IsFolder)
+					ctrl=jsml.class_create_instance("insertgalleryfolder");
+				else
+					ctrl=jsml.class_create_instance("insertgalleryfile");
+				ctrl.bind_item(item,self);
+				return ctrl;
+			});
+			]]>
+		</method>
+
+		
+		<initialize>
+			<![CDATA[
+			self._category="Gallery";
+			self._getoption={GetSize:true,GetTime:true,GetDimensions:true,GetThumbnails:true};
+			
+			self._sortmode="Name";
+			self._sortdesc=false;
+
+			self.change_folder("/");
+			]]>
+		</initialize>
+
+		<method name="select_file">
+			<![CDATA[
+			var src=self._folderitem.UrlPrefix+self._currdir+value.Name;
+
+			var imgobj=option.targetnode;
+			imgobj.SetAttribute("src",src);
+			]]>
+		</method>
+
+
+	</panel>
+
+	<panel jsml-base="insertgallerydialog">
+
+	</panel>
+
+
+</jsml>

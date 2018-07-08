@@ -1,0 +1,183 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<meta http-equiv="Page-Enter" content="blendTrans(Duration=0.1)" />
+	<meta http-equiv="Page-Exit" content="blendTrans(Duration=0.1)" />
+
+	<script type="text/javascript" src="resx/Dialog_ColorPicker.js"></script>
+
+	<link type="text/css" rel="stylesheet" href='resx/dialog.css' />
+	<style type="text/css">
+			.colorcell
+			{
+				width:16px;
+				height:17px;
+				cursor:hand;
+			}
+			.colordiv,.customdiv
+			{
+				border:solid 1px #808080;
+				width:16px;
+				height:17px;
+				font-size:1px;
+			}
+			#ajaxdiv{padding:10px;margin:0;text-align:center; background:#eeeeee;}
+		</style>
+	<title>NamedColors</title>
+
+	<script>
+								
+		var colorlist=[{n:'green',h:'#008000'},{n:'lime',h:'#00ff00'},{n:'teal',h:'#008080'}, {n:'aqua',h:'#00ffff'}, {n:'navy',h:'#000080'}, {n:'blue',h:'#0000ff'}, {n:'purple',h:'#800080'}, {n:'fuchsia',h:'#ff00ff'},{n:'maroon',h:'#800000'},{n:'red',h:'#ff0000'},{n:'olive',h:'#808000'},{n:'yellow',h:'#ffff00'},{n:'white',h:'#ffffff'},{n:'silver',h:'#c0c0c0'},{n:'gray',h:'#808080'},{n:'black',h:'#000000'}]
+		var colormore=[{n:'darkolivegreen',h:'#556b2f'},{n:'darkgreen',h:'#006400'},{n:'darkslategray',h:'#2f4f4f'},{n:'slategray',h:'#708090'},{n:'darkblue',h:'#00008b'},{n:'midnightblue',h:'#191970'},{n:'indigo',h:'#4b0082'},{n:'darkmagenta',h:'#8b008b'},{n:'brown',h:'#a52a2a'},{n:'darkred',h:'#8b0000'},{n:'sienna',h:'#a0522d'},{n:'saddlebrown',h:'#8b4513'},{n:'darkgoldenrod',h:'#b8860b'},{n:'beige',h:'#f5f5dc'},{n:'honeydew',h:'#f0fff0'},{n:'dimgray',h:'#696969'},{n:'olivedrab',h:'#6b8e23'},{n:'forestgreen',h:'#228b22'},{n:'darkcyan',h:'#008b8b'},{n:'lightslategray',h:'#778899'},{n:'mediumblue',h:'#0000cd'},{n:'darkslateblue',h:'#483d8b'},{n:'darkviolet',h:'#9400d3'},{n:'mediumvioletred',h:'#c71585'},{n:'indianred',h:'#cd5c5c'},{n:'firebrick',h:'#b22222'},{n:'chocolate',h:'#d2691e'},{n:'peru',h:'#cd853f'},{n:'goldenrod',h:'#daa520'},{n:'lightgoldenrodyellow',h:'#fafad2'},{n:'mintcream',h:'#f5fffa'},{n:'darkgray',h:'#a9a9a9'},{n:'yellowgreen',h:'#9acd32'},{n:'seagreen',h:'#2e8b57'},{n:'cadetblue',h:'#5f9ea0'},{n:'steelblue',h:'#4682b4'},{n:'royalblue',h:'#4169e1'},{n:'blueviolet',h:'#8a2be2'},{n:'darkorchid',h:'#9932cc'},{n:'deeppink',h:'#ff1493'},{n:'rosybrown',h:'#bc8f8f'},{n:'crimson',h:'#dc143c'},{n:'darkorange',h:'#ff8c00'},{n:'burlywood',h:'#deb887'},{n:'darkkhaki',h:'#bdb76b'},{n:'lightyellow',h:'#ffffe0'},{n:'azure',h:'#f0ffff'},{n:'lightgray',h:'#d3d3d3'},{n:'lawngreen',h:'#7cfc00'},{n:'mediumseagreen',h:'#3cb371'},{n:'lightseagreen',h:'#20b2aa'},{n:'deepskyblue',h:'#00bfff'},{n:'dodgerblue',h:'#1e90ff'},{n:'slateblue',h:'#6a5acd'},{n:'mediumorchid',h:'#ba55d3'},{n:'palevioletred',h:'#db7093'},{n:'salmon',h:'#fa8072'},{n:'orangered',h:'#ff4500'},{n:'sandybrown',h:'#f4a460'},{n:'tan',h:'#d2b48c'},{n:'gold',h:'#ffd700'},{n:'ivory',h:'#fffff0'},{n:'ghostwhite',h:'#f8f8ff'},{n:'gainsboro',h:'#dcdcdc'},{n:'chartreuse',h:'#7fff00'},{n:'limegreen',h:'#32cd32'},{n:'mediumaquamarine',h:'#66cdaa'},{n:'darkturquoise',h:'#00ced1'}
+			,{n:'cornflowerblue',h:'#6495ed'}//cornflowerblue?
+			,{n:'mediumslateblue',h:'#7b68ee'},{n:'orchid',h:'#da70d6'},{n:'hotpink',h:'#ff69b4'},{n:'lightcoral',h:'#f08080'},{n:'tomato',h:'#ff6347'},{n:'orange',h:'#ffa500'},{n:'bisque',h:'#ffe4c4'},{n:'khaki',h:'#f0e68c'},{n:'cornsilk',h:'#fff8dc'},{n:'linen',h:'#faf0e6'},{n:'whitesmoke',h:'#f5f5f5'},{n:'greenyellow',h:'#adff2f'},{n:'darkseagreen',h:'#8fbc8b'},{n:'turquoise',h:'#40e0d0'},{n:'mediumturquoise',h:'#48d1cc'},{n:'skyblue',h:'#87ceeb'},{n:'mediumpurple',h:'#9370db'},{n:'violet',h:'#ee82ee'},{n:'lightpink',h:'#ffb6c1'},{n:'darksalmon',h:'#e9967a'},{n:'coral',h:'#ff7f50'},{n:'navajowhite',h:'#ffdead'},{n:'blanchedalmond',h:'#ffebcd'},{n:'palegoldenrod',h:'#eee8aa'},{n:'oldlace',h:'#fdf5e6'},{n:'seashell',h:'#fff5ee'},{n:'ghostwhite',h:'#f8f8ff'},{n:'palegreen',h:'#98fb98'},{n:'springgreen',h:'#00ff7f'},{n:'aquamarine',h:'#7fffd4'},{n:'powderblue',h:'#b0e0e6'},{n:'lightskyblue',h:'#87cefa'},{n:'lightsteelblue',h:'#b0c4de'},{n:'plum',h:'#dda0dd'},{n:'pink',h:'#ffc0cb'},{n:'lightsalmon',h:'#ffa07a'},{n:'wheat',h:'#f5deb3'},{n:'moccasin',h:'#ffe4b5'},{n:'antiquewhite',h:'#faebd7'},{n:'lemonchiffon',h:'#fffacd'},{n:'floralwhite',h:'#fffaf0'},{n:'snow',h:'#fffafa'},{n:'aliceblue',h:'#f0f8ff'},{n:'lightgreen',h:'#90ee90'},{n:'mediumspringgreen',h:'#00fa9a'},{n:'paleturquoise',h:'#afeeee'},{n:'lightcyan',h:'#e0ffff'},{n:'lightblue',h:'#add8e6'},{n:'lavender',h:'#e6e6fa'},{n:'thistle',h:'#d8bfd8'},{n:'mistyrose',h:'#ffe4e1'},{n:'peachpuff',h:'#ffdab9'},{n:'papayawhip',h:'#ffefd5'}]
+		
+	</script>
+
+</head>
+<body>
+	<div id="ajaxdiv">
+		<div class="tab-pane-control tab-pane" id="tabPane1">
+			<div class="tab-row">
+				<h2 class="tab">
+					<a tabindex="-1" href='colorpicker.htm'><span style="white-space: nowrap;" langtext='1'>WebPalette
+					</span></a>
+				</h2>
+				<h2 class="tab selected">
+					<a tabindex="-1" href='colorpicker_basic.htm'><span style="white-space: nowrap;" langtext='1'>NamedColors
+					</span></a>
+				</h2>
+				<h2 class="tab">
+					<a tabindex="-1" href='colorpicker_more.htm'><span style="white-space: nowrap;" langtext='1'>CustomColor
+					</span></a>
+				</h2>
+			</div>
+			<div class="tab-page">
+				<table class="colortable" align="center">
+					<tr>
+						<td colspan="16" height="16">
+							<p style="text-align:left">
+								<span langtext='1'>Basic</span>:
+							</p>
+						</td>
+					</tr>
+					<tr>
+
+						<script>
+								var arr=[];
+								for(var i=0;i<colorlist.length;i++)
+								{
+			
+									arr.push("<td class='colorcell'><div class='colordiv' style='background-color:")
+									arr.push(colorlist[i].n);
+									arr.push("' title='")
+									arr.push(colorlist[i].n);
+									arr.push(' ');
+									arr.push(colorlist[i].h);
+									arr.push("' cname='");
+									arr.push(colorlist[i].n);
+									arr.push("' cvalue='")
+									arr.push(colorlist[i].h);
+									arr.push("'></div></td>");
+								}
+								document.write(arr.join(""));
+						</script>
+
+					</tr>
+					<tr>
+						<td colspan="16" height="12">							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="16">
+							<p style="text-align:left">
+								<span langtext='1'>Additional</span>:
+							</p>
+						</td>
+					</tr>
+
+					<script>
+							var arr=[];
+							for(var i=0;i<colormore.length;i++)
+							{
+								if(i%16==0)arr.push("<tr>");
+								arr.push("<td class='colorcell'><div class='colordiv' style='background-color:")
+								arr.push(colormore[i].n);
+								arr.push("' title='")
+								arr.push(colormore[i].n);
+								arr.push(' ');
+								arr.push(colormore[i].h);
+								arr.push("' cname='");
+								arr.push(colormore[i].n);
+								arr.push("' cvalue='")
+								arr.push(colormore[i].h);
+								arr.push("'></div></td>");
+								if(i%16==15)arr.push("</tr>");
+							}
+							if(colormore%16>0)arr.push("</tr>");
+							document.write(arr.join(""));
+					</script>
+
+					<tr>
+						<td colspan="16" height="8">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="16" height="12">
+							<input checked id="CheckboxColorNames" style="width: 16px; height: 12px; margin-bottom:-3px" type="checkbox">
+							<span style="width: 118px;" langtext='1'>usecolornames</span>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="16" height="12">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="16" valign="middle" height="24">
+							<span style="height: 24px; width: 50px;" langtext='1'>Color</span>: 
+							&nbsp;
+							<input type="text" id="divpreview" size="7" maxlength="7" style="width: 180px; height: 24px;
+								border: #a0a0a0 1px solid; padding: 4;" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="container-bottom">
+			<input type="button" id="buttonok" value="OK" langtext='1' class="formbutton" style="width: 70px"
+				onclick="do_insert();" />
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" id="buttoncancel" value="Cancel" langtext='1' class="formbutton" style="width: 70px"
+				onclick="do_Close();" />
+		</div>
+	</div>
+</body>
+
+<script>
+
+new function()
+{
+	var editor=parent.rtecolorpickereditor;
+	var ns=document.getElementsByTagName("*");
+	for(var i=0;i<ns.length;i++)
+	{
+		var n=ns[i];
+		if(n.getAttribute('langtext')!="1")continue;
+		var t=n.innerText||n.textContent||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.innerText=t;
+			n.textContent=t;
+		}
+		var t=n.value||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.value=t;
+		}
+	}
+}
+
+</script>
+
+</html>

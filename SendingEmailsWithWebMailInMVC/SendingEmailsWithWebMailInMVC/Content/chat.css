@@ -1,0 +1,38 @@
+﻿
+#container {
+  width: 400px ;
+  margin-left: auto ;
+  margin-right: auto ; 
+}
+#chatlog {
+  width:250px;
+  background-color:aliceblue;
+  float: left;
+}
+#onlineusers {
+  float: right;
+  width: 100px;
+  background-color:#D4D4D4;
+}
+#chatarea {
+  clear:both; 
+  width:200px;
+}
+#chatarea .messagelog {
+  float:left; 
+  height: 90%; 
+  top: 10%; 
+  position: relative;
+}
+#chatarea .messagelog .messagebox {
+  width:400px; 
+  height: 80%;
+}
+#chatarea .actionpane {
+  position:relative; 
+  float: left;
+}
+.smileys {
+  width:14px;
+  height:14px;
+}

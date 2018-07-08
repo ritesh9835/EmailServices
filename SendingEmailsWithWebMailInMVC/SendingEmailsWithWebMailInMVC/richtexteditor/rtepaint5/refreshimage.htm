@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+	<title>refreshing..</title>
+</head>
+<body>
+	<form id="form1" runat="server">
+		<script type="text/javascript">
+		
+			var pairs=window.location.href.split('#')[0].split('?')[1].split('&');
+			for(var i=0;i<pairs.length;i++)
+			{
+				var pair=pairs[i];
+				if(pair.substring(0,4)=="url=")
+				{
+					document.write("<img src='"+pair.substring(4)+"' />");
+				}
+			}
+
+			window.onload=function()
+			{
+				setTimeout(function()
+				{
+					if(document.cookie.indexOf("rterefreshimage=1")==-1)
+					{
+						document.cookie="rterefreshimage=1"
+						window.location.reload(true);
+					}
+					else
+					{
+						document.cookie="rterefreshimage=0"
+						parent.OnRefreshImage();
+					}
+				},100);
+			}
+		</script>
+
+	</form>
+</body>
+</html>

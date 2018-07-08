@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="insertdate_dialog" dock="fill" margin="2" padding="2" overflow="visible">
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<initialize>
+			<![CDATA[
+			
+			var d=new Date();
+			
+			var arr=[];
+			
+			arr.push(editor._config.command_insertdatetime())
+			arr.push(d.toString());
+			arr.push(d.toDateString());
+			arr.push(d.toGMTString());
+			arr.push(d.toLocaleString());
+			arr.push(d.toLocaleDateString());
+			arr.push(d.toLocaleTimeString());
+			arr.push(d.toTimeString());
+			
+			for(var i=0;i<arr.length;i++)
+			{
+				var item=self.createitem(arr[i]);
+				self.append_child(item);
+			}
+			
+			]]>
+		</initialize>
+		<method name="createitem">
+			var item=jsml.class_create_instance("rtemenuitem");
+			item.set_text(value);
+			item.attach_event("click",function()
+			{
+				editor.InsertHTML(value,true);
+			});
+			return item;
+		</method>
+	</panel>
+
+	<panel jsml-base="insertdate_dialog" />
+
+
+</jsml>

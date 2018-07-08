@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="properties_text" dock="fill">
+		<groupbox text="@LAYOUT" dock="top" overflow="visible" margin="4">
+			<panel dock="left" width="180">
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="visibility:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:visibility" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="visible" text="visible" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="collapse" text="collapse" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="display:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:display" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="block" text="block" />
+						<listitem value="inline" text="inline" />
+						<listitem value="inline-block" text="inline-block" />
+						<listitem value="inline-table" text="inline-table" />
+						<listitem value="list-item" text="list-item" />
+						<listitem value="table" text="table" />
+						<listitem value="table-caption" text="table-caption" />
+						<listitem value="table-cell" text="table-cell" />
+						<listitem value="table-column	" text="table-column	" />
+						<listitem value="table-row" text="table-row" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="float:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:float" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="left" text="left" />
+						<listitem value="right" text="right" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="clear:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:clear" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="left" text="left" />
+						<listitem value="right" text="right" />
+						<listitem value="both" text="both" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="cursor:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:cursor" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="auto" text="auto" />
+						<listitem value="pointer" text="pointer" />
+						<listitem value="default" text="default" />
+						<listitem value="text" text="text" />
+						<listitem value="wait" text="wait" />
+						<listitem value="move" text="move" />
+						<listitem value="help" text="help" />
+						<listitem value="crosshair" text="crosshair" />
+						<listitem value="progress" text="progress" />
+						<listitem value="e-resize" text="e-resize" />
+						<listitem value="n-resize" text="n-resize" />
+						<listitem value="ne-resize" text="ne-resize" />
+						<listitem value="nw-resize" text="nw-resize" />
+						<listitem value="s-resize" text="s-resize" />
+						<listitem value="se-resize" text="se-resize" />
+						<listitem value="sw-resize" text="sw-resize" />
+						<listitem value="w-resize" text="w-resize" />
+					</panel>
+				</panel>
+			</panel>
+			<panel dock="left" width="200">
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="overflow:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:overflow" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="visible" text="visible" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="scroll" text="scroll" />
+						<listitem value="auto" text="auto" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="clip:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<label dock="left" vertical_align="middle" width="100" text="rect(...)"/>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="top:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropnumupdown" width="100" propname="style:clip" suffix="px" jsml-local="cliptop">
+						<method name="set_node_value">
+							instance.set_clip_value(0,value);
+						</method>
+						<method name="get_node_value">
+							return instance.get_clip_value(0);
+						</method>
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="right:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropnumupdown" width="100" propname="style:clip" suffix="px" jsml-local="clipright">
+						<method name="set_node_value">
+							instance.set_clip_value(1,value);
+						</method>
+						<method name="get_node_value">
+							return instance.get_clip_value(1);
+						</method>
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="bottom:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropnumupdown" width="100" propname="style:clip" suffix="px" jsml-local="clipbottom">
+						<method name="set_node_value">
+							instance.set_clip_value(2,value);
+						</method>
+						<method name="get_node_value">
+							return instance.get_clip_value(2);
+						</method>
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="left:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropnumupdown" width="100" propname="style:clip" suffix="px" jsml-local="clipleft">
+						<method name="set_node_value">
+							instance.set_clip_value(3,value);
+						</method>
+						<method name="get_node_value">
+							return instance.get_clip_value(3);
+						</method>
+					</panel>
+				</panel>
+				<panel margin="7,3,30,3" height="18" dock="top">
+				</panel>
+			</panel>
+		</groupbox>
+
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+		<method name="get_clip_value" arguments="index">
+			<![CDATA[
+			var node=self.find_node();
+			var clip=node.GetStyle("clip");
+			if(!clip)return null;
+			return clip.replace(/.*rect\((.*)\s(.*)\s(.*)\s(.*)\).*/g,"$"+(index+1))
+			]]>
+		</method>
+		<method name="set_clip_value" arguments="index,value">
+			<![CDATA[
+			var node=self.find_node();
+			var clip=node.GetStyle("clip");
+			if(!clip&&!value)return;
+			clip=(clip||"").replace(/.*rect\((.*)\s(.*)\s(.*)\s(.*)\).*/g,"$1,$2,$3,$4").split(",");
+			if(clip.length!=4)clip=["0px","0px","0px","0px"];
+			clip[index]=value;
+			clip=clip.join(" ");
+			if(clip=="0px 0px 0px 0px")
+				clip=null;
+			else
+				clip="rect("+clip+")";
+			node.SetStyle("clip",clip);
+			]]>
+		</method>
+	</panel>
+	<panel jsml-base="properties_text" />
+</jsml>

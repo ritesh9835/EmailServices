@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="insertlink_dialog" dock="fill" margin="12" padding="12" back_color="green" overflow="visible">
+		<label dock="fill" margin="30" back_color="white" text="insertlink.xml" font="Normal 29pt Arial" vertical_align="middle" horizontal_align="center" cursor="pointer">
+			<attach name="click">
+				<![CDATA[
+				editor.AppendHTML("<p>insertlink.xml ! <p>");
+				]]>
+			</attach>
+		</label>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+	<panel jsml-base="insertlink_dialog" />
+
+
+</jsml>

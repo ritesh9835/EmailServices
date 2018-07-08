@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="colorpickericon" dock="flow" width="16" height="16" margin="2" border_color="transparent" border_width="1" cursor="pointer">
+		<panel jsml-member="inner" dock="fill" border_color="gray" border_width="1" back_color="black" />
+	</panel>
+	
+	<panel jsml-class="colorpickeritem" dock="flow" width="16" height="16" margin="2" border_color="transparent" border_width="1" cursor="pointer">
+		<panel jsml-member="inner" dock="fill" border_color="gray" border_width="1" />
+		<property name="value">
+			<get>
+				return self.inner.get_back_color();
+			</get>
+			<set>
+				self.inner.set_back_color(value);
+			</set>
+		</property>
+		<method name="setup_preview" arguments="html,cmd">
+			self._previewhtml=html;
+			self._previewcmd=cmd;
+			self._previewstyle=(cmd=="forecolor"?"color":"background-color");
+		</method>
+		<attach name="mousehover" arguments="je,e">
+			<![CDATA[
+			self.set_border_color('orange');
+			
+			self._hovered=true;
+			if(!self._previewhtml)return;
+			if(self.currentdialog&&self.currentdialog.get_visible())
+				return;
+			
+			var newoption={control:self,floatMode:'b-r',stopToggle:true,stopOverlay:true};
+			newoption.buttonClick=function()
+			{
+				self.invoke_event("click");
+			}
+			var dialog=jsml.class_create_instance("floatbox");
+			var htmlc=jsml.class_create_instance("htmlcontrol");
+			htmlc.set_html("<pre style='margin:0px;padding:0px;font-weight:bold;'>Preview for color : "+self.get_value()+"</pre><pre style='padding:5px;"+self._previewstyle+":"+self.get_value()+"'>"+self._previewhtml+"</pre>");
+			htmlc.set_dock("fill");
+			var gbr=jsml.get_body_rect();
+			htmlc.set_max_width(Math.floor(gbr.width*0.6));
+			htmlc.set_max_height(Math.floor(gbr.height*0.3));
+			htmlc.set_vertical_align("middle");
+			dialog.append_child(htmlc);
+			dialog.set_width(240);
+			dialog.set_padding(12);
+			dialog._estyle.zIndex=editor._config.dialog_zindex;
+			dialog.show(newoption);
+			self.currentdialog=dialog;
+			]]>
+		</attach>
+		<attach name="mouseleave">
+			<![CDATA[
+			self.set_border_color('transparent');
+			
+			self._hovered=false;
+			self.setDelegateTimeout(function()
+			{
+				if(self._hovered)return;
+				if(self.currentdialog&&self.currentdialog.get_visible())
+				{
+					self.currentdialog.close();
+				}
+			},11);
+			]]>
+		</attach>
+		<attach name="click">
+			dialog.close();
+			option.setcolor(self.get_value());
+		</attach>
+	</panel>
+	
+	
+
+	<panel jsml-class="colorpickerpanel" dock="fill" padding="6" width="186" overflow="visible">
+
+		<panel jsml-base="panelbutton" dock="top" margin="2,2,2,2" padding="0,3,0,3">
+			<panel jsml-base="colorpickericon" dock="left"/>
+			<label dock="fill" text="@automatic" cursor="pointer" vertical_align="middle" horizontal_align="center"/>
+			<attach name="click">
+				dialog.close();
+				option.setcolor("");
+			</attach>
+		</panel>
+		<panel jsml-base="panelbutton" dock="bottom" margin="2,2,2,2" padding="0,3,0,3">
+			<panel jsml-base="colorpickericon" dock="left"/>
+			<label dock="fill" text="@MoreColors" cursor="pointer" vertical_align="middle" horizontal_align="center" />
+			<attach name="click">
+				<![CDATA[
+				dialog.close();
+				var newoption={}
+				newoption.width=510;
+				newoption.height=460;
+				newoption.callback=function(val)
+				{
+					if(!val)return;
+					option.setcolor(val);
+				}
+				editor.ShowXmlDialog("{folder}server/colorpicker.xml",newoption);
+				]]>
+			</attach>
+		</panel>
+		<panel jsml-local="arraypanel" padding="6" dock="fill" overflow="visible">
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			var type=String(option.command).toLowerCase();
+			var arr=editor._config.colorpicker_othercolor;
+			switch(type)
+			{
+				case "forecolor":
+					arr=editor._config.colorpicker_forecolor;
+					if(option.preview&&!editor._config.preview_disabletooltip&&!editor._config.preview_disableforecolor)
+					{
+						self._previewcmd="forecolor";
+						self._previewhtml=editor.GetRangePreviewHTML("forecolor");
+					}
+					break;
+				case "backcolor":
+					arr=editor._config.colorpicker_backcolor;
+					if(option.preview&&!editor._config.preview_disabletooltip&&!editor._config.preview_disablebackcolor)
+					{
+						self._previewcmd="backcolor";
+						self._previewhtml=editor.GetRangePreviewHTML("backcolor");
+					}
+					break;
+			}
+			for(var i=0;i<arr.length;i++)
+			{
+				var item=jsml.class_create_instance("colorpickeritem");
+				if(self._previewhtml)
+					item.setup_preview(self._previewhtml,self._previewcmd);
+				else
+					item.set_tooltip(arr[i])
+				item.set_value(arr[i]);
+				arraypanel.append_child(item);
+			}
+			]]>
+		</initialize>
+		
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+	<panel jsml-base="colorpickerpanel" />
+
+
+</jsml>

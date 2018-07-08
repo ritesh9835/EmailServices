@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title(editor.GetLangText("spellcheck"));
+	</execute>
+
+	<panel jsml-class="spellcheck_dialog" dock="fill" overflow="visible">
+		<htmlcontrol dock="fill" jsml-local="hc">
+		</htmlcontrol>
+		<attach name="attach_dom">
+			<![CDATA[
+			self.setDelegateTimeout(function()
+			{
+				if(self.iframe)return;
+				
+				window.rtespellcheckeditor=editor;
+				window.rtespellcheckdialog=dialog;
+				
+				dialog.attach_event("closing",function()
+				{
+					window.rtespellcheckeditor=null;
+					window.rtespellcheckdialog=null;
+				});
+				
+				var iframe=document.createElement("IFRAME");
+				if(editor._config.servertype=="AspNet"||editor._config.servertype=="ASP")
+				{
+					iframe.setAttribute("src","{folder}server/SpellCheck.aspx?culture="+editor._config.lang+"&t="+new Date().getTime());
+				}
+				if(editor._config.servertype=="PHP")
+				{
+					iframe.setAttribute("src","{folder}server_php/SpellCheck.php?culture="+editor._config.lang+"&t="+new Date().getTime());
+				}
+				iframe.setAttribute("frameBorder","0");
+				hc._content.appendChild(iframe);
+				self.iframe=iframe;
+				self.invoke_event("resize");
+			},10);
+			]]>
+		</attach>
+		<attach name="resize">
+			if(!self.iframe)return;
+			self.iframe.style.width=hc.get_client_width()+"px";
+			self.iframe.style.height=hc.get_client_height()+"px";
+		</attach>
+	</panel>
+
+	<panel jsml-base="spellcheck_dialog" />
+
+
+</jsml>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTIMAGEMAP"));
+	</execute>
+
+	<panel jsml-class="insertimagemap_area" width="32" height="32">
+		<panel dock="top" jsml-local="resizet" height="2" back_color="blue" margin="0,2,0,0"/>
+		<panel dock="left" jsml-local="resizel" width="2" back_color="blue" margin="0,0,2,0"/>
+
+		<panel dock="right" width="6" cursor="e-resize" vertical_align="middle">
+			<panel dock="bottom" height="2" jsml-local="resizez" back_color="blue" margin="0,2,2,0" cursor="se-resize">
+				<attach name="mousedown" arguments="je,de">
+					de.cancel();
+					instance.resizearea(de,1,1);
+				</attach>
+			</panel>
+			<panel dock="left" back_color="yellow" opacity="50" width="2" />
+			<panel dock="fill" jsml-local="resizex" width="2" back_color="blue" margin="0,2,0,0" />
+			<image jsml-local="dotr" width="6" height="6" zoom="both" src="{folder}dialogs/images/dot_ring.png" overflow="none" />
+			<attach name="mousedown" arguments="je,de">
+				instance.resizearea(de,1,0);
+			</attach>
+		</panel>
+		<panel dock="bottom" height="6" cursor="n-resize" horizontal_align="center">
+			<panel dock="top" back_color="yellow" opacity="50" height="2" />
+			<panel dock="fill" jsml-local="resizey" back_color="blue" margin="0,0,2,0" />
+			<image jsml-local="dotb" width="6" height="6" zoom="both" src="{folder}dialogs/images/dot_ring.png" overflow="none" />
+			<attach name="mousedown" arguments="je,de">
+				instance.resizearea(de,0,1);
+			</attach>
+		</panel>
+		<panel dock="fill" back_color="yellow" opacity="50">
+			<attach name="mousedown" arguments="je,de">
+				<![CDATA[
+				de.cancel();
+				if(self.lastdowntime)
+				{
+					if(new Date().getTime()-self.lastdowntime<300)
+					{
+						self.bubble_event("dblclickarea",instance._area)
+						return;
+					}
+				}
+				instance.dialoginst.SelectHotSpot(instance._area);
+				instance.start_move_offset(de,function()
+				{
+					instance.updatecoords();
+				});
+				self.lastdowntime=new Date().getTime();
+				]]>
+			</attach>
+		</panel>
+
+		<initialize>
+			//self._estyle.boxShadow="2px 2px 2px #333333";
+		</initialize>
+		<property name="area">
+			<get>
+				return self._area;
+			</get>
+			<set>
+				self._area=value;
+				var coords=self._area.GetAttribute("coords")||"";
+				coords=coords.split(',');
+				var x1=parseInt(coords[0])||0;
+				var y1=parseInt(coords[1])||0;
+				var x2=parseInt(coords[2])||0;
+				var y2=parseInt(coords[3])||0;
+				self.set_left(x1);
+				self.set_top(y1);
+				self.set_width( (x2-x1)||32 );
+				self.set_height( (y2-y1)||32 );
+				self.set_offset_x(0);
+				self.set_offset_y(0);
+			</set>
+		</property>
+		<property name="selected">
+			<get>
+				return self._selected;
+			</get>
+			<set>
+				self._selected=value;
+				var color=value?"red":"blue";
+				self.set_border_color(color);
+				resizex.set_back_color(color);
+				resizey.set_back_color(color);
+				resizez.set_back_color(color);
+				resizet.set_back_color(color);
+				resizel.set_back_color(color);
+			</set>
+		</property>
+		<method name="updatecoords">
+			var x1=self.get_offset_x()+self.get_left();
+			var y1=self.get_offset_y()+self.get_top();
+			var x2=x1+self.get_width();
+			var y2=y1+self.get_height();
+			var coords=x1+","+y1+","+x2+","+y2;
+			self._area.SetAttribute("coords",coords);
+		</method>
+		<method name="resizearea" arguments="de,fr,fb">
+			<![CDATA[
+			self.start_resize(de,0,fr,fb,0,12,function()
+			{
+				self.updatecoords();
+			});
+			]]>
+		</method>
+		<attach name="mousehover">
+			var alt=self._area.GetAttribute("alt");
+			var url=self._area.GetAttribute("href");
+			var sb=[];
+			if(alt)sb.push(alt);
+			if(url)sb.push(url);
+			self.set_tooltip(sb.join("\r\n"));
+		</attach>
+
+	</panel>
+
+	<panel jsml-class="insertimagemap_dialog" dock="fill" overflow="visible" padding="5">
+
+		<panel dock="top" overflow="visible" text="@INSERTIMAGEMAP" width="180" jsml-local="mappanel">
+
+			<panel dock="top" margin="2" padding="2" height="24">
+				<label dock="left" width="80" text="@MAPNAME|:" vertical_align="middle" />
+				<panel dock="left" width="130"  jsml-base="rteproptextbox" propname="name" />
+				<panel dock="left" width="15"/>
+
+				<image jsml-base="imagebutton" imagename="imagemap" tooltip="@ADDHOTSPOT" width="20" height="20" dock="left" margin="0,2,0,2">
+					<attach name="click">
+						instance.InsertHotSpot();
+					</attach>
+				</image>
+				<image jsml-base="imagebutton" imagename="link" jsml-local="btnedit" disabled="true" tooltip="@EDITHOTSPOT" width="20" height="20" dock="left" margin="0,2,0,2">
+					<attach name="click">
+						instance.ShowHotSpotDialog();
+					</attach>
+				</image>
+				<image jsml-base="imagebutton" imagename="delete" jsml-local="btndel" disabled="true" tooltip="@DELETEHOTSPOT" width="20" height="20" dock="left" margin="0,2,0,2">
+					<attach name="click">
+						instance.DeleteHotSpot();
+					</attach>
+				</image>
+			</panel>
+
+		</panel>
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						var name=option.targetnode.GetAttribute("name");
+						if(!name)return;
+						var oldid=option.targetnode.GetAttribute("id");
+						if(oldid!=name)option.targetnode.SetAttribute("id",name);
+						option.targetimg.SetAttribute("usemap","#"+name);
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+		<panel dock="fill">
+			<panel dock="fill" jsml-local="areapanel" overflow="scroll" margin="3" padding="3" border_width="1" border_style="inset">
+				<image zoom="none">
+					<initialize>
+						self.set_src(option.targetimg.GetAttribute("src"));
+						var w=parseInt(option.targetimg.GetStyle("width"));
+						var h=parseInt(option.targetimg.GetStyle("height"));
+						//document.title=[w,h];
+						if(w)self.set_width(w);
+						if(h)self.set_height(h);
+						if(w||h)self.set_overflow("none");
+					</initialize>
+				</image>
+			</panel>
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			mappanel._rtenode=option.targetnode;
+			var c=option.targetnode.GetChildCount();
+			for(var i=0;i<c;i++)
+			{
+				var child=option.targetnode.GetChildAt(i);
+				if(child.GetNameLower()!="area")
+					continue;
+				self.ShowHotSpot(child);
+			}
+			]]>
+		</initialize>
+		<method name="InsertHotSpot">
+			<![CDATA[
+			var area=new $rte.DataElement("area");
+			area.SetAttribute("shape","rect");
+			area.SetAttribute("coords","0,0,32,32");
+			option.targetnode.AppendChild(area);
+			self.ShowHotSpot(area);
+			self.SelectHotSpot(area);
+			self.ShowHotSpotDialog();
+			]]>
+		</method>
+		<attach name="dblclickarea">
+			self.ShowHotSpotDialog();
+		</attach>
+		<method name="ShowHotSpotDialog">
+			<![CDATA[
+			var tag=self._selectedarea;
+			if(!tag)return;
+			var newoption={width:430,height:170,targetnode:tag};
+			newoption.nestedmode=true;
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertimagemaplink.xml"),newoption);
+			]]>
+		</method>
+		<method name="ShowHotSpot">
+			<![CDATA[
+			var ctrl=jsml.class_create_instance("insertimagemap_area");
+			ctrl.dialoginst=self;
+			ctrl.set_area(value);
+			areapanel.append_child(ctrl);
+			]]>
+		</method>
+		<method name="SelectHotSpot" arguments="area">
+			<![CDATA[
+			self._selectedarea=area;
+			self.invoke_event("selectedareachanged");
+			//hotspotpanel._rtenode=area;
+			//hotspotpanel.set_visible(true);
+			//hotspotpanel.invoke_recursive("loadvalue");
+			for(var i=1;i<areapanel._childs.length;i++)
+			{
+				var ctrl=areapanel._childs[i];
+				if(ctrl.get_area()==area)
+					ctrl.set_selected(true);
+				else
+					ctrl.set_selected(false);
+			}
+			]]>
+		</method>
+		<method name="DeleteHotSpot">
+			<![CDATA[
+			if(!confirm(editor.GetLangText("confirm_deleteitem")))
+				return;
+			var area=self._selectedarea;
+			self._selectedarea=null;
+			self.invoke_event("selectedareachanged");
+			//hotspotpanel._rtenode=null;
+			//hotspotpanel.set_visible(false);
+			for(var i=1;i<areapanel._childs.length;i++)
+			{
+				var ctrl=areapanel._childs[i];
+				if(ctrl.get_area()==area)
+				{
+					ctrl.dispose();
+					break;
+				}
+			}
+			area.RemoveNode();
+			]]>
+		</method>
+		<attach name="selectedareachanged">
+			var v=!self._selectedarea;
+			btnedit.set_disabled(v);
+			btndel.set_disabled(v);
+		</attach>
+
+	</panel>
+
+	<panel jsml-base="insertimagemap_dialog" />
+
+
+</jsml>

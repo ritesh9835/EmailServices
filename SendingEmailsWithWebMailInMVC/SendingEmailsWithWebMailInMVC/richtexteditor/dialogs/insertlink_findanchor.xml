@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title(editor.GetLangText("findanchor"));
+	</execute>
+
+	<panel jsml-class="insertlinkfindanchor_dialog" dock="fill" overflow="visible">
+		<panel dock="top" margin="6" width="244" height="120" overflow="scroll" border_style="solid" border_width="1" back_color="white" border_color="#cccccc">
+			<htmlcontrol jsml-local="container" dock="fill" margin="2" overflow="visible" css_class="jsml_button">
+			</htmlcontrol>
+		</panel>
+		<initialize>
+			<![CDATA[
+			editor.LoadAnchors(function(group)
+			{
+				self.loadgroupcontent(group,container._content);
+			});
+			]]>
+		</initialize>
+		<jsml-ref name="linktree"/>
+		<attach name="clicklink" arguments="je,link">
+			<![CDATA[
+			if(option.handlehref)
+				option.handlehref(link.href);
+			dialog.close();
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-base="insertlinkfindanchor_dialog" />
+
+
+</jsml>

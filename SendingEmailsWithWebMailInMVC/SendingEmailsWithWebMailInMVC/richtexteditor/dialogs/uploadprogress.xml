@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="uploadprogressitem" height="21" back_color="white">
+		<image dock="left" src="{folder}dialogs/uploadprogress/circle.png" overflow="none" width="20" />
+		<image dock="right" jsml-local="image" src="{folder}dialogs/uploadprogress/stop.png" overflow="none" width="20">
+			<attach name="click">
+				var item=instance._item;
+				if(item.Status=="Queue")item.Cancel();
+			</attach>
+		</image>
+		<label dock="right" jsml-local="lsize"/>
+		<label dock="fill" jsml-local="label" />
+		<method name="bind_item" arguments="item">
+			<![CDATA[
+			self._item=item;
+			label.set_text(item.FileName);
+			if(item.FileSize>-1)
+				lsize.set_text(jsml.format_size(item.FileSize));
+			self.update_item(item);
+			]]>
+		</method>
+		<method name="update_item" arguments="item">
+			<![CDATA[
+			var olditem=self._item;
+			self._item=item;
+			
+			if(self.laststatus!=item.Status)
+			{
+				self.laststatus=item.Status;
+				switch(item.Status)
+				{
+					case "Finish":
+						image.set_src("{folder}dialogs/uploadprogress/uploadok.png");
+						image.set_cursor("default");
+						break;
+					case "Error":
+						image.set_src("{folder}dialogs/uploadprogress/uploaderror.png");
+						image.set_cursor("default");
+						break;
+					case "Upload":
+						image.set_src("{folder}dialogs/uploadprogress/uploading.gif");
+						image.set_cursor("default");
+						break;
+					case "Queue":
+						image.set_src("{folder}dialogs/uploadprogress/stop.png");
+						image.set_cursor("pointer");
+						break;
+				}
+			}
+			]]>
+		</method>
+		<method name="close_item">
+			<![CDATA[
+			if(self.isclosed)return;
+			self.isclosed=true;
+			image.set_src("{folder}dialogs/uploadprogress/uploaderror.png");
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-class="uploadprogressdialog" dock="fill" back_color="white" padding="12">
+
+		<panel dock="fill">
+			<panel dock="top">
+				<label text="Files:"/>
+			</panel>
+			<panel dock="bottom" overflow="visible">
+				<panel dock="top" height="30">
+					<panel dock="left" width="300" border_color="gray" border_width="1" margin="5">
+						<panel jsml-local="progressblock" dock="left" background="url({folder}dialogs/uploadprogress/continuous.gif) repeat-x" width="0" />
+					</panel>
+				</panel>
+				<panel dock="top" overflow="visible" height="10" padding="0,3,0,3">
+					<label dock="top" jsml-local="progresslabel1" height="16" margin="2"/>
+					<label dock="top" jsml-local="progresslabel2" height="16" margin="2"/>
+				</panel>
+			</panel>
+			<panel dock="fill">
+				<panel jsml-base="scrollitemspanel" jsml-local="itemspanel" dock="fill">
+				</panel>
+			</panel>
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			
+			if(!option.uploader.internalobject._started)
+			{
+				self.set_visible(false);
+				dialog.set_visible(false);
+				self.setDelegateTimeout(function()
+				{
+					dialog.close();
+				},100);
+				return;
+			}
+			
+			self.editoreventid=editor.AttachEvent(self.delegate(self.processeditorevent));
+			itemspanel.add_items(option.uploader.getitems(),function(item)
+			{
+				var ctrl=jsml.class_create_instance("uploadprogressitem");
+				ctrl.bind_item(item);
+				return ctrl;
+			});
+			]]>
+		</initialize>
+		<attach name="disposing">
+			editor.DetachEvent(self.editoreventid);
+			if(!self.uploadstopped)option.uploader.reset();
+		</attach>
+		<method name="processeditorevent" arguments="editor,e">
+			<![CDATA[
+			switch(e.Name)
+			{
+				case "Uploader_QueueUI":
+					var items=option.uploader.getitems();
+					itemspanel.foreach_slot(function(ctrl)
+					{
+						for(var i=0;i<items.length;i++)
+						{
+							if(items[i].InitGuid==ctrl._item.InitGuid)
+							{
+								ctrl.update_item(items[i]);
+								return;
+							}
+						}
+						ctrl.close_item();
+					});
+					break;
+				case "Uploader_Progress":
+					var uploader=e.Arguments[0];
+					var filename=e.Arguments[2];
+					var begintime=e.Arguments[3];
+					var uploadedsize=e.Arguments[4];
+					var totalsize=e.Arguments[5];
+					progresslabel1.set_text("Uploading "+filename+". ");
+					if(!totalsize)
+					{
+						progressblock.set_width(0);
+						progresslabel2.set_text("");
+					}
+					else
+					{
+						var cw=Math.floor(progressblock.get_parent().get_client_width()*uploadedsize/totalsize);
+						progressblock.set_width(cw);
+						var speed=uploadedsize*1000/Math.max(1000,new Date().getTime()-begintime)
+						var s=(totalsize-uploadedsize)/Math.max(1000,speed);
+
+						var ts="-";
+						if(s>600)	//10 mins	, to be 87 mins
+							ts=Math.floor(s/60)+" minutes";
+						else if(s>120)	//2 mins	, to be 4.8 mins
+							ts=Math.floor(s/6)/10+" minutes";
+						else
+							ts=Math.floor(s)+" seconds";
+						progresslabel2.set_text(jsml.format_size(uploadedsize)+" of "+jsml.format_size(totalsize)+" at "+jsml.format_size(speed)+"/s , "+ts+" remaining");
+					}
+					break;
+				case "Uploader_Stop":
+				case "Uploader_Postback":
+					self.uploadstopped=true;
+					dialog.close();
+					break;
+			}
+			
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="uploadprogressdialog">
+	</panel>
+
+</jsml>

@@ -1,0 +1,875 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="jsml.xsl"?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../JSML/jsml.xsd">
+	<include src="uielement.xml?{now}"></include>
+	<include src="common.xml?{now}"></include>
+	<panel jsml-class="html5_ui" parent="container_panel">
+		<panel height="36" back_color="#ebebeb" dock="top" text_color="" horizontal_align="left" border_color="#a4a4a4" border_width="0,0,1,0" css_text="background:url('images/back/menubar.gif') left bottom repeat-x;">
+			<!--
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" menuname="File" menuimg="images/menu/new.png" tooltip="@Title_New">
+				<attach name="click">
+					<![CDATA[
+						ImageEditorDocument.$096("create",function(plugin)
+						{
+							if(!plugin.LoadUI)return;
+							plugin.LoadUI(instance);
+						});
+					]]>
+				</attach>
+			</panel>
+			-->
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Save" menuname="Save" menuimg="images/menu/save.png">
+				<attach name="click">
+					//ImageEditorDocument.set_SelectedTool("save");
+					ImageEditorDocument.$050();
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Undo" menuname="Undo" menuimg="images/menu/undo.png">
+				<initialize>
+					<![CDATA[
+						setInterval(function(){
+							var _his = ImageEditorDocument.get_history();
+							if(_his == ImageEditorDocument.$049()[0])
+								self.set_opacity(50);
+							else
+								self.set_opacity(100);
+						},500);
+					]]>
+				</initialize>
+				<attach name="click">
+					<![CDATA[							
+						if(self.get_opacity()==50) return;
+						var oldtool = ImageEditorDocument.get_SelectedTool();
+						ImageEditorDocument.set_SelectedTool("undo");
+						if(oldtool)
+						{
+							self.setDelegateTimeout(function(){ImageEditorDocument.set_SelectedTool(oldtool);},50);
+						}
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Redo" menuname="Redo" menuimg="images/menu/redo.png">
+				<initialize>
+					<![CDATA[
+						setInterval(function(){
+							var _his = ImageEditorDocument.get_history();
+							var _hislist = ImageEditorDocument.$049();
+							if(_his == _hislist[_hislist.length-1])
+								self.set_opacity(50);
+							else
+								self.set_opacity(100);
+						},500);
+					]]>
+				</initialize>
+				<attach name="click">
+					<![CDATA[
+						if(self.get_opacity()==50) return;
+						var oldtool = ImageEditorDocument.get_SelectedTool();
+						ImageEditorDocument.set_SelectedTool("redo");
+						if(oldtool)
+						{
+							self.setDelegateTimeout(function(){ImageEditorDocument.set_SelectedTool(oldtool);},50);
+						}
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Cut" menuname="Cut" menuimg="images/menu/cut.png">
+				<initialize>
+					<![CDATA[
+						setInterval(function(){
+							var sel = ImageEditorDocument.get_selection();
+							if(sel)
+								self.set_opacity(100);
+							else
+								self.set_opacity(50);
+						},500);
+					]]>
+				</initialize>
+				<attach name="click">
+					<![CDATA[
+						if(self.get_opacity()==50) return;
+						ImageEditorDocument.set_SelectedTool("cut");
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Copy" menuname="Copy" menuimg="images/menu/copy.png">
+				<initialize>
+					<![CDATA[
+						setInterval(function(){
+							var sel = ImageEditorDocument.get_selection();
+							if(sel)
+								self.set_opacity(100);
+							else
+								self.set_opacity(50);
+						},500);
+					]]>
+				</initialize>
+				<attach name="click">
+					<![CDATA[
+						if(self.get_opacity()==50) return;
+						ImageEditorDocument.set_SelectedTool("copy");
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Paste" menuname="Paste" menuimg="images/menu/paste.png">
+				<initialize>
+					<![CDATA[
+						setInterval(function(){
+							var sel = ImageEditorDocument._clipboard;
+							if(sel)
+								self.set_opacity(100);
+							else
+								self.set_opacity(50);
+						},500);
+					]]>
+				</initialize>
+				<attach name="click">
+					<![CDATA[
+						if(self.get_opacity()==50) return;
+						ImageEditorDocument.set_SelectedTool("paste");
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Effect" menuname="Adjust" menuimg="images/menu/adjust.png">
+				<attach name="click">
+					<![CDATA[
+						ImageEditorDocument.set_SelectedTool(null);
+						var box=jsml.class_create_instance("floatbox");
+						//box.set_manualclose(true);
+						box.show(self.get_element(),0,0,{"floatMode":"b-r"});
+						ImageEditorDocument.$096("adjust", function (plugin) {
+							if (!plugin.LoadUI) return;
+							plugin.LoadUI(box);
+						});
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Effect" menuname="Effect" menuimg="images/menu/effect.png">
+				<attach name="click">
+					<![CDATA[
+						ImageEditorDocument.set_SelectedTool(null);
+						var box=jsml.class_create_instance("floatbox");
+						box.show(self.get_element(),0,0,{"floatMode":"b-r"});
+						ImageEditorDocument.$096("effect", function (plugin) {
+							if (!plugin.LoadUI) return;
+							plugin.LoadUI(box);
+						});
+					]]>
+				</attach>
+			</panel>
+
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Rotate90Left" menuname="Rotate90Left" menuimg="images/rotateleft90.png">
+				<attach name="click">
+					<![CDATA[
+					ImageEditorDocument.$0120(270);
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_Rotate90Right" menuname="Rotate90Right" menuimg="images/rotateright90.png">
+				<attach name="click">
+					<![CDATA[
+					ImageEditorDocument.$0120(90);
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_FlipH" menuname="FlipH" menuimg="images/fliph.png">
+				<attach name="click">
+					<![CDATA[
+					ImageEditorDocument.$0127("h");
+					]]>
+				</attach>
+			</panel>
+			<panel dock="left" margin="1,0,1,3" jsml-base="menuitem" width="30" tooltip="@Title_FlipV" menuname="FlipV" menuimg="images/flipv.png">
+				<attach name="click">
+					<![CDATA[
+					ImageEditorDocument.$0127("v");
+					]]>
+				</attach>
+			</panel>
+		</panel>
+		<panel width="150" dock="right" back_color="#eeeeee" border_color="#cccccc" border_width="0,1,1,1" padding="0">
+			<panel dock="top" height="24" css_text="background:#bcc3c6 url(images/back/group.gif) repeat-x;">
+				<label dock="fill" text="@Layer_HistoryList" vertical_align="middle" text_color="#545454" css_text="font-weight:bold;" margin="0,0,0,3"></label>
+			</panel>
+			<panel jsml-base="historypanel" dock="top" height="270" css_text="background:#ffffff url(images/back/list.gif) top left repeat-x;"></panel>
+			<htmlcontrol dock="bottom" height="1" overflow="none">
+				<xmldata>
+					<input id="imageeditorloadfile" type="file" accept="image/*" />
+				</xmldata>
+			</htmlcontrol>
+			<panel dock="bottom" height="22" border_color="#cccccc" border_width="1,0,0,0">
+				<image dock="left" width="16" zoom="out" src="images/toolopenfile.gif" tooltip="@Title_LoadFile">
+					<initialize>
+						<![CDATA[
+						if(typeof(FileReader)=="undefined")
+							self.set_visible(0);
+						]]>
+					</initialize>
+					<attach name="click">
+						<![CDATA[
+						var input=document.getElementById("imageeditorloadfile");
+						if(!input.files || typeof(FileReader)=="undefined")
+						{
+							alert(ImageEditorDocument.Text["FileAPI"]);
+							return;
+						}
+						input.onchange=function()
+						{
+							var file=input.files[0];
+							ImageEditorDocument.$0110(file);
+							input.value = "";
+						}
+						input.click();
+						]]>
+					</attach>
+				</image>
+				<image dock="left" width="16" zoom="out" src="images/toolnewlayer.gif" tooltip="@Title_NewLayer">
+					<attach name="click">
+						ImageEditorDocument.$0108();
+					</attach>
+				</image>
+				<image dock="left" width="16" zoom="out" src="images/toolmoveup.gif" tooltip="@Title_MoveUp">
+					<attach name="click">
+						<![CDATA[
+						var layerlist = ImageEditorDocument.$068();	
+						var currlayer = ImageEditorDocument.get_layer();
+						if(currlayer==layerlist[layerlist.length-1])
+							return;
+						ImageEditorDocument.$085(currlayer);				
+						]]>
+					</attach>
+				</image>
+				<image dock="left" width="16" zoom="out" src="images/toolmerge.gif" tooltip="@Title_Merge">
+					<attach name="click">
+						<![CDATA[
+						var layerlist = ImageEditorDocument.$068();	
+						if(layerlist.length==1)
+							return;
+						if(!confirm(ImageEditorDocument.Text["ConfirmMergeLayer"]))
+							return;
+						ImageEditorDocument.$082();				
+						]]>
+					</attach>
+				</image>
+				<image dock="left" width="16" zoom="out" src="images/toolrecycle.gif" tooltip="@Title_DeleteLayer">
+					<attach name="click">
+						<![CDATA[
+						if(!confirm(ImageEditorDocument.Text["ConfirmDelete"]))
+							return;
+						
+						var currlayer = ImageEditorDocument.get_layer();
+				
+						var newlayer = jsml.class_create_instance("$042", [ImageEditorDocument]);
+						newlayer.set_name(ImageEditorDocument.Text["Layer_Remove"]);
+
+						ImageEditorDocument.set_selection(null);
+						ImageEditorDocument.$092(newlayer);
+				
+						var ls = ImageEditorDocument.get_history()._layers;
+						if(ls.length>2)
+							ls.splice(ls.length-1,1);
+						else
+							newlayer.set_name(ImageEditorDocument.Text["Layer_Background"]);
+				
+						var selix=0;
+						for (var i = ls.length - 1; i >= 0; i--) {
+							if (ls[i]._layerid != currlayer._layerid)
+								continue;
+							ls.splice(i,1);
+							selix = i-1;
+							break;
+						}
+						if(selix<0)selix=0;
+						ImageEditorDocument.set_layer(ls[selix]);
+						ImageEditorDocument.$0116();
+						ImageEditorDocument.invoke_event("HistorySelected");				
+						]]>
+					</attach>
+				</image>
+			</panel>
+			<panel dock="top" height="24" css_text="background:#bcc3c6 url(images/back/group.gif) repeat-x;">
+				<label dock="fill" text="@Layer_LayerList" vertical_align="middle" text_color="#545454" css_text="font-weight:bold;" margin="0,0,0,3"></label>
+			</panel>
+			<panel jsml-base="layerpanel" dock="fill" css_text="background:#ffffff url(images/back/list.gif) top left repeat-x;">
+			</panel>
+		</panel>
+		<panel height="23" back_color="#666666" text_color="white" dock="bottom">
+			<label dock="left" width="10" margin="0,0,0,8" overflow="visible" vertical_align="middle">
+				<attach name="attach_dom">
+					<![CDATA[
+						if(self._eventattached)return;
+						self._eventattached=true;
+						self._handleMousePosChanged=function(evtname,mxy)
+						{
+							if(!mxy || !mxy.offsetX)
+							{
+								self.set_text("x:, y:");
+								return;
+							}
+							self.set_text("x:"+mxy.offsetX+", y:" + mxy.offsetY);
+						}
+						ImageEditorDocument.attach_event("MousePosChanged",self._handleMousePosChanged);
+						]]>
+				</attach>
+				<attach name="detach_dom">
+					<![CDATA[
+						self._eventattached=false;
+						ImageEditorDocument.detach_event("MousePosChanged",self._handleMousePosChanged);
+						]]>
+				</attach>
+			</label>
+			<panel dock="right" width="60" margin="0,5,0,3" vertical_align="middle">
+				<label dock="top" jsml-local="txt_zoom" height="23" width="60" margin="0,5,0,0" vertical_align="middle" css_text="font-size:11px;">
+					<initialize>
+						<![CDATA[
+						var myself = self;
+						function RefreshZoomStatus()
+						{							
+							var zf = ImageEditorDocument.GetOption("ZoomFactor");
+							var zc = ImageEditorDocument.GetOption("ZoomCount");
+							
+							var za = 1;
+							if(zc>0)
+								za = zf["In"][zc-1];
+							if(zc<0)
+								za = zf["Out"][0-zc-1];
+							var zastr = za*100 + "%";
+							
+							myself.set_text(zastr);
+							
+							self.setDelegateTimeout(RefreshZoomStatus,500);
+						}
+						self.setDelegateTimeout(RefreshZoomStatus,500);
+					]]>
+					</initialize>
+					<attach name="mousehover">
+						if(ImageEditorDocument._selectedtool == "freesize")
+						return;
+						self.set_visible(0);
+						ddl_zoom.set_visible(1);
+						ddl_zoom.LoadDefault();
+					</attach>
+				</label>
+				<dropdown dock="top" jsml-local="ddl_zoom" visible="0" border_width="0" width="60" margin="2" height="19" vertical_align="middle" css_text="font-size:11px; border-width:0px;">
+					<attach name="click">
+						<![CDATA[
+						if(ImageEditorDocument._selectedtool == "freesize")
+							return;
+						if(!self._openlist && !jsml.safari)
+						{
+							self._openlist = true;
+							return;
+						}
+						self._openlist = null;
+						var curval = self.get_text();
+						if(curval == self.oldval)
+						{
+							ddl_zoom.set_visible(0);
+							txt_zoom.set_visible(1);
+							return;
+						}
+						self.oldval = curval;
+						ImageEditorDocument.SetOption("ZoomCount",curval);
+						ImageEditorDocument.$0116();
+						if(ImageEditorDocument._cropcomp._cropdiv.style.display != "none")
+							ImageEditorDocument.$057();
+						txt_zoom.set_visible(1);
+						ddl_zoom.set_visible(0);
+						]]>
+					</attach>
+					<attach name="mousehover">
+						<![CDATA[
+						if(!jsml.firefox)
+							self._openlist = null;
+						]]>
+					</attach>
+					<attach name="mouseleave">
+						<![CDATA[
+						if(self._openlist)
+							return;
+						txt_zoom.set_visible(1);
+						ddl_zoom.set_visible(0);
+						]]>
+					</attach>
+					<method name="LoadDefault">
+						<![CDATA[
+						var zc = ImageEditorDocument.GetOption("ZoomCount");
+						self.oldval = zc;
+						self.set_text(zc+"");
+						]]>
+					</method>
+					<initialize>
+						<![CDATA[
+						self.LoadDefault();
+						self._sel.style.borderWidth = "0px";
+						self._sel.style.fontSize = "11px";
+						self._sel.style.height = "19px";
+						]]>
+					</initialize>
+					<listitem value="-7" text="20%"></listitem>
+					<listitem value="-6" text="30%"></listitem>
+					<listitem value="-5" text="40%"></listitem>
+					<listitem value="-4" text="50%"></listitem>
+					<listitem value="-3" text="60%"></listitem>
+					<listitem value="-2" text="80%"></listitem>
+					<listitem value="-1" text="90%"></listitem>
+					<listitem value="0" text="100%"></listitem>
+					<listitem value="1" text="200%"></listitem>
+					<listitem value="2" text="300%"></listitem>
+					<listitem value="3" text="400%"></listitem>
+					<listitem value="4" text="500%"></listitem>
+					<listitem value="5" text="600%"></listitem>
+					<listitem value="6" text="700%"></listitem>
+					<listitem value="7" text="800%"></listitem>
+					<listitem value="8" text="900%"></listitem>
+					<listitem value="9" text="1000%"></listitem>
+				</dropdown>
+			</panel>
+			<label dock="right" width="10" overflow="visible" vertical_align="middle" horizontal_align="right" css_text="font-size:11px;" text="@Status_Zoom"></label>
+			<label dock="right" width="80" margin="0,10,0,0" vertical_align="middle" css_text="font-size:11px;">
+				<initialize>
+					<![CDATA[
+						var myself = self;
+						function RefreshCanvasStatus()
+						{
+							var w = ImageEditorDocument._canvas.width;
+							var h = ImageEditorDocument._canvas.height;							
+							
+							var str = " " + w + "*" + h+ ", ";
+							myself.set_text(str);
+							
+							self.setDelegateTimeout(RefreshCanvasStatus,2000);
+						}
+						self.setDelegateTimeout(RefreshCanvasStatus,500);
+					]]>
+				</initialize>
+			</label>
+			<label dock="right" width="10" overflow="visible" vertical_align="middle" horizontal_align="right" css_text="font-size:11px;" text="@Status_Size"></label>
+		</panel>
+		<panel dock="fill">
+			<panel width="70" dock="left" padding="4" border_color="gray" css_text="background:#fcfcfc url('images/back/toolbar.gif') bottom left repeat-x;" back_color="" border_width="0,0,0,0">
+				<panel dock="bottom" height="150" border_width="1,0,0,0" border_color="#eeeeee">
+					<panel dock="top" height="30" margin="5,0,0,0">
+						<panel left="30">
+							<image src="images/exchange.gif" border_width="0" tooltip="@Title_Exchange" cursor="default">
+								<attach name="click">
+									<![CDATA[
+								var _forecolor = ImageEditorDocument.GetOption("Ctx_ForeColor") || "Black";
+								var _backcolor = ImageEditorDocument.GetOption("Ctx_BackColor") || "White";
+								ImageEditorDocument.SetOption("Ctx_ForeColor",_backcolor);
+								ImageEditorDocument.SetOption("Ctx_BackColor",_forecolor);
+								//Ctx_LineWidth.set_back_color(_backcolor);
+								Ctx_ForeColor.set_back_color(_backcolor);
+								Ctx_BackColor.set_back_color(_forecolor);
+								]]>
+								</attach>
+							</image>
+						</panel>
+						<panel jsml-local="Ctx_ForeColor" left="17" top="13" width="16" height="16" border_width="1" border_color="gray" tooltip="@Title_ForeColor">
+							<attach name="click" arguments="sender,evt">
+								<![CDATA[
+								//popup color picker dialog likes PS							
+								var cp = ImageEditorDocument.$051();						
+								cp.set_target(self);
+								cp.set_visible(1);
+								//var style = cp._element.style;
+								function AdjustPos()
+								{			
+									var target = self.get_element();
+									var y = 0;
+									var x = 0;
+									while(target != document.body)
+									{
+										x += parseInt(target.offsetLeft)||0;
+										y += parseInt(target.offsetTop)||0;
+										target = target.parentNode;
+									}
+									var left = x + self.get_current_width() + 5;
+									var top = y - cp.get_current_height() + self.get_current_height();
+									if(top<0) top =0;
+									cp.set_offset_x(left);
+									cp.set_offset_y(top);
+								}
+								AdjustPos();
+								ImageEditorDocument.CancelBubble(evt);
+								return false;
+							]]>
+							</attach>
+							<method name="SaveColor" arguments="color">
+								self.set_back_color(color);
+								ImageEditorDocument.SetOption("Ctx_ForeColor",color);
+							</method>
+							<initialize>
+								self.set_back_color(ImageEditorDocument.GetOption('Ctx_ForeColor') || 'Black');
+							</initialize>
+							<attach name="attach_dom">
+								<![CDATA[
+								if(self._eventattached)return;
+								self._eventattached=true;
+								self._handleOptionChanged=function()
+								{
+									var color = ImageEditorDocument.GetOption('Ctx_ForeColor');
+									if(self.get_back_color()!=color)
+										self.set_back_color(color);
+								}
+								ImageEditorDocument.attach_event("OptionChanged",self._handleOptionChanged);
+								]]>
+							</attach>
+							<attach name="detach_dom">
+								<![CDATA[
+								self._eventattached=false;
+								ImageEditorDocument.detach_event("OptionChanged",self._handleOptionChanged);
+								]]>
+							</attach>
+						</panel>
+						<panel jsml-local="Ctx_BackColor" left="5" top="2" width="16" height="16" border_width="1" border_color="gray" tooltip="@Title_BackColor">
+							<attach name="click" arguments="sender,evt">
+								<![CDATA[
+								//popup color picker dialog likes PS
+								var cp = ImageEditorDocument.$051();						
+								cp.set_target(self);
+								cp.set_visible(1);
+								function AdjustPos()
+								{			
+									var target = self.get_element();
+									var y = 0;
+									var x = 0;
+									while(target != document.body)
+									{
+										x += parseInt(target.offsetLeft)||0;
+										y += parseInt(target.offsetTop)||0;
+										target = target.parentNode;
+									}
+									var left = x + self.get_current_width() + 5;
+									var top = y - cp.get_current_height() + self.get_current_height();
+									if(top<0) top =0;
+									cp.set_offset_x(left);
+									cp.set_offset_y(top);
+								}
+								AdjustPos();
+								ImageEditorDocument.CancelBubble(evt);
+								return false;
+								]]>
+							</attach>
+							<method name="SaveColor" arguments="color">
+								self.set_back_color(color);
+								ImageEditorDocument.SetOption("Ctx_BackColor",color);
+							</method>
+							<initialize>
+								self.set_back_color(ImageEditorDocument.GetOption('Ctx_BackColor'));
+							</initialize>
+							<attach name="attach_dom">
+								<![CDATA[
+								if(self._eventattached)return;
+								self._eventattached=true;
+								self._handleOptionChanged=function()
+								{
+									self.set_back_color(ImageEditorDocument.GetOption('Ctx_BackColor'));
+								}
+								ImageEditorDocument.attach_event("OptionChanged",self._handleOptionChanged);
+								]]>
+							</attach>
+							<attach name="detach_dom">
+								<![CDATA[
+								self._eventattached=false;
+								ImageEditorDocument.detach_event("OptionChanged",self._handleOptionChanged);
+								]]>
+							</attach>
+						</panel>
+					</panel>
+					<panel dock="top" height="24" horizontal_align="center" vertical_align="middle" tooltip="@Title_LineWidth">
+						<panel jsml-local="Ctx_LineWidth" width="50" height="1" back_color="black">
+							<initialize>
+								self.set_height(ImageEditorDocument.GetOption('Ctx_LineWidth') || 1);
+							</initialize>
+						</panel>
+						<attach name="attach_dom">
+							<![CDATA[
+							if(self._eventattached)return;
+							self._eventattached=true;
+							self._handleOptionChanged=function()
+							{
+								Ctx_LineWidth.set_height(ImageEditorDocument.GetOption("Ctx_LineWidth")||1);
+							}
+							ImageEditorDocument.attach_event("OptionChanged",self._handleOptionChanged);
+							]]>
+						</attach>
+						<attach name="detach_dom">
+							<![CDATA[
+							self._eventattached=false;
+							ImageEditorDocument.detach_event("OptionChanged",self._handleOptionChanged);
+							]]>
+						</attach>
+						<attach name="click">
+							<![CDATA[
+							//lineselector.set_target(self);
+							var box=jsml.class_create_instance("floatbox");
+							box.set_vertical_align("middle");
+							box.set_horizontal_align("center");
+							box.show(self.get_element(),0,0,{"floatMode":"r-b"});
+							var panel = jsml.class_create_instance("lineselectorpanel");
+							panel.set_target(self);
+							panel._box = box;
+							box.append_child(panel);
+							]]>
+						</attach>
+						<attach name="mousehover">
+							self.set_back_color("white");
+						</attach>
+						<attach name="mouseleave">
+							self.set_back_color("");
+						</attach>
+					</panel>
+					<panel dock="top" height="24" margin="2,2,0,0" css_text="border:solid #999999 1px; background:#f3f3f3;color:#333333;border-radius:2px; -webkit-border-radius:2px;">
+						<image src="images/frame.png" width="16" margin="0,1,0,1" dock="left" vertical_align="middle"></image>
+						<label dock="fill" vertical_align="middle" horizontal_align="center" text="@Tool_Frame_Head"></label>
+						<attach name="click">
+							<![CDATA[
+							if(ImageEditorDocument._watermarklist) 
+								ImageEditorDocument._watermarklist.Remove();
+							if(ImageEditorDocument._framelist) 
+								return;
+							ImageEditorDocument.set_SelectedTool(null);
+							ImageEditorDocument.$086();
+							ImageEditorDocument.$096("border", function (plugin) {
+								if (!plugin.LoadUI) return;
+								plugin.LoadUI(instance);
+							});
+							]]>
+						</attach>
+					</panel>
+					<panel dock="top" height="24" margin="5,2,0,0" css_text="border:solid #999999 1px; background:#f3f3f3;color:#333333;border-radius:2px; -webkit-border-radius:2px;">
+						<label dock="fill" vertical_align="middle" text_align="center" text="@Tool_Water_Head"></label>
+						<attach name="click">
+							<![CDATA[
+							if(ImageEditorDocument._framelist) ImageEditorDocument._framelist.Remove();
+							if(ImageEditorDocument._watermarklist)
+								return;
+							ImageEditorDocument.set_SelectedTool(null);
+							ImageEditorDocument.$086();
+							ImageEditorDocument.$096("watermark", function (plugin) {
+								if (!plugin.LoadUI) return;
+								plugin.LoadUI(instance);
+							});
+							]]>
+						</attach>
+					</panel>
+				</panel>
+				<panel dock="fill">
+					<image jsml-base="toolbutton" dock="flow" ToolName="arrow" tooltip="@Title_Arrow" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="freesize" tooltip="Free Transform" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="select" tooltip="@Title_Select" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="crop" tooltip="@Title_Crop"/>
+					<image jsml-base="toolbutton" dock="flow" ToolName="resize" tooltip="@Title_Resize" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="rotate" tooltip="@Title_Rotate" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="rect" tooltip="@Title_Rect" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="arc" tooltip="@Title_Arc" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="polygon" tooltip="@Title_Polygon" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="star" tooltip="@Title_Star" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="pen" tooltip="@Title_Pen" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="line" tooltip="@Title_Line" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="grad" tooltip="@Title_Gradient" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="fill" tooltip="@Title_Fill" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="erase" tooltip="@Title_Erase" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="stamp" tooltip="@Title_Stamp" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="text" tooltip="@Title_Text"/>
+					<image jsml-base="toolbutton" dock="flow" ToolName="colorpicker" tooltip="@Title_Colorpicker" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="zoom" tooltip="@Title_Zoom" />
+					<image jsml-base="toolbutton" dock="flow" ToolName="redeye" tooltip="@Title_Redeye" />
+				</panel>
+			</panel>
+			<panel dock="top" height="32" padding="5,0,5,5" overflow="none" border_color="#cccccc" border_width="0,0,1,0" back_color="#eeeeee">
+				<method name="UpdateSubMenu" arguments="toolname">
+					<![CDATA[
+					while(self.get_children().length)
+						self.remove_child(self.get_children()[0]);
+					
+					ImageEditorDocument._submenu = null;
+					ImageEditorDocument.textcontainer.SetVisible(0);
+					var submenu = "";
+					switch(toolname)
+					{
+						case "rect":
+							submenu = "submenudrawarea";
+							break;
+						case "arc":
+							submenu = "submenudrawarc";
+							break;
+						case "grad":
+							submenu = "submenugradient";
+							break;
+						case "pen":
+							submenu = "submenudrawpen";
+							break;
+						case "line":
+							submenu = "submenudrawline";
+							break;
+						case "rotate":
+							submenu = "submenurotate";
+							break;
+						case "polygon":
+							submenu = "submenupolygon";
+							break;
+						case "star":
+							submenu = "submenustar";
+							break;
+						case "crop":
+							submenu = "submenucrop";
+							break;
+						case "erase":
+							submenu = "submenuerase";
+							break;
+						case "text":
+							submenu = "submenutext";
+							break;
+						case "stamp":
+							submenu = "submenustamp";
+							break;
+						case "resize":
+							submenu = "submenuresize";
+							break;
+						case "zoom":
+							submenu = "submenuzoom";
+							break;
+						case "save":
+							submenu = "submenusave";
+							break;
+						case "fill":
+							submenu = "submenuvarnish";							
+							break;
+						case "redeye":
+							submenu = "submenuredeye";							
+							break;
+					}
+					if(submenu=="")
+						return;
+						
+					function AfterLoad(ctrl,item)
+					{
+						ImageEditorDocument._submenu = item;
+						item.set_dock("fill");
+						item._element.style.marginTop = "30px";
+						ctrl.append_child(item);
+					
+						function AnimationShow()
+						{
+							var mt = parseInt(item._element.style.marginTop);
+							mt -= 3;
+							if(mt<=0)
+							{
+								mt=0;
+								item._element.style.marginTop = mt+"px";
+								return;
+							}
+							item._element.style.marginTop = mt+"px";
+							self.setDelegateTimeout(AnimationShow,20);
+						}
+						self.setDelegateTimeout(AnimationShow,20);
+					}
+					ImageEditorDocument.$096("submenu",function(plugin)
+					{
+						if(!plugin.LoadUI)return;
+						plugin.LoadUI(self,submenu,AfterLoad);
+					});
+					//var item=jsml.class_create_instance(submenu);					
+					]]>
+				</method>
+				<attach name="attach_dom">
+					<![CDATA[
+					if(self._eventattached)return;
+					self._eventattached=true;
+					self._handleToolChanged=function()
+					{
+						var _toolname = ImageEditorDocument.get_SelectedTool();
+						self.UpdateSubMenu(_toolname);
+					}
+					ImageEditorDocument.attach_event("SelectedToolChanged",self._handleToolChanged);
+					]]>
+				</attach>
+				<attach name="detach_dom">
+					self._eventattached=false;
+					ImageEditorDocument.detach_event("SelectedToolChanged",self._handleToolChanged);
+				</attach>
+			</panel>
+
+			<panel jsml-local="canvaspanel" dock="fill" overflow="scroll" back_color="#bdbdbd">
+				<htmlcontrol jsml-local="canvashtml" border_width="0">
+					<xmldata>
+						<div id="thecanvasdiv" style="background-color:#bdbdbd;position:relative;"></div>
+					</xmldata>
+					<initialize>
+						<![CDATA[
+						self.div=self.find_element("thecanvasdiv");
+						self.canvas=ImageEditorDocument.get_canvas();
+						self.canvas.calcpos = function()
+						{
+							self.AdjustPos();
+						}
+						self.div.appendChild(self.canvas);
+						self.div.parentNode.style.border = "0px";
+						var cropdiv = ImageEditorDocument.$079();
+						var freediv = ImageEditorDocument.$064();
+						var textdiv = ImageEditorDocument.$031();
+						self.div.appendChild(textdiv);
+						self.div.appendChild(cropdiv);
+						self.div.appendChild(freediv);
+						//canvaspanel.get_element().appendChild(freediv);
+						ImageEditorDocument._canvasdiv = self.div;
+						]]>
+					</initialize>
+					<method name="AdjustPos">
+						//canvashtml._element.style.width = self.canvas.width + "px";
+						//canvashtml._element.style.height = self.canvas.height + "px";
+						var dw = Math.max(canvaspanel.get_current_width()-18, self.canvas.width);
+						var dh = Math.max(canvaspanel.get_current_height()-18, self.canvas.height);
+						var left = Math.max(0,dw-self.canvas.width)/2;
+						var top = Math.max(0,dh-self.canvas.height)/2;
+						self.set_width(dw-left);
+						self.set_height(dh-top);
+						self.set_left(left);
+						self.set_top(top);
+					</method>
+				</htmlcontrol>
+				<attach name="resize">
+					canvashtml.AdjustPos();
+				</attach>
+			</panel>
+		</panel>
+		<initialize>
+			<![CDATA[			
+			self.set_parent(document.body);
+			jsml.dom_attach_event(window,"resize",function()
+			{
+				self.setwinsize();
+			});
+			self.setDelegateTimeout(function()
+			{
+				self.setwinsize();
+			},10);
+			self.setwinsize();
+			]]>
+		</initialize>
+		<method name="setwinsize">
+			<![CDATA[
+			var rect=jsml.get_body_rect();
+			var ua=navigator.userAgent;
+			if(ua!=null&&(ua.indexOf("iPhone")!=-1||ua.indexOf("Android")!=-1))
+			{
+				if(rect.width>rect.height)
+				{
+					rect.width=480;
+					rect.height=360;
+				}
+				else
+				{
+					rect.width=360;
+					rect.height=480;
+				}
+			}
+			self.set_width(rect.width);
+			self.set_height(rect.height);
+			]]>
+		</method>
+	</panel>
+</jsml>

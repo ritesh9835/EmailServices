@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_other" dock="fill">
+		<groupbox text="@OTHER" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="40" overflow="visible" text="@ZINDEX|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" jsml-base="rtepropunitbox" width="80" propname="style:z-index" />
+				<panel dock="left" width="12"/>
+				<label dock="left" vertical_align="middle" width="32" text="@CURSOR|:"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:cursor">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="pointer" text="@CURSORPOINTER" />
+					<listitem value="text" text="@CURSORTEXT" />
+					<listitem value="wait" text="@CURSORWAIT" />
+					<listitem value="move" text="@CURSORMOVE" />
+					<listitem value="help" text="@CURSORHELP" />
+					<listitem value="crosshair" text="@CURSORCROSSHAIR" />
+				</panel>
+			</panel>
+		</groupbox>
+		<groupbox text="@PRINT" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="40" overflow="visible" text="@PAGEBREAKBEFORE|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:page-break-before">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="always" text="@ALWAYS" />
+				</panel>
+				<panel dock="left" width="12"/>
+				<label dock="left" vertical_align="middle" width="32" text="@PAGEBREAKAFTER|:"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:page-break-after">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="always" text="@ALWAYS" />
+				</panel>
+			</panel>
+		</groupbox>
+	</panel>
+
+	<panel jsml-base="properties_other" />
+
+
+</jsml>

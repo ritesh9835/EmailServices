@@ -1,0 +1,53 @@
+﻿@using SendingEmailsWithWebMailInMVC.Common
+<nav class="navbar-default navbar-side" role="navigation">
+    <div class="sidebar-collapse">
+        <ul class="nav" id="main-menu">
+            <li>
+                <div class="user-img-div">
+                    <img src="http://images.clipartpanda.com/default-clipart-acspike_male_user_icon.png" class="img-thumbnail" />
+
+                    <div class="inner-text">
+                        @{ 
+                            var c1 = @SessionContext.CurrentUser.FirstName;
+                            var c2 = @SessionContext.CurrentUser.LastName;
+                            var name = c1 +" "+ c2;
+                                }
+                        @name
+                        <br />
+                        <small>@SessionContext.CurrentUser.Email </small>
+                    </div>
+                </div>
+
+            </li>
+           
+
+            <li>
+                <a href="@Url.Action("Index", "Dashboards", new { id = UrlParameter.Optional })"><i class="fa fa-dashboard "></i>Dashboard</a>
+            </li>
+            <li>
+                <a href="@Url.Action("SendEmailView", "Home", new { id = UrlParameter.Optional })"><i class="fa fa-desktop "></i>Compose Email</a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("ReadMail", "SMTP", new { id = UrlParameter.Optional })"><i class="fa fa-inbox"></i>Inbox</a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("Support", "Dashboards", new { id = UrlParameter.Optional })"><i class="fa fa-flash "></i>Support </a>
+            </li>
+
+            <li>
+                <a href="#"><i class="fa fa-yelp "></i>Setting <span class="fa arrow"></span></a>
+                <ul class="nav nav-second-level">
+                    <li>
+                        <a href="@Url.Action("Index", "SMTP", new { id = UrlParameter.Optional })"><i class="fa fa-list-alt"></i>Select Email</a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Add", "SMTP", new { id = UrlParameter.Optional })"><i class="fa fa-plus"></i>Add SMTP/POP3 Details</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+</nav>

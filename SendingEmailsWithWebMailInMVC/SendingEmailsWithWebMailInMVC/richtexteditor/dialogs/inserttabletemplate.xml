@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		<![CDATA[
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTTABLE"));
+		dialog.tablearray=[];
+		dialog.tablearray.push({text:"Header",html:"<tr style='height:40px'><td>&nbsp;</td></tr><tr style='height:160px'><td>&nbsp;</td></tr>",preview:"<tr style='height:8px'><td>&nbsp;</td></tr><tr style='height:32px'><td>&nbsp;</td></tr>"});
+		dialog.tablearray.push({text:"Side",html:"<tr style='height:200px'><td style='width:20%'>&nbsp;</td><td style='width:80%'>&nbsp;</td></tr>",preview:"<tr><td style='width:8px;'>&nbsp;</td><td style='width:32px;'>&nbsp;</td></tr>"});
+		dialog.tablearray.push({text:"Footer",html:"<tr style='height:160px'><td>&nbsp;</td></tr><tr style='height:40px'><td>&nbsp;</td></tr>",preview:"<tr style='height:32px'><td>&nbsp;</td></tr><tr style='height:8px'><td>&nbsp;</td></tr>"});
+		dialog.tablearray.push({text:"Header and side",html:"<tr style='height:40px'><td colspan='2'>&nbsp;</td></tr><tr style='height:160px'><td style='width:20%'>&nbsp;</td><td style='width:80%'>&nbsp;</td></tr>",preview:"<tr style='height:8px'><td colspan='2'>&nbsp;</td></tr><tr style='32px'><td style='width:8px;'>&nbsp;</td><td style='width:32px;'>&nbsp;</td></tr>"});
+		dialog.tablearray.push({text:"Header and footer",html:"<tr style='height:40px'><td>&nbsp;</td></tr><tr style='height:120px'><td>&nbsp;</td></tr><tr style='height:40px'><td>&nbsp;</td></tr>",preview:"<tr style='height:8px'><td>&nbsp;</td></tr><tr style='height:24px'><td>&nbsp;</td></tr><tr style='height:8px'><td>&nbsp;</td>"});
+		dialog.tablearray.push({text:"Header, footer and side",html:"<tr style='height:40px'><td colspan='2'>&nbsp;</td></tr><tr style='height:120px'><td style='width:20%'>&nbsp;</td><td style='width:80%'>&nbsp;</td></tr><tr style='height:40px'><td colspan='2'>&nbsp;</td></tr>",preview:"<tr style='height:8px'><td colspan='2'>&nbsp;</td></tr><tr style='32px'><td style='width:8px;'>&nbsp;</td><td style='width:32px;'>&nbsp;</td></tr><tr style='height:8px'><td colspan='2'>&nbsp;</td></tr>"});
+		]]>
+	</execute>
+
+	<panel jsml-class="inserttabletemplateitem" dock="fill" height="42" cursor="pointer">
+		<htmlcontrol dock="left" jsml-local="hc" width="42" />
+		<label dock="fill" jsml-local="label" vertical_align="middle" cursor="pointer" margin="0,0,0,5" />
+		<method name="bind">
+			<![CDATA[
+			self.itemdata=value;
+			label.set_text(value.text);
+			hc._content.innerHTML="<table style='width:40px;height:40px;border-collapse:collapse;font-size:1px;' border='1' cellspacing=0 cellpadding=0>"+value.preview+"</table>";
+			]]>
+		</method>
+		<attach name="click">
+			self.bubble_event("inserttabletemplateitemclicked",self.itemdata);
+		</attach>
+	</panel>
+
+	<panel jsml-class="inserttabletemplatepanel" dock="top" margin="5" overflow="visible">
+		<attach name="mousehover">
+			self.set_back_color('#eeeeee');
+		</attach>
+		<attach name="mouseleave">
+			self.set_back_color('');
+		</attach>
+	</panel>
+
+	<panel jsml-class="inserttabletemplatedialog" dock="fill">
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+		<groupbox text="@TEMPLATE" dock="top" overflow="visible" margin="3">
+			<panel dock="left" width="65">
+				<label text="@TEMPLATE" dock="fill" vertical_align="middle" text_align="center" />
+			</panel>
+			<panel jsml-local="itempanel" height="52" dock="left" width="245" padding="5" margin="5" back_color="white" border_style="inset" border_width="1" overflow="visible">
+				<panel jsml-local="itembox" jsml-base="floatbox" jsml-append="false">
+					<initialize>
+						<![CDATA[
+						for(var i=0;i<dialog.tablearray.length;i++)
+						{
+							var data=dialog.tablearray[i];
+							var item=jsml.class_create_instance("inserttabletemplateitem");
+							item.bind(data);
+							var panel=jsml.class_create_instance("inserttabletemplatepanel");
+							panel.append_child(item);
+							self.append_child(panel);
+						}
+						]]>
+					</initialize>
+					<attach name="inserttabletemplateitemclicked" arguments="je,data">
+						self.close();
+						itempanel.loaddata(data);
+					</attach>
+				</panel>
+				<attach name="disposing">
+					itembox.dispose();
+				</attach>
+				<attach name="click">
+					itembox._element.style.zIndex=editor._config.dialog_zindex+1;
+					itembox.set_min_width(self.get_current_width());
+					itembox.show({control:self,stopDispose:true});
+				</attach>
+				<method name="loaddata" arguments="data">
+					<![CDATA[
+					self.dispose_children();
+					var item=jsml.class_create_instance("inserttabletemplateitem");
+					item.bind(data);
+					self.append_child(item);
+					var nodes=editor.ParseHtmlCode(data.html);
+					var table=option.targetnode;
+					var count=table.GetChildCount();
+					for(var i=count-1;i>=0;i--)
+					{
+						var child=table.GetChildAt(i);
+						switch(child.GetNameLower())
+						{
+							case "tbody":
+							case "thead":
+							case "tfoot":
+							case "tr":
+								child.RemoveNode(true);
+								break;
+						}
+					}
+					for(var i=0;i<nodes.length;i++)
+						table.AppendChild(nodes[i]);
+					]]>
+				</method>
+				<initialize>
+					self.loaddata(dialog.tablearray[0]);
+				</initialize>
+			</panel>
+		</groupbox>
+
+		<groupbox text="@LAYOUT" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="80" text="@CELLSPACING|:" vertical_align="middle" text_align="right" />
+				<panel dock="left" width="4" />
+				<panel dock="left" width="65" jsml-base="rtepropnumupdown" propname="cellspacing" min_value="0" />
+				<panel dock="left" width="25" />
+				<checkbox dock="left" jsml-local="cbusewidth" checked="1">
+					<attach name="change">
+						<![CDATA[
+						tbwidth.set_node_value(self.get_checked()?tbwidth.get_text():"");
+						tbwidth.set_disabled(!self.get_checked());
+						]]>
+					</attach>
+				</checkbox>
+				<label dock="left" vertical_align="middle" width="45" text="@WIDTH|:" unselectable="true">
+					<attach name="click,dblclick">
+						cbusewidth.set_checked(!cbusewidth.get_checked());
+					</attach>
+				</label>
+				<panel jsml-base="rtepropunitbox" jsml-local="tbwidth" width="65" dock="left" propname="style:width" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="80" text="@CELLPADDING|:" vertical_align="middle" text_align="right" />
+				<panel dock="left" width="4" />
+				<panel dock="left" width="65" jsml-base="rtepropnumupdown" propname="cellpadding" min_value="0" />
+				<panel dock="left" width="25" />
+				<checkbox dock="left" jsml-local="cbuseheight" checked="1">
+					<attach name="change">
+						<![CDATA[
+						tbheight.set_node_value(self.get_checked()?tbheight.get_text():"");
+						tbheight.set_disabled(!self.get_checked());
+						]]>
+					</attach>
+				</checkbox>
+				<label dock="left" vertical_align="middle" width="45" text="@HEIGHT|:" unselectable="true">
+					<attach name="click,dblclick">
+						cbuseheight.set_checked(!cbuseheight.get_checked());
+					</attach>
+				</label>
+				<panel jsml-base="rtepropunitbox" width="65" jsml-local="tbheight" dock="left" propname="style:height" />
+				<initialize>
+					if(option.targetnode.GetAttribute("height"))return;
+					cbuseheight.set_checked(false);
+					tbheight.set_disabled(true);
+				</initialize>
+			</panel>
+			<panel margin="7,3,8,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@FLOAT|:"  width="80" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="75" propname="style:float">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="right" text="@NONE" />
+				</panel>
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="@ALIGN|:" width="60"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="rules" width="67">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+				</panel>
+				<panel dock="left" width="25" />
+				<label dock="left" vertical_align="middle" text="@RULES|:" width="85"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="rules">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="all" text="all" />
+					<listitem value="rows" text="rows" />
+					<listitem value="cols" text="cols" />
+					<listitem value="none" text="none" />
+				</panel>
+			</panel>
+		</groupbox>
+		<groupbox text="@BORDER" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,8,3" height="18" dock="top">
+				<label dock="left" width="70" text="@SIZE|:" vertical_align="middle"  text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" width="65" jsml-base="rtepropnumupdown" propname="border" min_value="0" />
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="@COLOR|:" width="60"/>
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="bordercolor" width="75" />
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="style:border-collapse" truestring="collapse" falsestring="" jsml-local="cbcollapse" />
+				<label dock="left" vertical_align="middle" width="32" text="@BORDERCOLLAPSE" unselectable="true">
+					<attach name="click,dblclick">
+						cbcollapse.toggle_checked();
+					</attach>
+				</label>
+			</panel>
+		</groupbox>
+		<groupbox text="@ATTRIBUTES" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@CSSCLASS|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="class"  width="65" />
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="ID:" width="60"/>
+				<panel jsml-base="rteproptextbox" dock="left" propname="id" width="75" />
+				<panel dock="left" width="15" />
+				<label dock="left" vertical_align="middle" text="@BACKGROUNDCOLOR|:" width="85"/>
+				<panel dock="left" jsml-base="rtepropcolorbox" width="75" propname="style:background-color" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@CAPTION|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="title" width="340">
+					<method name="get_node_value">
+						<![CDATA[
+						var node=self.find_node();
+						for(var index=0;true;index++)
+						{
+							var child=node.GetChildAt(index);
+							if(!child)
+								break;
+							if(child.GetNameLower()!="caption")
+								continue;
+							return child.GetInnerText();
+						}
+						return "";
+						]]>
+					</method>
+					<method name="set_node_value">
+						<![CDATA[
+						var node=self.find_node();
+						for(var index=0;true;index++)
+						{
+							var child=node.GetChildAt(index);
+							if(!child)
+								break;
+							if(child.GetNameLower()!="caption")
+								continue;
+							if(value)
+								child.SetInnerText(value);
+							else
+								child.RemoveNode(true);
+							return;
+						}
+						var child=new $rte.ContainerElement("caption");
+						node.AppendChild(child);
+						child.SetInnerText(value);
+						]]>
+					</method>
+				</panel>
+				<image dock="left" src="{folder}images/accessibility.gif" vertical_align="middle" margin="1,1,1,5" />
+			</panel>
+			<panel margin="7,3,10,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@SUMMARY|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="summary" width="340" />
+				<image dock="left" src="{folder}images/accessibility.gif" vertical_align="middle" margin="1,1,1,5" />
+			</panel>
+		</groupbox>
+
+	</panel>
+
+	<panel jsml-base="inserttabletemplatedialog">
+		<initialize>
+			self._rtenode=option.targetnode;
+		</initialize>
+	</panel>
+
+
+</jsml>

@@ -1,0 +1,257 @@
+﻿@using SendingEmailsWithWebMailInMVC.Common
+
+@{
+    Layout = "~/Views/Shared/_Landing.cshtml";
+}
+
+
+@*
+
+    <p> @SessionContext.CurrentUser.Email</p>
+*@
+
+
+
+<div class="top-content">
+    <div class="inner-bg">
+        <div class="container">
+            <div class="row">
+                <div class="tab-pane" style="float:right; margin-top:-5%;">
+                    <h4>
+                        <a href="@Url.Action("Login", "Account", new { id = UrlParameter.Optional })"><i class="fa fa-sign-in"></i> Login</a>
+                        <a style="margin-left:5%" href="@Url.Action("SignUp", "Account", new { id = UrlParameter.Optional })"><i class="fa fa-sign-out"></i>Sign UP</a>
+                    </h4>
+                </div>
+                <div class="col-sm-5 phone">
+                    <br><br><br> <br><br>
+                    <img src="~/Content/assets/img/iphone-1.png" alt="">
+                </div>
+                <div class="col-sm-7 text">
+                    <h1> WebmailSMTP  <br> Get started!</h1>
+                    <div class="description">
+                        We have been working very hard to design the WebmailSMTP.
+                        Finally it's ready. Check it out!
+                    </div>
+                    <div class="top-button">
+                        <a class="button-1" href="#">
+                            <span class="button-1-right">
+                                <span class="button-1-right-top"><center>Get Started</center></span>
+                                <span class="button-1-right-bottom"><center>Click!</center></span>
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features -->
+<div class="features-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 features">
+                <h2>What makes it special</h2>
+                <p>
+                    The main aim of this networking project is to use the mail server and make the uses and accessing of the mail easier and secure.
+                    The project modifies and configures the SMPT and PoPPT to get access to the mail server and send data and file to the respected users.
+                    It also stores the mail and gives a popup to inform the user about the incoming mail.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 features-box-1">
+                <div class="features-box-1-icon">
+                    <i class="fa fa-eye"></i>
+                </div>
+                <h3>Easy To Use</h3>
+                <p>
+                    1. Send Mail. <br>
+                    2. Receive mail. <br>
+                    3. edit your profile. <br>
+                </p>
+            </div>
+            <div class="col-sm-4 features-box-1">
+                <div class="features-box-1-icon">
+                    <i class="fa fa-table"></i>
+                </div>
+                <h3>Database</h3>
+                <p>
+                    There are various tables used for this system.
+                </p>
+            </div>
+            <div class="col-sm-4 features-box-1">
+                <div class="features-box-1-icon">
+                    <i class="fa fa-pencil"></i>
+                </div>
+                <h3>Testing</h3>
+                <p>
+                    System testing is actually a series of different tests whose sole purpose is to exercise the full computer based system.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Single feature -->
+<div class="single-feature-container single-feature-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 single-feature-text">
+                <h2>Easy to use</h2>
+                <p>
+                    In professional world all the communications are being done by emails.
+                    Now a day’s mailing server is playing a very important role in our social and economic life.
+                    It is one of the fast communicating mediums for a modern era.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-7 single-feature-img-description">
+                <p>
+                    <strong>User</strong> <br>
+                    User can create his\her account to access the application.
+                    Once user register he\she will get the login details, which he can use for accessing the emails.
+                </p>
+                <p>
+                    <strong>SMTP Details</strong> <br>
+                    We are using SMTP protocol for email access.
+                    So after creating account user need to configure the SMTP details.
+                </p>
+                <p>
+                    <strong>Email Account</strong> <br>
+                    Based on configured SMTP details user will able to access the email accounts.
+                    And Through the system use can send and receive the emails.
+                </p>
+            </div>
+            <div class="col-sm-5 single-feature-img">
+                <img src="~/Content/assets/img/iphone-2.png" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Single feature -->
+<div class="single-feature-container single-feature-no-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 single-feature-text">
+                <h2>Database</h2>
+                <p>
+                    Our database has 5 tables which are listed below:
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-5 single-feature-img">
+                <img src="~/Content/assets/img/iphone-3.png" alt="">
+            </div>
+            <div class="col-sm-7 single-feature-img-description">
+                <p>
+                    <strong>User Table</strong> <br>
+                    Uid | Email | Uname | Password | Companyname | Image.
+                </p>
+                <p>
+                    <strong>Email Account Table</strong> <br>
+                    emailaddress | password | Uid |	Smtp_id | Imap_id
+                </p>
+                <p>
+                    <strong>Role Table</strong> <br>
+                    RoleId | Uid | Rolename
+                </p>
+                <p>
+                    <strong>SMTP Table</strong> <br>
+                    Smtp_id | Smtp | Ssl_required	| Authentication | Ssl_port
+                </p>
+                <p>
+                    <strong>Imap Table</strong> <br>
+                    Imap_id | Imap | Ssl_required | Imap_port
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Single feature -->
+<div class="single-feature-container single-feature-bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 single-feature-text">
+                <h2>Testing</h2>
+                <p>
+                    System testing is actually a series of different tests whose sole purpose is to exercise the full computer based system.
+                    It is an investigation conducted to provide stakeholders with information about the quality of the product or service under test.
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-7 single-feature-img-description">
+                <p>
+                    <strong>Integration testing</strong> <br>
+                    In an Integration testing, test takes place from top to bottom, following the control flow or architectural structure (e.g. starting from the GUI or main menu).
+                </p>
+                <p>
+                    <strong>Validation testing</strong> <br>
+                    During verification if some defects are missed then during validation process it can be caught as failures.
+                    Validation is done during testing like feature testing, integration testing, system testing, load testing, compatibility testing etc.
+                </p>
+
+            </div>
+            <div class="col-sm-5 single-feature-img">
+                <img src="~/Content/assets/img/iphone-2a.png" alt="">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Call to action -->
+<div class="call-to-action-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 call-to-action-text">
+                <h2>Get Started Now!</h2>
+                <p>
+                    Benefits: <br>
+                    •	Free of Cost. <br>
+                    •	You can configure the SMTP details and access your email accounts easily.<br>
+                    •	For all the emails which is created on the server have same SMTP details. So using our system you can add all the email accounts into one account and access their emails.<br>
+                    •	We are providing encryption and decryption facility in email transmission. So we can ensure the users that, they are secured for using our system.<br>
+                </p>
+                <div class="call-to-action-button">
+                    <a class="button-1" href="#">
+                        <span class="button-1-right">
+                            <span class="button-1-right-top"><center>Get Started</center></span>
+                            <span class="button-1-right-bottom"><center>Click!</center></span>
+                        </span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="footer-social">
+                    <a class="social social-facebook" href=""><i class="fa fa-facebook"></i></a>
+                    <a class="social social-twitter" href=""><i class="fa fa-twitter"></i></a>
+                    <a class="social social-pinterest" href=""><i class="fa fa-pinterest"></i></a>
+                </div>
+                <div class="footer-copyright">
+                    &copy; Ritesh Kumar Rai, Prannoy Giri and Pema Gurung
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<!-- Javascript -->
+<script src="~/Content/assets/js/jquery-1.10.2.min.js"></script>
+<script src="~/Content/assets/js/jquery.backstretch.min.js"></script>
+<script src="~/Content/assets/js/retina-1.1.0.min.js"></script>
+<script src="~/Content/assets/js/scripts.js"></script>

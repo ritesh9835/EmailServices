@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phoneselectdialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel jsml-local="subbuttonpanel" dock="top" overflow="visible">
+			<panel jsml-base="phone_{skin}_{color}" dock="top" command="SelectAll" imagename="m_selectall" text="@SELECTALL">
+				<attach name="click">
+					dialog.close();
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" dock="top" imagename="m_selectparagraph" text="@SELECTPARAGRAPH">
+				<attach name="click">
+					var p=editor.EnsureParagraph();if(p)editor.SelectContent(p)
+					dialog.close();
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}"  dock="top" imagename="m_selecttop" text="@SELECTTOHOME">
+				<attach name="click">
+					editor.SetPointInside(editor.GetBodyNode(),0)
+					dialog.close();
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}"  dock="top" imagename="m_selectbottom" text="@SELECTTOEND">
+				<attach name="click">
+					editor.SetPointInside(editor.GetBodyNode(),editor.GetBodyNode().GetMaxOffset())
+					dialog.close();
+				</attach>
+			</panel>
+		</panel>
+	</panel>
+
+	<panel jsml-base="phoneselectdialog">
+	</panel>
+
+</jsml>

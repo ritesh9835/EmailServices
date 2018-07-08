@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="inserttemplatedropdown_dialog" dock="fill" overflow="visible">
+		<groupbox text="@codesnippet" dock="top" overflow="visible" margin="3">
+			<panel width="280" height="210" overflow="scroll">
+				<htmlcontrol jsml-local="container" dock="fill" margin="2" padding="4" overflow="visible">
+				</htmlcontrol>
+			</panel>
+		</groupbox>
+		<initialize>
+			<![CDATA[
+			editor.LoadTemplates(function(group)
+			{
+				self.loadgroupcontent(group,container._content);
+			});
+			]]>
+		</initialize>
+
+		<method name="loadgroupcontent" arguments="group,element">
+			<![CDATA[
+			
+			if(group.groups.length+group.templates.length==0)
+			{
+				element.style.paddingLeft="6px";
+				element.innerHTML="(Empty)";
+				return;
+			}
+			
+			var table=document.createElement("TABLE");
+			table.cellSpacing=0;
+			table.cellPadding=0;
+			
+			var cg1=document.createElement("COLGROUP");
+			cg1.style.width="16px";
+			table.appendChild(cg1);
+			
+			for(var i=0;i<group.groups.length;i++)
+			{
+				self.templatetree_addgroup(group.groups[i],table);
+			}
+			for(var i=0;i<group.templates.length;i++)
+			{
+				self.templatetree_addtemplate(group.templates[i],table);
+			}
+			
+			element.appendChild(table);
+			
+			container.invoke_notify_content();
+			
+			]]>
+		</method>
+		<method name="templatetree_addgroup" arguments="group,table">
+			<![CDATA[
+			var closedimg="<img src='{folder}dialogs/images/tree_closed.gif' style='width:13px;height:13px;'/>";
+			var openedimg="<img src='{folder}dialogs/images/tree_opened.gif' style='width:13px;height:13px;'/>";
+			
+			var loaded=false;
+			var opened=false;
+			
+			var row1=table.insertRow(-1);
+			var row2=table.insertRow(-1);
+			var td11=row1.insertCell(-1);
+			var td12=row1.insertCell(-1);
+			var td21=row2.insertCell(-1);
+			var td22=row2.insertCell(-1);
+			
+			td11.style.cursor="pointer";
+			td11.style.verticalAlign="middle";
+			td11.style.fontSize="1px";
+			td11.style.lineHeight="1px";
+			td11.style.padding="0px";
+			td11.innerHTML=closedimg;
+			
+			td12.className="rtelinktreegroup";
+			td12.innerHTML=jsml.html_encode(group.text);
+			
+			row2.style.display='none';
+			
+			function toggleit()
+			{
+				if(!loaded)
+				{
+					loaded=true;
+					self.loadgroupcontent(group,td22);
+				}
+				if(!opened)
+				{
+					row2.style.display='';
+					td11.innerHTML=openedimg;
+					opened=true;
+				}
+				else
+				{
+					row2.style.display='none';
+					td11.innerHTML=closedimg;
+					opened=false;
+				}
+				container.invoke_notify_content();
+			}
+			
+			td11.onclick=toggleit;
+			td12.onclick=toggleit;
+			]]>
+		</method>
+		<method name="templatetree_addtemplate" arguments="template,table">
+			<![CDATA[
+			var row1=table.insertRow(-1);
+			var td11=row1.insertCell(-1);
+			var td12=row1.insertCell(-1);
+			
+			td11.innerHTML="<img src='{folder}dialogs/images/document.gif' style='width:13px;height:13px;'/>"
+      td11.style.verticalAlign="middle";
+						
+			td12.className="rtelinktreeitem";
+			td12.innerHTML=jsml.html_encode(template.text);
+			if(template.href)td12.setAttribute("title",template.href);
+			
+			td12.onmouseover=new Function("","this.style.color='#0000FF'");
+			td12.onmouseout=new Function("","this.style.color=''");
+			
+			td12.onclick=function()
+			{
+				self.invoke_event("clicktemplate",template);
+			}
+			
+			]]>
+		</method>
+		
+		<attach name="clicktemplate" arguments="je,template">
+			<![CDATA[
+			editor.InsertHTML(editor.FilterForPaste(template.code,"InsertTemplate"));
+			dialog.close();
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-base="inserttemplatedropdown_dialog" />
+
+
+</jsml>

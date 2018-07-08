@@ -1,0 +1,266 @@
+body,input,textarea,button,select,fieldset,table
+{
+	color: windowtext;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:12px;
+}
+
+table, textarea
+{
+	text-align:left;
+}
+button
+{
+	padding-top: 1px;
+	height: 22px;
+}
+
+.formbutton{
+	cursor:pointer;
+	padding: 1px 10px;
+}
+#uploader input {
+	cursor:pointer;
+	padding: 1px 10px;
+	height: 21px;
+	vertical-align:top;
+}
+#uploader
+{
+	padding:10px 0 10px 30px;
+	width:100px;
+}
+
+fieldset
+{
+	border:1px solid #dddddd;
+	padding: 2px;
+}
+.boxBg
+{
+	background-color:#dddddd;
+}
+.boxBorder
+{
+	border:1px solid #dddddd;
+}
+
+.normal
+{
+	color: windowtext; 
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+}
+.sortable
+{
+	color: windowtext; 
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+}
+
+body
+{
+	background-color:#eeeeee;	
+	overflow:hidden;
+	margin:0px;
+	padding:0px;
+	height:100%;
+}
+
+.buttons a
+{
+	width:100px;
+	margin: 0 7px 3px 0;
+	text-decoration: none;
+    background-color:#f5f5f5;
+    background: url(images/formbg.gif) repeat-x left top;
+    border-top:solid 1px #cccccc;
+    border-left:solid 1px #cccccc;
+    border-right:solid 1px #aaaaaa;
+    border-bottom:solid 1px #aaaaaa;
+	padding: 4px 12px 5px 5px;
+	display: block;
+	cursor: pointer;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+	line-height: 120%;
+	color: #333;outline: none;
+	font-weight:normal;
+}
+.buttons a img
+{
+	margin: 0 3px -3px 0 !important;
+	width: 16px;
+	height: 16px;
+	padding: 0 !important;
+	border: none !important;
+	display: inline !important;
+}
+.buttons a:hover
+{
+	background-color: #C0DDFC;
+    background: url(images/formbg2.gif) repeat-x left top;
+	border: 1px solid #3388ff;
+	color: #333;
+}
+.buttons a.current
+{
+	background-color: #C0DDFC;
+    background: url(images/formbg2.gif) repeat-x left top;
+	border: 1px solid #3388ff;
+	color: #333;
+}
+.buttons a.current:hover
+{
+    background: url(images/formbg.gif) repeat-x left top;
+    border-top:solid 1px #cccccc;
+    border-left:solid 1px #cccccc;
+    border-right:solid 1px #aaaaaa;
+    border-bottom:solid 1px #aaaaaa;
+}
+
+#div_demo
+{
+	position:static!important;
+	width:100%!important;
+	height:100%!important;
+}
+
+#outer
+{
+	width:300px;
+	overflow:auto; 
+	height:150px;
+	margin-top:7px;
+	background-color: #ffffff;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+    border: #dddddd 1px solid;	
+}
+
+.inputbuttoncancel , .inputbuttoninsert
+{
+	width:80px;
+	padding-top:2px;
+}
+.dialogButton
+{
+	border:1px solid #f5f5f4;
+	padding:1px;
+}
+
+.editimgDisabled 
+{
+	/*filter:gray alpha(opacity=25);opacity: .25; -moz-opacity: .25;*/
+}
+.filelistHeadCol A
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+/*	cursor: default; */
+	color: windowtext;
+}
+
+a.filelistHeadCol:visited, a.filelistHeadCol:link /* Font used for links in the navigation menu */
+{
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+	color: #ffffff;
+    text-decoration: none; 
+}
+
+a.filelistHeadCol:Hover /* Font used for hovering over a link in the navigation menu */
+{
+    color: #FF3300;
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+}
+
+#container {padding:10px;margin:0;text-align:center; background:#eeeeee;}
+#container-bottom { clear:both; text-align:right; padding-right:30px; margin-right:30px;background:#eeeeee;margin-top:5px;}
+
+.tab-pane-control.tab-pane {
+	position:	relative;
+	width:		100%;
+}
+.tab-pane-control.tab-pane {
+	position:	relative;
+	width:		100%;
+}
+
+.tab-pane-control .tab-row .tab {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+	display:		inline;
+	margin:			1px -2px 1px 2px;
+	float:			left;
+	padding:		2px 5px 3px 5px;
+	background:		#ECECEC url(../images/formbn.gif) repeat-x;
+	border:			1px solid;
+	border-color:	#898C95;
+	border-bottom:	0;
+	z-index:		1;
+	position:		relative;
+	top:			0;
+	cursor:		pointer; 
+	cursor:		hand;
+}
+
+.tab-pane-control .tab-row .tab.selected {
+	border-bottom:	0;
+	z-index:		3;
+	padding:		2px 6px 5px 7px;
+	margin:			1px -3px -2px 0px;
+	top:			-2px;
+	background:		#f5f5f5;
+	cursor:			pointer; 
+	cursor:			hand;
+}
+
+.tab-pane-control .tab-row .tab a {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size:11px;
+	font-weight:normal;
+	color:				black;
+	text-decoration:	none;outline: none;
+}
+
+.tab-pane-control .tab-row .hover a {
+	color:	blue;
+}
+
+.tab-pane-control .tab-page {
+	clear:			both;
+	border:			1px solid;
+	border-color:	#898C95;
+	background:		#f5f5f5;
+	z-index:		2;
+	position:		relative;
+	top:			-2px;
+	color:			black;
+	font:			Message-Box;
+	padding:		5px;
+}
+
+.tab-pane-control .tab-row {
+	z-index:		1;
+	white-space:	nowrap;
+}
+.tab-pane-control .tab-row {
+	z-index:		1;
+	white-space:	nowrap;
+}
+#FoldersAndFiles {table-layout:fixed;}
+#FoldersAndFiles td{text-align:left;vertical-align: middle;}
+.cursor{cursor:pointer;cursor:hand;}
+div.progress-container {
+  background-color:green;height:5px;width:50px;font-size:5px;
+  margin:2px 5px 2px 6px;
+}
+
+div.progress-container div {
+  background-color:red;height:5px;font-size:5px
+}
+
+#uploadinfo {margin:0;padding:0 0 0 20px;}
+#ajaxdiv{padding:10px;text-align:center;background:#eeeeee;}

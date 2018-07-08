@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagtextarea" dock="fill">
+		<groupbox text="Input" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="@Type|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="type" disabled="true" width="100" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="@NAME|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="name" width="100" />
+			</panel>
+			<panel jsml-local="panel_value" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@Value|:"  width="100" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" propname="value" width="320"></panel>
+			</panel>
+			<panel jsml-local="panel_src" visible="false" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="Src:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="320" propname="src">
+				</panel>
+				<panel dock="left" width="4" />
+				<button dock="left" height="24" width="30" text="...">
+					<attach name="click">
+						instance.showuploadfile(self);
+					</attach>
+				</button>
+			</panel>
+			<panel jsml-local="panel_alt" visible="false" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@alternate|:"  width="100" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" propname="alt" width="320"></panel>
+			</panel>
+			<panel jsml-local="panel_size" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="@Size|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rtepropnumupdown" min_value="1" dock="left" propname="size" width="100" />
+			</panel>
+			<panel jsml-local="panel_maxlength" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="@maxlength|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rtepropnumupdown" min_value="1" dock="left" propname="maxlength" width="100" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="100" text="ID:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="id" width="100" />
+			</panel>
+			<panel jsml-local="panel_accesskey" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@ACCESSKEY|:" width="100" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="accesskey" width="100" />
+			</panel>
+			<panel jsml-local="panel_tabindex" margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@TABINDEX|:" text_align="right" width="100"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="tabindex" width="100" />
+			</panel>
+			<panel jsml-local="panel_disabled" margin="3,3,3,3" height="18" dock="top">
+				<panel dock="left" width="100" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="disabled" truestring="1" falsestring="" />
+				<label dock="left" vertical_align="middle" width="80" text="@disabled"/>
+			</panel>
+			<panel jsml-local="panel_readonly" margin="3,3,3,3" height="18" dock="top">
+				<panel dock="left" width="100" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="readonly" truestring="1" falsestring="" />
+				<label dock="left" vertical_align="middle" width="80" text="@readonly"/>
+			</panel>
+			<panel jsml-local="panel_checked" margin="7,3,1,3" visible="false" height="18" dock="top">
+				<panel dock="left" width="100" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="checked" truestring="checked" falsestring="" />
+				<label dock="left" vertical_align="middle" text="@CHECKED|:" width="80"/>
+			</panel>
+
+			<panel margin="7,3,12,3" height="18" dock="top">
+			</panel>
+		</groupbox>
+
+		<initialize>
+			<![CDATA[
+			switch(option.targetnode.GetAttribute("type"))
+			{
+				case "file":
+			panel_value.set_visible(false);
+			panel_size.set_visible(false);
+			panel_maxlength.set_visible(false);
+			panel_readonly.set_visible(false);
+					  break;
+				case "image":
+			panel_src.set_visible(true);
+			panel_readonly.set_visible(false);
+			panel_size.set_visible(false);
+			panel_maxlength.set_visible(false);
+			panel_value.set_visible(false);
+					  break;
+				case "text":
+					  break;
+				case "hidden":
+			panel_size.set_visible(false);
+			panel_maxlength.set_visible(false);
+			panel_accesskey.set_visible(false);
+			panel_tabindex.set_visible(false);
+			panel_disabled.set_visible(false);
+			panel_readonly.set_visible(false);
+					  break;
+			  case "password":
+					  break;
+				case "checkbox":
+				case "radio":
+			panel_size.set_visible(false);
+			panel_checked.set_visible(true);
+			panel_maxlength.set_visible(false);
+			panel_readonly.set_visible(false);
+					  break;
+				case "button":
+				case "submit":
+				case "reset":
+			panel_size.set_visible(false);
+			panel_maxlength.set_visible(false);
+			panel_readonly.set_visible(false);
+					  break;
+			}
+			]]>
+		</initialize>
+
+		<method name="showuploadfile" arguments="anchor">
+			<![CDATA[
+			var img=new $rte.GenericElement("img");
+			var newoption={width:640,height:420,targetnode:img};
+			newoption.nestedmode=true;
+			newoption.callback=function(res)
+			{
+				if(!res)return;
+				option.targetnode.SetAttribute("src",img.GetAttribute("src"));
+				self.invoke_recursive("loadvalue");
+				self.bubble_event("rtepropsaved");
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertgallery.xml"),newoption);
+			]]>
+		</method>
+	</panel>
+
+	<panel jsml-base="properties_tagtextarea" />
+
+
+</jsml>

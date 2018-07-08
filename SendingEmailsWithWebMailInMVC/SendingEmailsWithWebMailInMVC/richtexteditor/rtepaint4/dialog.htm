@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Untitled Page</title>
+</head>
+<body style="padding: 0px; margin: 0px; overflow: hidden;">
+	<div id="container_panel" class="ImageEditor" style="width:640px;height:480px;">
+	</div>
+    <script type="text/javascript">
+    	var editor=parent.rteimageeditoreditor;
+		var dialog=parent.rteimageeditordialog;
+		var option=parent.rteimageeditoroption;		
+		var fileurl=option.storage.UrlPrefix+option.storage.UrlPath+option.fileitem.Name;
+		dialog.set_title(editor.GetLangText("imageeditor")+" : "+fileurl);
+    </script>
+    <script type="text/javascript" src="Language.aspx"></script>
+	<script type="text/javascript" src="menuimpl.js"></script>
+	<script type="text/javascript" src="ImageEditorLib.js"></script>
+
+	<script type="text/javascript">
+	
+		window.RefreshImage=function(url,callback)
+		{
+			var iframe=document.createElement("IFRAME");
+			iframe.style.width="1px";
+			iframe.style.height="1px";
+			iframe.style.position="absolute";
+			iframe.style.top="-1px";
+			
+			window.rterefreshimagecallback=callback;
+			window.rterefreshimageiframe=iframe;
+			
+			var src="refreshimage.aspx?url="+encodeURIComponent(url);
+			iframe.src=src;
+			document.body.insertBefore(iframe,document.body.firstChild);
+			
+		}
+		window.OnRefreshImage=function()
+		{
+			var cb=window.rterefreshimagecallback;
+			if(cb)setTimeout(cb,1);
+			
+			var iframe=window.rterefreshimageiframe;
+			iframe.parentNode.removeChild(iframe);
+		}
+		
+		
+	
+		var imageeditor;
+		var imageid=null;
+		function onajaxinitimage(res)
+		{
+			if(res.Error)
+			{
+				alert(res.Error);
+				dialog.close();
+				return;
+			}
+			imageid=res.ReturnValue;
+			if(imageid==null)
+			{
+				alert("Unable to init server image data.");
+				dialog.close();
+				return;
+			}
+
+            var savetype = "png";
+            var filename = option.fileitem.Name;
+            var ix = option.fileitem.Name.lastIndexOf(".");
+            if (ix >= 0) {
+                savetype = option.fileitem.Name.substring(ix + 1);
+                filename = filename.substr(0, ix);
+            }
+            var imageeditorconfig = { "ImageID": imageid, "RTEPath": editor._config.folder + "rtepaint4/",
+                "SaveFileName": filename, "SaveFileType": savetype, "ImageUrl": option.fileitem.Name
+			};
+			imageeditor = new ImageEditor("container_panel", imageeditorconfig);
+	    
+		}
+
+		editor.CallAjax("AjaxInitImage", onajaxinitimage, option.storage, option.fileitem.Name)
+
+		function onajaxcommitimage(res)
+		{
+			if(res.Error)
+			{
+				alert(res.Error);
+				dialog.close();
+				return;
+			}
+			var pathitem=res.ReturnValue;
+			if(pathitem==null)
+			{
+				alert("Unable to commit server image data. session may expired.");
+				dialog.close();
+				return;
+			}
+			window.RefreshImage(fileurl,function()
+			{
+				if(option.onsaveimage)
+				{
+					option.onsaveimage(pathitem);
+				}
+				//alert("Saved OK");
+				dialog.close();
+			});
+		}
+			
+		function OnImageSaved()
+		{
+			editor.CallAjax("AjaxCommitImage", onajaxcommitimage, option.storage, option.fileitem.Name, imageid)
+		}
+	</script>
+</body>
+</html>

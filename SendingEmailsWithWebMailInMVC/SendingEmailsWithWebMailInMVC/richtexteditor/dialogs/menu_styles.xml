@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-base="rtemenuitem" htmlcode="@FONT" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"font"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@BLOCK" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"block"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@BACKGROUND" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"background"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@BOX" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"box"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@POSITION" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"position"})
+		</attach>
+	</panel>
+
+
+	<panel jsml-base="rtemenuitem" htmlcode="@LAYOUT" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"layout"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@LIST" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"list"})
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@TABLE" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"table"})
+		</attach>
+	</panel>
+
+
+</jsml>

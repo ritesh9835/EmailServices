@@ -1,0 +1,1605 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<jsml-def name="browsedialogitemtooltip">
+		<method name="showfloatbox" arguments="devent">
+			<![CDATA[
+			if(!self._hovered||!self.get_visible())
+				return;
+			if(self.currentdialog&&self.currentdialog.get_visible())
+				return;
+			if(!jsml.floatbox_allowautofloatbox(self._element))
+				return;
+
+			var text=self.itemtooltiptext;
+			if(!text)return;
+			
+			var newoption={stopToggle:true,stopOverlay:true};
+			var br=jsml.get_body_rect();
+			newoption.x=devent.clientX+br.scrollLeft+5;
+			newoption.y=devent.clientY+br.scrollTop+5;
+			
+			newoption.buttonClick=function()
+			{
+				self.invoke_event("click");
+			}
+			var dialog=jsml.class_create_instance("floatbox");
+			var htmlc=jsml.class_create_instance("htmlcontrol");
+			htmlc.set_html("<pre style='margin:0px;padding:2px;color: windowtext;font: normal 11px sans-serif;'>"
+				+jsml.html_encode(text)+"</pre>");
+			htmlc.set_dock("fill");
+			var gbr=jsml.get_body_rect();
+			htmlc.set_max_width(Math.floor(gbr.width*0.6));
+			htmlc.set_max_height(Math.floor(gbr.height*0.3));
+			htmlc.set_vertical_align("middle");
+			dialog.append_child(htmlc);
+			dialog.set_width(150);
+			dialog.set_padding(5);
+			dialog.set_back_color('#FFFFE0')
+			dialog._estyle.zIndex=editor._config.dialog_zindex;
+			dialog.show(newoption);
+			self.currentdialog=dialog;
+			]]>
+		</method>
+		<attach name="mousemove" arguments="jevent,devent">
+			<![CDATA[
+			self._hovered=true;
+			clearTimeout(self._showfbid);
+			self._showfbid=self.setDelegateTimeout(function()
+			{
+				self.showfloatbox(devent);
+			},333);
+			]]>
+		</attach>
+		<attach name="mouseleave">
+			<![CDATA[
+			self._hovered=false;
+			self.setDelegateTimeout(function()
+			{
+				if(self._hovered)return;
+				if(self.currentdialog&&self.currentdialog.get_visible())
+				{
+					self.currentdialog.close();
+				}
+			},33);
+			]]>
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="browsedialogoncontextmenu">
+		<attach name="contextmenu" arguments="jevent,devent">
+			<![CDATA[
+			devent.cancel();
+			var anchor=devent.get_element();
+			var newoption={control:self,anchor:devent.get_element(),x:devent.offsetX+2,y:devent.offsetY+2,floatMode:'none',stopOverlay:true,stopDispose:true};
+			var menu=option.dialogcontrol.theitemmenu;
+			menu.invoke_recursive("updateitem",self._item);
+			menu.show(newoption);
+			function menuclosing()
+			{
+				menu.detach_event("closing",menuclosing);
+				self._estyle.fontWeight="";
+				//self._estyle.color="";
+			}
+			menu.attach_event("closing",menuclosing);
+			self._estyle.fontWeight="bold";
+			//self._estyle.color="darkgreen";
+			]]>
+		</attach>
+	</jsml-def>
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+		class browserdialogrow/browserdialogfolder/browserdialogfile
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+
+	<panel jsml-class="browserdialogrow" height="21" border_width="0,1,0,0" border_color="white">
+		<attach name="mousehover">
+			self.set_back_color('#eeeeee');
+		</attach>
+		<attach name="mouseleave">
+			self.set_back_color('');
+		</attach>
+		<jsml-ref name="browsedialogoncontextmenu"/>
+	</panel>
+
+	<panel jsml-class="browserdialogfolder" jsml-base="browserdialogrow">
+		<checkbox dock="left" jsml-local="checkbox" width="20" padding="1,0,-1,0" margin="0,0,0,0">
+			<attach name="change">
+				instance._item.IsChecked=self.get_checked();
+			</attach>
+		</checkbox>
+		<image dock="left" jsml-local="theicon" width="20" src="{folder}images/closedfolder.gif" border_width="0,0,0,1" border_color="white" padding="2,-1,-2,1" overflow="none" cursor="pointer" >
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</image>
+		<image dock="right" width="20" jsml-local="editbtn" jsml-base="imagebutton" src="{folder}images/edit.gif" padding="2"  overflow="none">
+			<attach name="click">
+				option.dialogcontrol.startedititem(instance._item,instance);
+			</attach>
+		</image>
+		<label dock="right" width="60" jsml-local="lsize" vertical_align="middle" border_width="0,1,0,1" border_color="white" cursor="pointer" text_align="right" padding="0,4,0,0">
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</label>
+		<label dock="fill" jsml-local="lname" vertical_align="middle" border_width="0,0,0,1" border_color="white" cursor="pointer">
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</label>
+		<method name="update_check">
+			if(self._item)checkbox.set_checked(!!self._item.IsChecked);
+		</method>
+		<method name="bind_item">
+			<![CDATA[
+			self._item=value;
+			checkbox.set_checked(!!value.IsChecked);
+			lname.set_text(value.Text||value.Name);
+			if(value.Size)lsize.set_text(value.Size);
+			if(value.Name=="..")
+			{
+				checkbox.set_visible(false);
+				editbtn.set_visible(false);
+				lsize.set_margin([0,20,0,0])
+				theicon.set_margin([0,0,0,20])
+				theicon.set_src("{folder}images/parentfolder.png");
+			}
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-class="browserdialogfile" jsml-base="browserdialogrow">
+		<checkbox dock="left" jsml-local="checkbox" width="20" padding="1,0,-1,0" margin="0,0,0,0">
+			<attach name="change">
+				instance._item.IsChecked=self.get_checked();
+			</attach>
+		</checkbox>
+		<image dock="left" width="20" jsml-local="image" padding="2,0,-2,0" border_width="0,0,0,1" border_color="white" overflow="none" cursor="pointer" >
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</image>
+		<image dock="right" width="20" jsml-base="imagebutton" src="{folder}images/edit.gif" padding="2" overflow="none">
+			<attach name="click">
+				option.dialogcontrol.startedititem(instance._item,instance);
+			</attach>
+		</image>
+		<label dock="right" width="60" jsml-local="lsize" vertical_align="middle" border_width="0,1,0,1" border_color="white" cursor="pointer" text_align="right" padding="0,4,0,0">
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</label>
+		<label dock="right" jsml-local="ldime" width="10" vertical_align="middle" text_align="right" cursor="pointer">
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</label>
+		<label dock="fill" jsml-local="lname" vertical_align="middle" border_width="0,0,0,1" border_color="white" cursor="pointer">
+			<attach name="click">
+				option.dialogcontrol.select_item(instance._item);
+			</attach>
+		</label>
+		<method name="update_check">
+			if(self._item)checkbox.set_checked(!!self._item.IsChecked);
+		</method>
+		<method name="bind_item">
+			<![CDATA[
+			var MAX_STRING_LENGTH=24
+			
+			self._item=value;
+			checkbox.set_checked(!!value.IsChecked);
+			
+			var str=value.Text||value.Name;
+			var len=0;
+			for(var i=0;i<str.length;i++)
+			{
+				len++;
+				if(str.charCodeAt(i)>256)
+					len++;
+				if(len>MAX_STRING_LENGTH&&i+2<str.length)
+				{
+					str=str.substring(0,i)+"..";
+					break;
+				}
+			}
+			lname.set_text(str);
+			if(value.Size)lsize.set_text(jsml.format_size(value.Size));
+			var ns=value.Name.split('.');
+			var ext=ns.length>1?ns[ns.length-1]:"";
+			ext=ext.toLowerCase();
+			switch(ext)
+			{
+				case "bmp":
+				case "jpg":
+				case "jpeg":
+				case "gif":
+				case "png":
+				case "arj":
+				case "asa":
+				case "asax":
+				case "ascx":
+				case "asmx":
+				case "asp":
+				case "aspx":
+				case "au":
+				case "avi":
+				case "bat":
+				case "cab":
+				case "chm":
+				case "com":
+				case "cs":
+				case "disco":
+				case "dll":
+				case "doc":
+				case "docx":
+				case "exe":
+				case "flv":
+				case "hlp":
+				case "htm":
+				case "html":
+				case "inc":
+				case "ini":
+				case "log":
+				case "mdb":
+				case "mid":
+				case "midi":
+				case "mov":
+				case "mp3":
+				case "mp4":
+				case "mpeg":
+				case "mpg":
+				case "pdf":
+				case "ppt":
+				case "rar":
+				case "rtf":
+				case "swf":
+				case "sys":
+				case "txt":
+				case "vb":
+				case "vbs":
+				case "vsdisco":
+				case "wav":
+				case "wmv":
+				case "wri":
+				case "xls":
+				case "xlsx":
+				case "xml":
+				case "zip":
+					image.set_src("{folder}images/"+ext+".gif");
+					break;
+				default:
+					image.set_src("{folder}images/unknown.gif");
+					break;
+			}
+
+			if(value.Width&&value.Width>0&&value.Height&&value.Height>0)
+			{
+				ldime.set_text(value.Width+"x"+value.Height);
+			}
+			else
+			{
+				ldime.set_visible(false);
+			}
+			
+			var text=editor.GetLangText("NAME")+": "+self._item.Name+"\r\n"+editor.GetLangText("SIZE")+": "+jsml.format_size(self._item.Size);
+			if(self._item.Width&&self._item.Height)
+				text+="\r\n"+editor.GetLangText("DIMENSIONS")+": "+self._item.Width+" x "+self._item.Height;
+			if(self._item.Time)
+			{
+				var date=new Date(self._item.Time)
+				var dval=date.getFullYear()*10000+(date.getMonth()+1)*100+date.getDate();
+				dval=dval*1000000+date.getHours()*10000+date.getMinutes()*100+date.getSeconds();
+				var dstr=String(dval).replace(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/,"$1-$2-$3 $4:$5")
+				text+="\r\n"+editor.GetLangText("DATECREATED")+": "+dstr;
+			}
+			
+			if(true)
+				self.itemtooltiptext=text;
+			else
+				self.set_tooltip(text);
+			]]>
+		</method>
+
+		<jsml-ref name="browsedialogitemtooltip"/>
+
+	</panel>
+
+
+
+	<panel jsml-class="browsedialogsortmenuitem" jsml-base="rtemenuitem">
+		<initialize>
+			self.image.set_padding([3,-5,-3,5]);
+			self.image.set_margin([2,1,2,1]);
+			self.image.set_width(17);
+			self.image.set_height(17);
+		</initialize>
+		<property name="sort_name">
+			<get>return self._sortname;</get>
+			<set>self._sortname=value;</set>
+		</property>
+		<property name="sort_desc">
+			<get>return self._sortdesc;</get>
+			<set>
+				value=jsml.toboolean(value)
+				self._sortdesc=value;
+				self.set_src("{folder}images/sort_"+(value?"desc":"asc")+"_arrow.gif");
+			</set>
+		</property>
+		<attach name="showing">
+			self.set_checked(option.dialogcontrol.is_sort(self._sortname,!self._sortdesc));
+		</attach>
+		<attach name="click">
+			option.dialogcontrol.set_sort(self._sortname,!self._sortdesc);
+		</attach>
+	</panel>
+
+	<panel jsml-class="browsedialogbase">
+
+		<panel jsml-member="theitemmenu" jsml-base="floatmenu" jsml-append="false">
+			<panel jsml-base="rtemenuitem" htmlcode="@EDIT" src="{folder}images/edit.gif">
+				<initialize>
+					self.image.set_padding(2);
+				</initialize>
+				<attach name="updateitem" arguments="jevent,item">
+					<![CDATA[
+					self._currentitem=item;
+					var s=option.dialogcontrol._selectedstorage;
+					if(item.IsFolder)return self.set_visible(false);
+					var arr=item.Name.split('.');
+					var ext=arr[arr.length-1].toLowerCase();
+					switch(ext)
+					{
+						case "gif":case "png":case"jpg":case "jpeg":case "bmp":
+							self.set_visible(true);
+							break;
+						default:
+							self.set_visible(false);
+							break;
+					}
+					]]>
+				</attach>
+				<attach name="click">
+					if(self._disabled)return;
+					option.dialogcontrol.processmenucommand("edit",self._currentitem);
+				</attach>
+			</panel>
+			<panel jsml-base="rtemenuitem" htmlcode="@MOVE" src="{folder}images/move.png">
+				<initialize>
+					self.image.set_padding(1);
+				</initialize>
+				<attach name="updateitem" arguments="jevent,item">
+					self._currentitem=item;
+					var s=option.dialogcontrol._selectedstorage;
+					if(item.IsFolder)self.set_disabled(!s.AllowMoveFolder);
+					else self.set_disabled(!s.AllowMoveFile);
+				</attach>
+				<attach name="click">
+					if(self._disabled)return;
+					option.dialogcontrol.processmenucommand("move",self._currentitem);
+				</attach>
+			</panel>
+			<panel jsml-base="rtemenuitem" htmlcode="@COPY" src="{folder}images/copy.png">
+				<attach name="updateitem" arguments="jevent,item">
+					self._currentitem=item;
+					var s=option.dialogcontrol._selectedstorage;
+					if(item.IsFolder)self.set_disabled(!s.AllowMoveFolder);
+					else self.set_disabled(!s.AllowMoveFile);
+				</attach>
+				<attach name="click">
+					if(self._disabled)return;
+					option.dialogcontrol.processmenucommand("copy",self._currentitem);
+				</attach>
+			</panel>
+			<panel jsml-base="rtemenuitem" htmlcode="@DELETE" src="{folder}images/delete.png">
+				<attach name="updateitem" arguments="jevent,item">
+					self._currentitem=item;
+					var s=option.dialogcontrol._selectedstorage;
+					if(item.IsFolder)self.set_disabled(!s.AllowDeleteFolder);
+					else self.set_disabled(!s.AllowDeleteFile);
+				</attach>
+				<attach name="click">
+					if(self._disabled)return;
+					option.dialogcontrol.processmenucommand("delete",self._currentitem);
+				</attach>
+			</panel>
+		</panel>
+		<panel jsml-member="thesortmenu" jsml-base="floatmenu" jsml-append="false">
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYNAMEASC" sort_desc="false" sort_name="Name" />
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYNAMEDESC" sort_desc="true" sort_name="Name" />
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYSIZEASC" sort_desc="false" sort_name="Size" />
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYSIZEDESC" sort_desc="true" sort_name="Size" />
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYDATEASC" sort_desc="false" sort_name="Time" />
+			<panel jsml-base="browsedialogsortmenuitem" htmlcode="@MENU_SORTBYDATEDESC" sort_desc="true" sort_name="Time" />
+		</panel>
+		<initialize>
+			self.thesortmenu._estyle.zIndex=editor._config.dialog_zindex;
+			self.theitemmenu._estyle.zIndex=editor._config.dialog_zindex;
+		</initialize>
+		<attach name="disposing">
+			self.thesortmenu.dispose();
+			self.theitemmenu.dispose();
+		</attach>
+
+
+
+		<panel dock="top" height="22" margin="5,3,0,3">
+			<panel dock="left" margin="0,3,0,3" width="296">
+				<image dock="left" width="20" margin="0,0,2,0" vertical_align="middle" horizontal_align="center" src="{folder}images/openfolder.png">
+				</image>
+				<panel jsml-base="panelbutton" jsml-local="storagepanel" dock="left" width="10" overflow="visible" visible="false">
+					<label jsml-local="storagelabel"  dock="left" width="10" padding="0,-1,0,1" text="!" vertical_align="middle" cursor="pointer" />
+					<attach name="click">
+						instance.call_selectstorage(self);
+					</attach>
+				</panel>
+				<panel jsml-base="panelbutton" dock="left" overflow="visible" width="32" margin="0,0,0,-2">
+					<label jsml-local="labelpath" dock="fill" text="/" padding="0,1,0,0" width="32" vertical_align="middle" cursor="pointer"/>
+					<attach name="click">
+						instance.call_openfolder(self);
+					</attach>
+				</panel>
+			</panel>
+
+
+			<image jsml-base="imagebutton" dock="left" tooltip="@REFRESH" width="22" padding="3,2,1,2" border_width="1" src="{folder}images/refresh.gif" >
+				<attach name="click">
+					instance.call_reload(self);
+				</attach>
+			</image>
+
+			<image jsml-base="imagebutton" dock="left" width="22" padding="3,2,1,2" border_width="1" src="{folder}images/newfolder.gif">
+				<attach name="updatestorage">
+					var allow=instance._selectedstorage.AllowCreateFolder;
+					self.set_disabled(!allow);
+					self.set_tooltip(editor.GetLangText(allow?"TOOLTIP_CREATEFOLDER":"TOOLTIP_FUNCTIONDISABLED"));
+				</attach>
+				<attach name="click">
+					if(self.get_disabled())return;
+					instance.call_createfolder(self);
+				</attach>
+			</image>
+			<image jsml-base="imagebutton" dock="left" width="22" padding="2,2,2,2" border_width="1" src="{folder}images/move.png">
+				<attach name="updatestorage">
+					var allow=instance._selectedstorage.AllowMoveFolder||instance._selectedstorage.AllowMoveFile;
+					self.set_disabled(!allow);
+					self.set_tooltip(editor.GetLangText(allow?"TOOLTIP_MOVEITEMS":"TOOLTIP_FUNCTIONDISABLED"));
+				</attach>
+				<attach name="click">
+					if(self.get_disabled())return;
+					instance.call_moveitems(self);
+				</attach>
+			</image>
+			<image jsml-base="imagebutton" dock="left" width="22" border_width="1" src="{folder}images/copy.png">
+				<attach name="updatestorage">
+					var allow=instance._selectedstorage.AllowCopyFolder||instance._selectedstorage.AllowCopyFile;
+					self.set_disabled(!allow);
+					self.set_tooltip(editor.GetLangText(allow?"TOOLTIP_COPYITEMS":"TOOLTIP_FUNCTIONDISABLED"));
+				</attach>
+				<attach name="click">
+					if(self.get_disabled())return;
+					instance.call_copyitems(self);
+				</attach>
+			</image>
+			<image jsml-base="imagebutton" dock="left" width="22" border_width="1"  src="{folder}images/delete.png">
+				<attach name="updatestorage">
+					var allow=instance._selectedstorage.AllowDeleteFolder||instance._selectedstorage.AllowDeleteFile;
+					self.set_disabled(!allow);
+					self.set_tooltip(editor.GetLangText(allow?"TOOLTIP_DELETEITEMS":"TOOLTIP_FUNCTIONDISABLED"));
+				</attach>
+				<attach name="click">
+					if(self.get_disabled())return;
+					instance.call_deleteitems(self);
+				</attach>
+			</image>
+
+			<image jsml-base="imagebutton" dock="left" tooltip="@SORT" width="22" padding="4,0,0,4" border_width="1"  src="{folder}images/sort.gif" vertical_align="middle" horizontal_align="center">
+				<attach name="click">
+					instance.thesortmenu.show({control:self,stopDispose:true});
+				</attach>
+			</image>
+
+			<image jsml-base="imagebutton" jsml-local="uploadbtn" dock="left" width="22" padding="4,1,0,3" border_width="1"  src="{folder}images/uploadimage.png" vertical_align="middle">
+				<attach name="updatestorage">
+					var allow=instance._selectedstorage.AllowUpload;
+					self.set_disabled(!allow);
+					self.set_tooltip(editor.GetLangText(allow?"UPLOAD":"TOOLTIP_FUNCTIONDISABLED"));
+				</attach>
+				<method name="showfloatbox">
+					<![CDATA[
+					if(!self._hovered||!self.get_visible())
+						return;
+					if(self.currentdialog&&self.currentdialog.get_visible())
+						return;
+					if(!jsml.floatbox_allowautofloatbox(self._element))
+						return;
+					var storage=instance._selectedstorage;
+					var newoption={storage:storage,storages:option.storages,folder:"/",items:[]}
+					newoption.control=self
+					newoption.floatMode="b-r";
+					//newoption.onoverlay=function(overlay,floatbox)
+					//{
+					//	editor.RegisterUploadButton(overlay,true);
+					//	floatbox.attach_event("disposing",function()
+					//	{
+					//		editor.RemoveUploadButton(overlay);
+					//	});
+					//}
+					self.currentdialog=editor.ShowXmlFloatBox(editor.BuildDialogUrl("uploadinfo.xml"),newoption);
+					]]>
+				</method>
+				<attach name="click">
+					self.showfloatbox();
+				</attach>
+				<attach name="mousehover">
+					<![CDATA[
+					self._hovered=true;
+					//self.setDelegateTimeout(self.delegate(self.showfloatbox),666);
+					]]>
+				</attach>
+				<attach name="mouseleave">
+					self._hovered=false;
+				</attach>
+			</image>
+
+			<panel dock="right" width="120">
+				<panel dock="bottom" height="19" margin="0,0,1,0">
+					<image dock="left" src="{folder}images/filter_l.gif" width="19"/>
+					<image dock="right" src="{folder}images/filter_c.gif" width="19" cursor="pointer">
+						<attach name="click">
+							instance.set_filter("");
+							filtertextbox.set_text("");
+							filtertextbox.focus();
+						</attach>
+					</image>
+					<panel dock="fill" background="url({folder}images/filter_m.gif) repeat-x">
+						<textbox jsml-local="filtertextbox" dock="fill" border_width="0" back_color="transparent" >
+							<attach name="enterkey">
+								instance.set_filter(self.get_text());
+							</attach>
+							<attach name="change">
+								instance.set_filter(self.get_text());
+							</attach>
+							<attach name="keyup">
+								instance.set_filter(self.get_text());
+							</attach>
+						</textbox>
+					</panel>
+				</panel>
+			</panel>
+
+		</panel>
+
+		<panel jsml-local="panelafterupload" dock="top" margin="2" padding="2,2,2,6" overflow="visible" visible="false" back_color="#EEEECC">
+			<label dock="left" text="@msg_displayuploaded" vertical_align="middle" />
+			<panel jsml-base="panelbutton" dock="left" margin="0,3,0,3">
+				<label dock="fill" text_color="blue" text="@msg_showall" vertical_align="middle" horizontal_align="center" cursor="pointer" >
+					<initialize>
+						self._content.style.textDecoration='underline';
+					</initialize>
+					<attach name="click">
+						panelafterupload.set_visible(false);
+						instance._onlyshowchecked=false;
+						instance.fill_items(instance._folderitem.Items,true);
+					</attach>
+				</label>
+			</panel>
+		</panel>
+
+
+		<!-- # # # # # # # # # # # # # # # # 
+			dialog code
+		 # # # # # # # # # # # # # # # # -->
+
+		<method name="setisloading">
+		</method>
+
+		<method name="select_file">
+		</method>
+		<method name="clearitemcontrols">
+		</method>
+		<method name="additemcontrols">
+		</method>
+
+		<attach name="updatestorage">
+			storagelabel.set_text(self._selectedstorage.Name);
+		</attach>
+		<attach name="updateui_folderload">
+			labelpath.set_text(self._currdir);
+		</attach>
+		<attach name="updateui_storagelist">
+			storagepanel.set_visible(self._allstorages.length>1);
+		</attach>
+		<attach name="updateui_afterupload">
+			panelafterupload.set_visible(self._onlyshowchecked);
+		</attach>
+
+		<attach name="doinit_uploader">
+			<![CDATA[
+			//delay load the uploader..
+			uploadbtn._element.onmouseover=function()
+			{
+				uploadbtn.invoke_event("mousehover");
+			}
+			uploadbtn._element.onmouseout=function()
+			{
+				uploadbtn.invoke_event("mouseleave");
+			}
+			self.setDelegateTimeout(function()
+			{
+				editor.RegisterUploadButton(document.createElement("DIV"));
+			},1000);
+			//editor.RegisterUploadButton(uploadbtn._element);
+			]]>
+		</attach>
+		<attach name="disposing">
+			uploadbtn._element.onmouseover=jsml.empty_function;
+			uploadbtn._element.onmouseout=jsml.empty_function;
+			//editor.RemoveUploadButton(uploadbtn._element);
+		</attach>
+
+
+		<initialize>
+			option.dialogcontrol=self;
+			self._sortmode="Name";
+			self._sortdesc=false;
+			self.editoreventid=editor.AttachEvent(self.delegate(self.processeditorevent));
+		</initialize>
+		<attach name="disposing">
+			editor.DetachEvent(self.editoreventid);
+		</attach>
+
+
+		<property name="storage">
+			<get>
+				return self._selectedstorage;
+			</get>
+			<set arguments="storage,folder">
+				<![CDATA[
+				var exts=storage.Extensions.split('.').join('').split('*').join('').split(',');
+				for(var i=0;i<exts.length;i++)exts[i]="."+exts[i];
+				self._selectedextensions=exts;
+				self._selectedstorage=storage;
+				self.change_folder(folder||"/");
+				self.invoke_recursive("updatestorage");
+				]]>
+			</set>
+		</property>
+
+		<method name="reportError" arguments="msg">
+			<![CDATA[
+			if(!msg)return;
+			if(msg.substring(0,6)=="ERROR:")
+			{
+				msg=msg.substring(6);
+				var pos=msg.indexOf(":");
+				if(pos!=-1)
+				{
+					var word=msg.substring(0,pos).toLowerCase();
+					var arg='-';
+					switch(word)
+					{
+						case "maxfilesize":
+							arg=self._selectedstorage.MaxFileSize+"KB";
+							break;
+						case "maxfoldersize":
+							arg=self._selectedstorage.MaxFolderSize+"KB";
+							break;
+						case "maximagewidth":
+							arg=self._selectedstorage.MaxFolderWidth;
+							break;
+						case "maximageheight":
+							arg=self._selectedstorage.MaxFolderHeight;
+							break;
+					}
+					msg=editor.GetLangText("error_"+word);
+					msg=msg.split("{0}").join(arg);
+				}
+			}
+			editor.Alert(msg);
+			]]>
+		</method>
+
+		<method name="handlecreatefolder" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			
+			var item=res.ReturnValue;
+			if(!item)return;
+			
+			var folder=self._currdir||"/";
+			//	//auto enter the new folder ?
+			//folder += item.Name+"/"
+			panelafterupload.set_visible(false);
+			instance._onlyshowchecked=false;
+			self.change_folder( folder );
+			]]>
+		</method>
+		<method name="handlemoveitems" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			editor.Alert(editor.GetLangText("msg_itembemoved"));
+			panelafterupload.set_visible(false);
+			instance._onlyshowchecked=false;
+			self.change_folder(self._currdir||"/");
+			]]>
+		</method>
+		<method name="handlecopyitems" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			editor.Alert(editor.GetLangText("msg_itembecopied"));
+			]]>
+		</method>
+		<method name="handledeleteitems" arguments="res">
+			if(res.Error)self.reportError(res.Error.message);
+			panelafterupload.set_visible(false);
+			instance._onlyshowchecked=false;
+			self.change_folder(self._currdir||"/");
+		</method>
+
+		<method name="handlegetfolderitem" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			
+			var folderitem=res.ReturnValue;
+			if(!folderitem)return;
+			
+			self._currdir=self._chaningdir;
+			self._folderitem=folderitem;
+			
+			var checkmap=self["checkmap:"+self._currdir];
+			if(checkmap)
+			{
+				var arr=self._folderitem.Items;
+				for(var i=0;i<arr.length;i++)
+				{
+					var n=arr[i].Name;
+					if(n=="..")continue;
+					if(checkmap[self._currdir+":"+n])
+						arr[i].IsChecked=true;
+				}
+			}
+
+			self.fill_items(folderitem.Items,true);
+			
+			self.invoke_event("updateui_folderload");
+			
+			]]>
+		</method>
+		<method name="handlegetstorages" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+		
+			self._allstorages=res.ReturnValue;
+
+			self.set_storage(self._allstorages[0],self._chaningdir);
+			
+			if(!self._uploaderinited)
+			{
+				self.invoke_event("doinit_uploader");
+				self._uploaderinited=true;
+			}
+			
+			self.invoke_event("updateui_storagelist");
+
+			]]>
+		</method>
+		<method name="handlechangename" arguments="res">
+			<![CDATA[
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			
+			var newname=res.ReturnValue;
+			if(!newname)
+			{
+				editor.Alert(editor.GetLangText("msg_failedrename"));
+				return;
+			}
+			
+			if(self._chaningnamectrl)
+			{
+				var item=self._chaningnamectrl._item;
+				item.Name=newname;
+				self._chaningnamectrl.bind_item(item,self);
+			}
+			
+			]]>
+		</method>
+		<method name="handleuploadfiles" arguments="res">
+			<![CDATA[
+			
+			self._uploadertoreset.reset();
+
+			self.setisloading(false);
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			
+			var arr=res.ReturnValue;
+			if(!arr||arr.length==0)
+			{
+				self.change_folder(self._currdir);
+				return;
+			}
+			
+			var errcount=0;
+			for(var i=0;i<arr.length;i++)
+			{
+				if(typeof(arr[i])=="string")
+				{
+					self.reportError(arr[i]);
+					errcount++;
+				}
+			}
+			
+			if(errcount==arr.length)
+				return;
+			
+			self.checkallitems(false);
+			
+			var items=self._folderitem.Items;
+			
+			for(var i=0;i<arr.length;i++)
+			{
+				if(typeof(arr[i])=="string")
+					continue;
+				arr[i].IsChecked=true;
+				var exists=false;
+				for(var j=0;j<items.length;j++)
+				{
+					if(items[j].Name!=arr[i].Name)
+						continue;
+					items[j]=arr[i];
+					exists=true;
+					break;
+				}
+				if(!exists)
+				{
+					items.push(arr[i]);
+				}
+			}
+
+			self._onlyshowchecked=true;
+			self.invoke_event("updateui_afterupload");
+			self.set_sort("Time",false);
+			self.fill_items(items,true);
+			self.select_item(arr[0]);
+			]]>
+		</method>
+		<method name="fill_items" arguments="arr,reset">
+			<![CDATA[
+			if(reset)
+			{
+				self.clearitemcontrols();
+				self.itemcount=0;
+			}
+			
+			var filter=self._lastkeyword;
+			if(filter)
+			{
+				var newarr=[];
+				for(var i=0;i<arr.length;i++)
+				{
+					var item=arr[i];
+					if(item.Name.toLowerCase().indexOf(filter)==-1)
+						continue;
+					newarr.push(item);
+				}
+				arr=newarr;
+			}
+			if(self._onlyshowchecked)
+			{
+				var newarr=[];
+				for(var i=0;i<arr.length;i++)
+				{
+					var item=arr[i];
+					if(item.IsChecked)
+						newarr.push(item);
+				}
+				arr=newarr;
+			}
+			
+			function quick_string_sort(str)
+			{
+				str=str.toLowerCase();
+				var f=0;
+				var seed=1/65536;
+				for(var i=0;i<str.length;i++)
+					f+=str.charCodeAt(i)*Math.pow(seed,i);
+				return f;
+			}
+			
+			var sorttrue=-1;
+			var sortfalse=1;
+			if(self._sortdesc)
+			{
+				sorttrue=1;
+				sortfalse=-1;
+			}
+			
+			function compare_folder(a,b)
+			{
+				if(a.IsFolder!=b.IsFolder)
+					return a.IsFolder?sorttrue:sortfalse;
+				if(a.Name==b.Name)
+					return 0;
+				if(a.IsFolder&&a.Name=="..")return sorttrue;
+				if(b.IsFolder&&b.Name=="..")return sortfalse;
+				return 0;
+			}
+
+			arr=arr.concat();
+			if(self._sortmode=="Name")
+			{
+				arr.sort(function(a,b)
+				{
+					var r=compare_folder(a,b);
+					if(r!=0)
+						return r;
+										
+					if(!a.strsort_name)a.strsort_name=quick_string_sort(a.Name);
+					if(!b.strsort_name)b.strsort_name=quick_string_sort(b.Name);
+					if(a.strsort_name<b.strsort_name)
+						return -1;
+					return 1;
+				});
+			}
+			if(self._sortmode=="Size")
+			{
+				arr.sort(function(a,b)
+				{
+					var r=compare_folder(a,b);
+					if(r!=0)
+						return r;
+						
+					if(a.Size<b.Size)
+						return -1;
+					if(a.Size==b.Size)
+						return 0;
+					return 1;
+				});
+			}
+			if(self._sortmode=="Time")
+			{
+				arr.sort(function(a,b)
+				{
+					var r=compare_folder(a,b);
+					if(r!=0)
+						return r;
+						
+					if(a.Time<b.Time)
+						return -1;
+					if(a.Time==b.Time)
+						return 0;
+					return 1;
+				});
+			}
+			if(self._sortdesc)arr.reverse();
+
+
+			self.itemcount=(self.itemcount||0)+arr.length;
+			self.invoke_event("updateui_itemcount");
+			
+			self.additemcontrols(arr);
+			
+			]]>
+		</method>
+		<method name="toggle_sort" arguments="mode">
+			<![CDATA[
+			if(self._sortmode==mode)
+			{
+				self._sortdesc=!self._sortdesc;
+			}
+			else
+			{
+				self._sortmode=mode;
+				self._sortdesc=false;
+			}
+			self.invoke_event("updateui_sort");
+			if(!self._folderitem)return;
+			self.fill_items(self._folderitem.Items,true);
+			]]>
+		</method>
+		<method name="is_sort" arguments="mode,asc">
+			<![CDATA[
+			return self._sortmode==mode&&self._sortdesc==!asc;
+			]]>
+		</method>
+		<method name="set_sort" arguments="mode,asc">
+			<![CDATA[
+			self._sortmode=mode;
+			self._sortdesc=!asc;
+			self.invoke_event("updateui_sort");
+			if(!self._folderitem)return;
+			self.fill_items(self._folderitem.Items,true);
+			]]>
+		</method>
+		<method name="set_filter" arguments="keyword">
+			<![CDATA[
+			if(keyword)keyword=keyword.replace(/(^\s+|\s+$)/g,"").toLowerCase().split('*').join('');
+			if(!keyword)keyword=null;
+			if(self._lastkeyword==keyword)return;
+			self._lastkeyword=keyword
+
+			if(!self._folderitem)return;
+			self.fill_items(self._folderitem.Items,true);
+			]]>
+		</method>
+		<method name="change_folder" arguments="folder">
+			<![CDATA[
+			self._lastkeyword=null;
+			self._chaningdir=folder;
+			if(self._folderitem&&self._currdir)
+			{
+				var checkmap={}
+				self["checkmap:"+self._currdir]=checkmap;
+				
+				var arr=self._folderitem.Items;
+				for(var i=0;i<arr.length;i++)
+				{
+					var n=arr[i].Name;
+					if(n=="..")continue;
+					var key=self._currdir+":"+n;
+					if(arr[i].IsChecked)
+						checkmap[key]=true;
+				}
+			}
+			self.setisloading(true);
+			if(!self._selectedstorage)
+			{
+				editor.CallAjax("AjaxGetStorages",self.delegate(self.handlegetstorages),self._category);
+			}
+			else
+			{
+				var storage={ID:self._selectedstorage.ID,UrlPath:self._chaningdir,Category:self._category};
+				editor.CallAjax("AjaxGetFolderItem",self.delegate(self.handlegetfolderitem),storage,self._getoption);
+			}
+			]]>
+		</method>
+
+		<method name="select_item">
+			<![CDATA[
+			if(value.IsFolder)
+			{
+				var folder=self._currdir+value.Name+"/";
+				if(value.Name=="..")
+				{
+					var sb=[]
+					var ps=self._currdir.split('/');
+					for(var i=0;i<ps.length;i++)
+						if(ps[i])sb.push(ps[i]);
+					sb.splice(sb.length-1,1);
+					folder=sb.length?("/"+sb.join("/")+"/"):"/";
+				}
+				self.change_folder(folder);
+			}
+			else
+			{
+				self.select_file(value);
+			}
+			]]>
+		</method>
+
+		<method name="splitnamepart" arguments="name">
+			var pos=name.lastIndexOf('.');
+			if(pos==-1)return [name,""];
+			return [name.substring(0,pos),name.substring(pos)];
+		</method>
+		<method name="startedititem" arguments="item,ctrl">
+			<![CDATA[
+			if(item.IsFolder)
+			{
+				if(!self._selectedstorage.AllowRenameFolder)
+				{
+					editor.Alert({control:ctrl,message:editor.GetLangText("msg_deny_renamefolder")});
+					return;
+				}
+			}
+			else
+			{
+				if(!self._selectedstorage.AllowRenameFile)
+				{
+					editor.Alert({control:ctrl,message:editor.GetLangText("msg_deny_renamefile")});
+					return;
+				}
+			}
+
+			self._chaningnamectrl=ctrl;
+			var newoption={control:ctrl,title:"Change name",message:editor.GetLangText("prompt_newname"),allowempty:false}
+			var namepart=self.splitnamepart(item.Name);
+			newoption.defaultvalue=namepart[0];
+			newoption.callback=function(val,err){
+				if(err)return;
+				if(val==null)return;
+				if(val==namepart[0])return;
+				var newname=val+namepart[1];
+				if(self.finditem(newname) && newname.toLowerCase()!=item.Name.toLowerCase())
+				{
+					newoption.message=editor.GetLangText("msg_namebeused",newname);
+					editor.Prompt(newoption);
+					return;
+				}
+				self.setisloading(true);
+				var storage={ID:self._selectedstorage.ID,UrlPath:self._currdir,Category:self._category};
+				editor.CallAjax("AjaxChangeName",self.delegate(self.handlechangename),storage,item.Name,newname);
+			}
+			editor.Prompt(newoption)
+			]]>
+		</method>
+
+		<method name="processuploaderselect" arguments="uploader,tasks">
+			<![CDATA[
+			var INSERT_DATE_BEFORE_FILENAME=false;
+			var files=[];
+				
+			var indexes=[];
+			var usednamemap={};
+			for(var i=0;i<tasks.length;i++)
+			{
+				var task=tasks[i];
+				var filename=task.FileName;
+				if(INSERT_DATE_BEFORE_FILENAME)
+				{
+					var d=new Date();
+					filename=String(d.getFullYear()*10000+(d.getMonth()+1)*100+d.getDate())+"_"+filename;
+				}
+				task.SetClientData(filename);
+				if(usednamemap[filename]||self.finditem(filename))
+					indexes.push(i);
+				else
+					usednamemap[filename]=true;
+			}
+			
+			function AllocateNewname(filename)
+			{
+				var pos=filename.lastIndexOf('.');
+				var prefix=filename;
+				var suffix="";
+				if(pos>-1)
+				{
+					prefix=filename.substring(0,pos);
+					suffix=filename.substring(pos);
+				}
+				prefix=prefix.replace(/\(\n+\)&/,'');
+				for(var np=1;true;np++)
+				{
+					filename=prefix+"("+np+")"+suffix;
+					if(usednamemap[filename]||self.finditem(filename))
+						continue;
+					return filename;
+				}
+			}
+			
+			var lastchecked=true;
+			
+			var nextindex=0;
+			function processproblemitem()
+			{
+				if(nextindex>=indexes.length)
+				{
+					self.setDelegateTimeout(function(){uploader.startupload()},1);
+					return;
+				}
+				task=tasks[indexes[nextindex]];
+				var newoption={title:editor.GetLangText("msg_itemexiststitle"),width:320,height:150}
+				newoption.result="cancel";
+				newoption.lastchecked=lastchecked;
+				newoption.message=editor.GetLangText("msg_itemexists",task.GetClientData())
+				if(nextindex+1<indexes.length)
+					newoption.nextmsg=editor.GetLangText("msg_sameforitems",indexes.length-nextindex-1)
+					
+				newoption.AllowOverride=self._selectedstorage.AllowOverride;
+				newoption.callback=function(res,err)
+				{
+					lastchecked=newoption.checked;
+					var loopnext=nextindex<indexes.length;
+					while(loopnext)
+					{
+						var task=tasks[indexes[nextindex]];
+						
+						if(newoption.checked)
+						{
+							nextindex++
+							loopnext=nextindex<indexes.length;
+						}
+						else
+						{
+							loopnext=false;
+						}
+						
+						if(newoption.result=="cancel")
+						{
+							task.Cancel();
+						}
+						else if(newoption.result=="override")
+						{
+						}
+						else
+						{
+							//rename:
+							var filename=task.GetClientData();
+							task.SetClientData(AllocateNewname(filename));
+						}
+					}
+					nextindex++;
+					self.setDelegateTimeout(processproblemitem,1);
+				}
+				editor.ShowXmlDialog(editor.BuildDialogUrl("overriderename.xml"),newoption);
+			}
+			self.setDelegateTimeout(processproblemitem,1);
+			]]>
+		</method>
+		<method name="processuploaderstart" arguments="uploader">
+			<![CDATA[
+			self.uploaderstarted=true;
+			self.setisloading(true);
+			var newoption={title:"Uploading:",width:420,height:280}
+			newoption.uploader=uploader;
+			newoption.ondialoginit=function(dialog)
+			{
+				self.uploaderprogressdialog=dialog;
+			}
+			newoption.callback=function(res,err){}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("uploadprogress.xml"),newoption);
+			]]>
+		</method>
+		<method name="processuploaderstop" arguments="uploader,postback">
+			<![CDATA[
+			self.uploaderstarted=false;
+			if(postback)
+			{
+				self.setisloading(true);
+				self._uploadertoreset=uploader;
+				var storage={ID:self._selectedstorage.ID,UrlPath:self._currdir,Category:self._category};
+				var namemap=[];
+				
+				var items=uploader.getitems();
+				for(var i=0;i<items.length;i++)
+					namemap.push(items[i].FileGuid+"/"+items[i].GetClientData());
+				editor.CallAjax("AjaxUploadFiles",self.delegate(self.handleuploadfiles),storage,self._getoption,namemap.join("|"));
+			}
+			else
+			{
+				self.setisloading(false);
+			}
+			if(self.uploaderprogressdialog)
+			{
+				self.uploaderprogressdialog.close();
+			}
+			]]>
+		</method>
+
+		<method name="processeditorevent" arguments="editor,e">
+			<![CDATA[
+			switch(e.Name)
+			{
+				case "Uploader_Browse":
+					var uploader=e.Arguments[0];
+					var filter=self._category+" files|"+self._selectedextensions.join(';').split('.').join("*.");
+					uploader.internalobject.DialogFilter=filter;
+					if(self._category=="Image"||self._category=="Gallery")
+						uploader.internalobject.DialogAccept="image/*";
+					else
+						uploader.internalobject.DialogAccept="*/*";
+					uploader.internalobject.MaxSizeKB=self._selectedstorage.MaxFileSize;
+					if(!self.uploaderstarted)uploader.reset();
+					if(!self._selectedstorage.AllowUpload)e.ReturnValue=false;
+					break;
+				case "Uploader_Select":
+					var uploader=e.Arguments[0];
+					var tasks=e.Arguments[1];
+					self.processuploaderselect(uploader,tasks);
+					break;
+				case "Uploader_Start":
+					self.processuploaderstart(e.Arguments[0]);
+					break;
+				case "Uploader_Stop":
+					self.processuploaderstop(e.Arguments[0]);
+					break;
+				case "Uploader_Postback":
+					self.processuploaderstop(e.Arguments[0],true);
+					break;
+			}
+			]]>
+		</method>
+
+
+		<method name="call_reload">
+			self.change_folder(self._currdir||"/");
+		</method>
+
+		<method name="call_createfolder" arguments="ctrl">
+			<![CDATA[
+			if(!self._folderitem)return;
+			
+			function createfoldercallback(res)
+			{
+				self.handlecreatefolder(res);
+				if(res.ReturnValue)
+				{
+					editor.Alert({control:ctrl,message:editor.GetLangText("msg_foldercreated",res.ReturnValue.Name)});
+				}
+			}
+
+			var newoption={control:ctrl,title:"Create Folder",message:editor.GetLangText("prompt_newfoldername"),allowempty:false}
+			newoption.callback=function(val,err){
+				if(err)return;
+				if(!val)return;
+				var item=self.finditem(val);
+				if(item!=null)
+				{
+					editor.Alert({control:ctrl,message:editor.GetLangText("msg_itemexists",val)});
+					return;
+				}
+				self.setisloading(true);
+				var storage={ID:self._selectedstorage.ID,UrlPath:self._currdir,Category:self._category};
+				editor.CallAjax("AjaxCreateFolder",createfoldercallback,storage,val);
+				return;
+			}
+			editor.Prompt(newoption)
+			]]>
+		</method>
+		<method name="call_edititem" arguments="ctrl,value">
+			<![CDATA[
+			var storage={ID:self._selectedstorage.ID,UrlPrefix:self._selectedstorage.UrlPrefix,UrlPath:self._currdir,Category:self._category};
+			var newoption={storage:storage,fileitem:value}
+			var rect=jsml.get_body_rect();
+			newoption.width=rect.width-100;
+			newoption.height=rect.height-100;
+			newoption.callback=function(res,err)
+			{
+				if(!res)return;
+			}
+			newoption.onsaveimage=function(pathitem)
+			{
+				var url=self._folderitem.UrlPrefix+self._currdir+pathitem.Name;
+				self.invoke_event("repreview");
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("imageeditor.xml"),newoption);
+			]]>
+			</method>
+		<method name="call_deletearray" arguments="ctrl,arr">
+			<![CDATA[
+			var newoption={control:ctrl,title:"Delete items",message:editor.GetLangText("confirm_deleteitems",arr.length)}
+			newoption.callback=function(val,err){
+				if(err)return;
+				if(!val)return;
+				
+				for(var i=0;i<arr.length;i++)arr[i]=arr[i].Name;
+				self.setisloading(true);
+				var storage={ID:self._selectedstorage.ID,UrlPath:self._currdir,Category:self._category};
+				editor.CallAjax("AjaxDeleteItems",self.delegate(self.handledeleteitems),storage,arr);
+			}
+			editor.Confirm(newoption)
+			]]>
+		</method>
+		<method name="call_deleteitems" arguments="ctrl">
+			<![CDATA[
+			var arr=self.getcheckeditems();
+			if(arr.length==0)
+			{
+				editor.Alert({control:ctrl,message:editor.GetLangText("msg_requireselecteditems")});
+				return;
+			}
+			if( ! self._selectedstorage.AllowDeleteFile )
+			{
+				for(var i=0;i<arr.length;i++)
+				{
+					if(!arr[i].IsFolder)
+					{
+						editor.Alert({control:ctrl,message:editor.GetLangText("msg_deny_deletefile")});
+						return;
+					}
+				}
+			}
+			if( ! self._selectedstorage.AllowDeleteFolder )
+			{
+				for(var i=0;i<arr.length;i++)
+				{
+					if(arr[i].IsFolder)
+					{
+						editor.Alert({control:ctrl,message:editor.GetLangText("msg_deny_deletefolder")});
+						return;
+					}
+				}
+			}
+			self.call_deletearray(ctrl,arr);
+			]]>
+		</method>
+		<method name="call_copymovearray" arguments="ctrl,iscopy,arr">
+			<![CDATA[
+			for(var i=0;i<arr.length;i++)arr[i]=arr[i].Name;
+			var storage={ID:self._selectedstorage.ID,UrlPath:"/",Category:self._category};
+			var newoption={storage:storage,storages:self._allstorages,folder:self._currdir,items:arr}
+			newoption.callback=function(res,err)
+			{
+				if(!res)return;
+				self.setisloading(true);
+				var method="AjaxMoveItems";
+				var handler=self.handlemoveitems;
+				if(iscopy)
+				{
+					method="AjaxCopyItems"; //TODO: split the copy items into multiple steps.
+					handler=self.handlecopyitems;
+				}
+				var src={ID:self._selectedstorage.ID,UrlPath:self._currdir,Category:self._category};
+				var dst={ID:self._selectedstorage.ID,UrlPath:res,Category:self._category};
+				editor.CallAjax(method,self.delegate(handler),src,dst,arr);
+			}
+			if(ctrl)
+			{
+				newoption.control=ctrl;
+				editor.ShowXmlFloatBox(editor.BuildDialogUrl("foldertree.xml"),newoption);
+			}
+			else
+			{
+				editor.ShowXmlDialog(editor.BuildDialogUrl("foldertree.xml"),newoption);
+			}
+			]]>
+		</method>
+		<method name="call_copymoveitems" arguments="ctrl,iscopy">
+			<![CDATA[
+			var arr=self.getcheckeditems();
+			if(arr.length==0)
+			{
+				editor.Alert({control:ctrl,message:editor.GetLangText("msg_requireselecteditems")});
+				return;
+			}
+			if( ! (iscopy?self._selectedstorage.AllowCopyFile:self._selectedstorage.AllowMoveFile) )
+			{
+				for(var i=0;i<arr.length;i++)
+				{
+					if(!arr[i].IsFolder)
+					{
+						editor.Alert({control:ctrl,message:editor.GetLangText(iscopy?"msg_deny_copyfolder":"msg_deny_movefile")});
+						return;
+					}
+				}
+			}
+			if( ! (iscopy?self._selectedstorage.AllowCopyFolder:self._selectedstorage.AllowMoveFolder) )
+			{
+				for(var i=0;i<arr.length;i++)
+				{
+					if(arr[i].IsFolder)
+					{
+						editor.Alert({control:ctrl,message:editor.GetLangText(iscopy?"msg_deny_copyfolder":"msg_deny_movefolder")});
+						return;
+					}
+				}
+			}
+			self.call_copymovearray(ctrl,iscopy,arr);
+			]]>
+		</method>
+		<method name="call_copyitems">
+			<![CDATA[
+			self.call_copymoveitems(value,true);
+			]]>
+		</method>
+		<method name="call_moveitems">
+			<![CDATA[
+			self.call_copymoveitems(value,false);
+			]]>
+		</method>
+		<method name="call_openfolder" arguments="ctrl">
+			<![CDATA[
+			var storage={ID:self._selectedstorage.ID,UrlPath:"/",Category:self._category};
+			var newoption={storage:storage,storages:self._allstorages,folder:self._currdir,items:[]}
+			newoption.callback=function(res,err)
+			{
+				if(!res)return;
+				self.change_folder(res);
+			}
+			newoption.quickselect=function(res)
+			{
+				self.change_folder(res);
+			}
+			if(ctrl&&ctrl._element)
+			{
+				newoption.control=ctrl;
+				editor.ShowXmlFloatBox(editor.BuildDialogUrl("foldertree.xml"),newoption);
+			}
+			else
+			{
+				editor.ShowXmlDialog(editor.BuildDialogUrl("foldertree.xml"),newoption);
+			}
+			]]>
+		</method>
+		<method name="call_selectstorage" arguments="ctrl">
+			<![CDATA[
+			var storage={ID:self._selectedstorage.ID,UrlPath:"/",Category:self._category};
+			var newoption={storage:storage,storages:self._allstorages,folder:self._currdir,items:[]}
+			newoption.control=ctrl;
+			newoption.setstorage=self.delegate(self.set_storage);
+			editor.ShowXmlFloatBox(editor.BuildDialogUrl("storagelist.xml"),newoption);
+			]]>
+		</method>
+
+		<method name="checkallitems" arguments="val">
+			<![CDATA[
+			if(!self._folderitem)return;
+			for(var i=0;i<self._folderitem.Items.length;i++)
+			{
+				self._folderitem.Items[i].IsChecked=val;
+			}
+			self.invoke_event("updateui_itemscheck");
+			]]>
+		</method>
+		<method name="getcheckeditems">
+			<![CDATA[
+			var sb=[];
+			if(!self._folderitem)return sb;
+			var arr=self._folderitem.Items;
+			for(var i=0;i<arr.length;i++)
+				if(arr[i].IsChecked)
+					sb.push(arr[i]);
+			return sb;
+			]]>
+		</method>
+		<method name="finditem" arguments="name">
+			<![CDATA[
+			if(!self._folderitem)return;
+			var arr=self._folderitem.Items;
+			name=name.toLowerCase();
+			for(var i=0;i<arr.length;i++)
+				if(arr[i].Name.toLowerCase()==name)
+					return arr[i];
+			]]>
+		</method>
+
+		<method name="processmenucommand" arguments="cmd,value">
+			<![CDATA[			
+			switch(cmd)
+			{
+				case "edit":
+					self.call_edititem(null,value);
+					break;
+				case "move":
+					self.call_copymovearray(null,false,[value]);
+					break;
+				case "copy":
+					self.call_copymovearray(null,true,[value]);
+					break;
+				case "delete":
+					self.call_deletearray(null,[value]);
+					break;
+			}
+			]]>
+		</method>
+		
+	</panel>
+
+
+</jsml>

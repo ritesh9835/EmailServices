@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../../core/jsml.xsd">
+
+	<panel jsml-class="ribbon_{skin}_{color}" dock="left" overflow_x="visible" margin="2" padding="3,3,0,4"  height="104" width="32" >
+		<label dock="bottom" jsml-local="label" css_class="ribbonlabel" height="15" margin="0,-5,0,-4" text="ribbon" font_size="11px" width="20" vertical_align="bottom" horizontal_align="center">
+			<jsml-ref name="rteborderstyle"/>
+		</label>
+
+		<attach name="set_text">
+			label.set_text(self.get_text());
+		</attach>
+
+		<jsml-ref name="rteborderstyle"/>
+
+		<initialize>
+			self.toggle_css_class("ribbon_{skin}");
+			self.toggle_css_class("ribbon_{color}");
+			self.toggle_css_class("ribbon_{skin}_{color}");
+		</initialize>
+
+	</panel>
+
+	<image jsml-class="ribbonimage_{skin}_{color}" jsml-base="image_skin_base" dock="left">
+		<initialize>
+			self.toggle_css_class("rbimage_{skin}");
+			self.toggle_css_class("rbimage_{color}");
+			self.toggle_css_class("rbimage_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("rbimage_{skin}_"+name,mode);
+			self.toggle_css_class("rbimage_{color}_"+name,mode);
+			self.toggle_css_class("rbimage_{skin}_{color}_"+name,mode);
+		</attach>
+	</image>
+
+
+	<panel jsml-class="tbgroup_{skin}_{color}" dock="flow" overflow_x="visible" margin="2,3,2,2" height="32" width="20" >
+		<initialize>
+			self.toggle_css_class("tbgroup_{skin}");
+			self.toggle_css_class("tbgroup_{color}");
+			self.toggle_css_class("tbgroup_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("tbgroup_{skin}_"+name,mode);
+			self.toggle_css_class("tbgroup_{color}_"+name,mode);
+			self.toggle_css_class("tbgroup_{skin}_{color}_"+name,mode);
+		</attach>
+		<jsml-ref name="rteborderstyle"/>
+		<attach name="attach_dom">
+			if(self.get_border_width()[1])self.set_padding([0,0,0,0])
+		</attach>
+	</panel>
+
+	<panel jsml-class="linebreak_{skin}_{color}" dock="flow" flow_clear="newline" width='0'></panel>
+
+	<image jsml-class="image_{skin}_{color}" jsml-base="image_skin_base" margin="0,2,0,0" width="32" height="32" padding="1" dock="left">
+		<initialize>
+			self.toggle_css_class("tbcontrol_{skin}");
+			self.toggle_css_class("tbcontrol_{color}");
+			self.toggle_css_class("tbcontrol_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("tbcontrol_{skin}_"+name,mode);
+			self.toggle_css_class("tbcontrol_{color}_"+name,mode);
+			self.toggle_css_class("tbcontrol_{skin}_{color}_"+name,mode);
+		</attach>
+	</image>
+	
+	<panel jsml-class="splitbtn_{skin}_{color}" jsml-base="splitbtn_skin_base" margin="0,2,0,0" width="32" dock="left">
+		<initialize>
+			self.toggle_css_class("splitbtn_{skin}");
+			self.toggle_css_class("splitbtn_{color}");
+			self.toggle_css_class("splitbtn_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("splitbtn_{skin}_"+name,mode);
+			self.toggle_css_class("splitbtn_{color}_"+name,mode);
+			self.toggle_css_class("splitbtn_{skin}_{color}_"+name,mode);
+		</attach>
+	</panel>
+
+	<panel jsml-class="dropdown_{skin}_{color}" jsml-base="dropdown_skin_base" margin="0,2,0,0">
+		<initialize>
+			self.toggle_css_class("dropdown_{skin}");
+			self.toggle_css_class("dropdown_{color}");
+			self.toggle_css_class("dropdown_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("dropdown_{skin}_"+name,mode);
+			self.toggle_css_class("dropdown_{color}_"+name,mode);
+			self.toggle_css_class("dropdown_{skin}_{color}_"+name,mode);
+		</attach>
+	</panel>
+	
+	<panel jsml-class="phone_{skin}_{color}" dock="top" cursor="pointer" width="130" height="32" margin="5,0,5,0" overflow="visible">
+		<image jsml-member="image" css_class="splitbtnimage" dock="left" width="32" overflow="none"/>
+		<label jsml-local="label" dock="fill" vertical_align="middle" horizontal_align="center" cursor="pointer" overflow="visible" font_size="18px" padding="0,3,0,3"></label>
+
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol"/>
+
+		<initialize>
+			self.toggle_css_class("splittxt_{skin}");
+			self.toggle_css_class("splittxt_{color}");
+			self.toggle_css_class("splittxt_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("splittxt_{skin}_"+name,mode);
+			self.toggle_css_class("splittxt_{color}_"+name,mode);
+			self.toggle_css_class("splittxt_{skin}_{color}_"+name,mode);
+		</attach>
+		<attach name="set_text">
+			label.set_text(self.get_text());
+		</attach>
+	</panel>
+
+	<include src="{folder}skins/{skin}/toolbar_phone.xml?{timems}" />
+
+	<jsml-def name="layout_toolbar_{skin}_{color}">
+		<jsml-ref name="toolbar_{toolbar}_{skin}_{color}"/>
+	</jsml-def>
+	
+	<include src="{folder}skins/{skin}/_layout.xml?{timems}" />
+
+
+	<panel jsml-class="rteskin_{skin}_{color}" width="200" height="200">
+
+		<jsml-ref name="rteborderstyle"/>
+		
+		<jsml-ref name="_phone_layout_{skin}_{color}"/>
+		
+	</panel>
+
+</jsml>

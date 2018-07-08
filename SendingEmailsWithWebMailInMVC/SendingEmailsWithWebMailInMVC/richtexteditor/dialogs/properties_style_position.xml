@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+  <panel jsml-class="properties_text" dock="fill">
+	<groupbox text="@POSITION" dock="top" overflow="visible" margin="4">
+		<panel dock="left" width="180">
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="position:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropdropdown" propname="style:position" width="100">
+			  <listitem value="" text="@NOTSET" />
+			  <listitem value="static" text="static" />
+			  <listitem value="absolute" text="absolute" />
+			  <listitem value="fixed" text="fixed" />
+			  <listitem value="relative" text="relative" />
+			  <listitem value="inherit" text="inherit" />
+			</panel>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" width="80" overflow="visible" text="z-index:" vertical_align="middle" text_align="right"  />
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropnumupdown" width="100" propname="style:z-index" />
+		  </panel>
+		</panel>
+		<panel dock="left" width="200">
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="width:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:width"/>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="height:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:height"/>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="top:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:top"/>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="right:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:right"/>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="bottom:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:bottom"/>
+		  </panel>
+		  <panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="80" text="left:" text_align="right"/>
+			<panel dock="left" width="4" />
+			<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:left"/>
+		  </panel>
+		</panel>	  
+	</groupbox>
+  </panel>
+  <panel jsml-base="properties_text" />
+</jsml>

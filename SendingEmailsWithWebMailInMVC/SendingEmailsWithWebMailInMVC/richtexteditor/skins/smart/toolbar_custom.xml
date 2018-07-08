@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../../core/jsml.xsd">
+
+	<jsml-def name="toolbar_{toolbar}_{skin}_{color}">
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<image jsml-base="image_{skin}_{color}" command="Save" tooltip="@SAVE"/>
+			<image jsml-base="image_{skin}_{color}" command="New" tooltip="@NEW" imagename="newdoc" />
+			<image jsml-base="image_{skin}_{color}" command="Print" tooltip="@PRINT" />
+			<image jsml-base="image_{skin}_{color}" command="Find" tooltip="@FINDANDREPLACE" />
+			<image jsml-base="image_{skin}_{color}" command="CleanCode" tooltip="@CLEANCODE" imagename="cleanup" />
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="spellcheck" tooltip="@SPELLCHECK" imagename="spell" />
+
+			<image jsml-base="image_{skin}_{color}" command="FullScreen" tooltip="@FULLSCREEN" imagename="fit" />
+
+		</panel>
+		<panel jsml-base="tbgroup_{skin}_{color}">
+
+			<image jsml-base="image_{skin}_{color}" command="SelectAll" tooltip="@SELECTALL" />
+			<image jsml-base="image_{skin}_{color}" command="SelectNone" tooltip="@SELECTNONE" />
+			<image jsml-base="image_{skin}_{color}" command="Delete" tooltip="@DELETE" />
+
+			<image jsml-base="image_{skin}_{color}" command="Cut" tooltip="@CUT">
+				<attach name="mousehover">
+					self._ResetFCButton();
+				</attach>
+			</image>
+			<image jsml-base="image_{skin}_{color}" command="Copy" tooltip="@COPY">
+				<attach name="mousehover">
+					self._ResetFCButton();
+				</attach>
+			</image>
+
+		</panel>
+		<panel jsml-base="tbgroup_{skin}_{color}">
+
+			<image jsml-base="image_{skin}_{color}" command="Paste" tooltip="@PASTE" />
+			<image jsml-base="image_{skin}_{color}" command="PasteText" tooltip="@PASTETEXT" />
+			<image jsml-base="image_{skin}_{color}" command="PasteWord" tooltip="@PASTEWORD" />
+
+		</panel>
+		<panel jsml-base="tbgroup_{skin}_{color}">
+
+			<image jsml-base="image_{skin}_{color}" command="Undo" tooltip="@UNDO" />
+			<image jsml-base="image_{skin}_{color}" command="Redo" tooltip="@REDO" />
+
+		</panel>
+
+		<!--
+		<panel jsml-base="linebreak_{skin}" />
+		-->
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<image jsml-base="image_{skin}_{color}" command="InsertGallery" tooltip="@INSERTGALLERY" imagename="gallery" />
+			<image jsml-base="image_{skin}_{color}" command="InsertImage" tooltip="@INSERTIMAGE" imagename="image" />
+			<image jsml-base="image_{skin}_{color}" command="InsertVideo" tooltip="@INSERTVIDEO" imagename="media" />
+			<image jsml-base="image_{skin}_{color}" command="InsertDocument" tooltip="@INSERTDOCUMENT" imagename="document" />
+			<image jsml-base="image_{skin}_{color}" command="InsertTemplate" tooltip="@INSERTTEMPLATE" imagename="template" />
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="syntaxhighlighter" tooltip="@SYNTAXHIGHLIGHTER" imagename="code" />
+
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="insertyoutube" tooltip="@INSERTYOUTUBE" imagename="youtube"/>
+			<image jsml-base="image_{skin}_{color}" imagename="html5" tooltip="@INSERTHTML5">
+				<attach name="click">
+					inserthtml5menu.show({control:self,stopDispose:true});
+				</attach>
+				<attach name="editor_ready" arguments="jevent,editor">
+					inserthtml5menu.invoke_recursive("editor_ready",editor);
+				</attach>
+				<attach name="disposing">
+					inserthtml5menu.dispose();
+				</attach>
+				<panel jsml-base="floatmenu" jsml-local="inserthtml5menu" jsml-append="false">
+					<panel jsml-base="rtemenuitem" command="InsertWbr" text="@INSERT| &lt;wbr&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="Mark" text="@INSERT| &lt;mark&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertDetails" text="@INSERT| &lt;details&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertSection" text="@INSERT| &lt;section&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertArticle" text="@INSERT| &lt;article&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertHeader" text="@INSERT| &lt;header&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertFooter" text="@INSERT| &lt;footer&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertHGroup" text="@INSERT| &lt;hgroup&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertAside" text="@INSERT| &lt;aside&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertAudio" text="@INSERT| &lt;audio&gt;" imagename="newtag" />
+					<panel jsml-base="rtemenuitem" command="InsertVideo" text="@INSERT| &lt;video&gt;" imagename="newtag" />
+				</panel>
+			</image>
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="googlemap" tooltip="@GOOGLEMAP" imagename="map"/>
+		</panel>
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<panel jsml-base="dropdown_{skin}_{color}" command="ShowXmlFloatbox" arguments="setfontname.xml" width="80" text="@FontName" stylename="fontname" />
+			<panel jsml-base="dropdown_{skin}_{color}" command="ShowXmlFloatbox" arguments="setfontsize.xml" width="70" text="@FontSize" stylename="fontsize" />
+
+			<image jsml-base="image_{skin}_{color}" command="Bold" tooltip="@BOLD" />
+			<image jsml-base="image_{skin}_{color}" command="Italic" tooltip="@ITALIC" />
+			<image jsml-base="image_{skin}_{color}" command="Underline" tooltip="@UNDERLINE" imagename="under" />
+			<image jsml-base="image_{skin}_{color}" command="Linethrough" tooltip="@LINETHROUGH" imagename="strike" />
+			<image jsml-base="image_{skin}_{color}" command="Overline" tooltip="@OVERLINE" />
+
+			<image jsml-base="image_{skin}_{color}" command="Superscript" tooltip="@SUPERSCRIPT" />
+			<image jsml-base="image_{skin}_{color}" command="Subscript" tooltip="@SUBSCRIPT" />
+			<image jsml-base="image_{skin}_{color}" command="Ucase" tooltip="@UPPERCASE" />
+			<image jsml-base="image_{skin}_{color}" command="Lcase" tooltip="@LOWERCASE" />
+
+			<panel jsml-base="splitbtn_{skin}_{color}" command="ForeColor" tooltip="@TEXTCOLOR">
+				<jsml-ref name="rtecommandcolor"/>
+			</panel>
+			<panel jsml-base="splitbtn_{skin}_{color}" command="BackColor" tooltip="@BACKCOLOR">
+				<jsml-ref name="rtecommandcolor"/>
+			</panel>
+
+		</panel>
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<image jsml-base="image_{skin}_{color}" command="RemoveFormat" tooltip="@REMOVEFORMAT" imagename="unformat" />
+			<panel jsml-base="splitbtn_{skin}_{color}" tooltip="@FORMATPAINTER" imagename="formatpainter">
+				<attach name="click" arguments="je,e">
+					<![CDATA[
+						if(e.ctrlKey||e.altKey)
+							return self._rteinstance.ExecCommand("formatpainterfetch")
+						if(self._rteinstance.CanExecCommand("formatpainterapply"))
+							self._rteinstance.ExecCommand("formatpainterapply")
+						else
+							self.invoke_event("splitclick");
+						]]>
+				</attach>
+				<attach name="splitclick">
+					formatpaintermenu.show({control:self,stopDispose:true});
+				</attach>
+				<attach name="editor_ready" arguments="jevent,editor">
+					formatpaintermenu.invoke_recursive("editor_ready",editor);
+				</attach>
+				<attach name="disposing">
+					formatpaintermenu.dispose();
+				</attach>
+				<panel jsml-base="floatmenu" jsml-local="formatpaintermenu" jsml-append="false">
+					<panel jsml-base="rtemenuitem" command="formatpainterfetch" imagename="copy" text="@FORMATPAINTERFETCH"  />
+					<panel jsml-base="rtemenuitem" command="formatpainterapply" imagename="formatpainter" text="@FORMATPAINTERAPPLY"  />
+					<panel jsml-base="rtemenuitem" command="formatpainterclear" imagename="newdoc" text="@FORMATPAINTERCLEAR"  />
+				</panel>
+			</panel>
+		</panel>
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<panel jsml-base="dropdown_{skin}_{color}" command="ShowXmlFloatbox" arguments="setparagraph.xml" width="90" text="@Paragraphs" stylename="paragraph" />
+			<panel jsml-base="dropdown_{skin}_{color}" command="ShowXmlFloatbox" arguments="setstyles.xml" width="90" text="@Styles" />
+			<image jsml-base="image_{skin}_{color}" command="JustifyLeft" tooltip="@JUSTIFYLEFT" imagename="left" />
+			<image jsml-base="image_{skin}_{color}" command="JustifyCenter" tooltip="@JUSTIFYCENTER" imagename="center" />
+			<image jsml-base="image_{skin}_{color}" command="JustifyRight" tooltip="@JUSTIFYRIGHT" imagename="right" />
+			<image jsml-base="image_{skin}_{color}" command="JustifyFull" tooltip="@JUSTIFYFULL" />
+			<image jsml-base="image_{skin}_{color}" command="JustifyNone" tooltip="@JUSTIFYNONE" noactive="true" />
+
+
+			<panel jsml-base="splitbtn_{skin}_{color}" command="InsertOrderedList" tooltip="@ORDEREDLIST" imagename="numlist" >
+				<attach name="splitclick">
+					listolmenu.show({control:self,stopDispose:true});
+				</attach>
+				<attach name="editor_ready" arguments="jevent,editor">
+					listolmenu.invoke_recursive("editor_ready",editor);
+				</attach>
+				<attach name="disposing">
+					listolmenu.dispose();
+				</attach>
+				<panel jsml-base="floatmenu" jsml-local="listolmenu" jsml-append="false">
+					<panel jsml-base="rtemenuitem"  command="InsertOrderedList" arguments="decimal" noactive="1" text="1,2,3,4,5"  />
+					<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="lower-latin" noactive="1" text="a,b,c,d,e"  />
+					<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="lower-roman" noactive="1" text="ⅰ,ⅱ,ⅲ,ⅳ,ⅴ"  />
+					<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="upper-latin" noactive="1" text="A,B,C,D,E"  />
+					<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="upper-roman" noactive="1" text="Ⅰ,Ⅱ,ⅢⅢ,Ⅳ,Ⅴ"  />
+					<!--<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="cjk-ideographic" text="一,二,三,四,五"  />-->
+					<!-- NOTE:check the css list-style-type -->
+				</panel>
+			</panel>
+
+
+			<panel jsml-base="splitbtn_{skin}_{color}" command="InsertUnorderedList" tooltip="@UNORDEREDLIST" imagename="bullist">
+				<attach name="splitclick">
+					listulmenu.show({control:self,stopDispose:true});
+				</attach>
+				<attach name="editor_ready" arguments="jevent,editor">
+					listulmenu.invoke_recursive("editor_ready",editor);
+				</attach>
+				<attach name="disposing">
+					listulmenu.dispose();
+				</attach>
+				<panel jsml-base="floatmenu" jsml-local="listulmenu" jsml-append="false">
+					<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="disc" noactive="1" imagename="ul-disc" text="@UL_DISC"  />
+					<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="circle" noactive="1" imagename="ul-circle" text="@UL_CIRCLE"  />
+					<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="square" noactive="1" imagename="ul-square" text="@UL_SQUARE"  />
+				</panel>
+			</panel>
+
+			<image jsml-base="image_{skin}_{color}" command="Outdent" tooltip="@OUTDENT" />
+			<image jsml-base="image_{skin}_{color}" command="Indent" tooltip="@INDENT" />
+		</panel>
+		<panel jsml-base="tbgroup_{skin}_{color}">
+
+			<image jsml-base="image_{skin}_{color}" command="InsertBlockQuote" tooltip="@INSERTBLOCKQUOTE" imagename="blockquote" />
+			<image jsml-base="image_{skin}_{color}" command="InsertBreak" tooltip="@INSERTBREAKRULE" imagename="break" />
+			<image jsml-base="image_{skin}_{color}" command="InsertWbr" tooltip="@INSERTWBR" imagename="wbr" />
+			<image jsml-base="image_{skin}_{color}" command="InsertDiv" tooltip="@INSERTDIV" imagename="div" />
+			<image jsml-base="image_{skin}_{color}" command="InsertParagraph" tooltip="@INSERTPARAGRAPH" imagename="p" />
+			<image jsml-base="image_{skin}_{color}" command="InsertHorizontalRule" tooltip="@INSERTHORIZONTALRULE" imagename="rule" />
+			<image jsml-base="image_{skin}_{color}" command="InsertPageBreak" tooltip="@INSERTPAGEPRINTBREAK" imagename="InsertPageBreak" />
+			<image jsml-base="image_{skin}_{color}" command="InsertTopLine" tooltip="@INSERTTOPLINE" imagename="topline" />
+			<image jsml-base="image_{skin}_{color}" command="InsertBottomLine" tooltip="@INSERTBOTTOMLINE" imagename="bottomline" />
+
+		</panel>
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<panel jsml-base="splitbtn_{skin}_{color}" command="InsertLink" tooltip="@INSERTLINK" imagename="link" />
+			<image jsml-base="image_{skin}_{color}" command="UnLink" tooltip="@REMOVE| |@LINK" imagename="unlink" />
+			<image jsml-base="image_{skin}_{color}" command="InsertAnchor" tooltip="@INSERTANCHOR" imagename="anchor" />
+			<image jsml-base="image_{skin}_{color}" command="InsertImageMap" tooltip="@INSERTIMAGEMAP" imagename="imagemap" />
+
+			<panel jsml-base="splitbtn_{skin}_{color}" command="InsertDate" tooltip="@INSERTDATE" imagename="insertdate" />
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="insertchars" tooltip="@INSERTCHARS" imagename="specialchar" />
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="virtualkeyboard" tooltip="@VIRTUALKEYBOARD" imagename="keyboard" />
+
+		</panel>
+
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+
+			<image jsml-base="image_{skin}_{color}" command="InsertBox" tooltip="@INSERTBOX" imagename="box" />
+			<image jsml-base="image_{skin}_{color}" command="InsertLayer" tooltip="@INSERTLAYER" imagename="layer" />
+			<image jsml-base="image_{skin}_{color}" command="InsertFieldSet" tooltip="@INSERTFIELDSET" imagename="groupbox" />
+			<panel jsml-base="splitbtn_{skin}_{color}" command="InsertTable"  tooltip="@INSERTTABLE">
+				<attach name="splitclick">
+					var editor=self.find_editor();
+					editor.ShowXmlFloatBox(editor.BuildDialogUrl("inserttable.xml"),{control:self,stopDispose:true});
+					//alert(editor.ShowXmlFloatBox);
+					//editor.ShowXmlFloatbox("inserttable.xml",{control:self,stopDispose:true});
+				</attach>
+			</panel>
+
+			<panel jsml-base="splitbtn_{skin}_{color}" tooltip="@INSERTFORM" imagename="InsertForm" >
+				<attach name="click,splitclick">
+					insertformmenu.show({control:self,stopDispose:true});
+				</attach>
+				<attach name="editor_ready" arguments="jevent,editor">
+					insertformmenu.invoke_recursive("editor_ready",editor);
+				</attach>
+				<attach name="disposing">
+					insertformmenu.dispose();
+				</attach>
+				<panel jsml-base="floatmenu" jsml-local="insertformmenu" jsml-append="false">
+
+					<panel jsml-base="rtemenuitem" command="InsertForm" text="@INSERTFORM" />
+					<panel jsml-base="rtemenuitem" command="InsertTextarea" text="@INSERTTEXTAREA" imagename="textarea" />
+					<panel jsml-base="rtemenuitem" command="InsertInpText" text="@INSERTINPTEXT" imagename="textbox" />
+					<panel jsml-base="rtemenuitem" command="InsertInpPassword" text="@INSERTINPPASSWORD" imagename="passwordfield" />
+					<panel jsml-base="rtemenuitem" command="InsertInpHidden" text="@INSERTINPHIDDEN" imagename="hiddenfield" />
+					<panel jsml-base="rtemenuitem" command="InsertInpFile" text="@INSERTINPFILE" imagename="document"/>
+					<panel jsml-base="rtemenuitem" command="InsertInpImage" text="@INSERTINPIMAGE" imagename="image" />
+					<panel jsml-base="rtemenuitem" command="InsertInpReset" text="@INSERTINPRESET" imagename="reset" />
+					<panel jsml-base="rtemenuitem" command="InsertInpSubmit" text="@INSERTINPSUBMIT" imagename="submit" />
+					<panel jsml-base="rtemenuitem" command="InsertRadioBox" text="@INSERTRADIOBOX" imagename="optionbutton" />
+					<panel jsml-base="rtemenuitem" command="InsertCheckbox" text="@INSERTCHECKBOX" imagename="checkbox" />
+					<panel jsml-base="rtemenuitem" command="InsertInpButton" text="@INSERTINPBUTTON" imagename="pushbutton" />
+					<panel jsml-base="rtemenuitem" command="InsertButton" text="@INSERTBUTTON" imagename="pushbutton" />
+					<panel jsml-base="rtemenuitem" command="InsertDropDown" text="@INSERTDROPDOWN" imagename="dropdownbox" />
+					<panel jsml-base="rtemenuitem" command="InsertListbox" text="@INSERTLISTBOX" imagename="listbox" />
+
+				</panel>
+			</panel>
+			<image jsml-base="image_{skin}_{color}" command="ToggleBorder" imagename="borders" />
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="pageproperties" tooltip="@PAGEPROPERTIES" imagename="properties" />
+			<image jsml-base="image_{skin}_{color}" command="Help"  tooltip="@HELP" />
+		</panel>
+	</jsml-def>
+
+
+
+</jsml>
+

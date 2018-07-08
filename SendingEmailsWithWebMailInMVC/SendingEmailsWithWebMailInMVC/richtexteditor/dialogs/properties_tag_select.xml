@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagtextarea" dock="fill">
+	<groupbox text="Select" dock="top" overflow="visible" margin="4">
+	  <panel dock="left" width="134">
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="50" text="@NAME|:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rteproptextbox" width="80" propname="name"/>
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="50" text="ID:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rteproptextbox" width="80" propname="id"/>
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="50" text="@SIZE|:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" width="80" jsml-base="rtepropnumupdown" propname="size" min_value="1" />
+		</panel>
+		<panel margin="7,3,1,3" height="18" dock="top">
+		  <panel dock="left" width="50" />
+		  <panel dock="left" jsml-base="rtepropcheckbox" propname="disabled" truestring="1" falsestring="" />
+		  <label dock="left" vertical_align="middle" width="80" text="@disabled"/>
+		</panel>
+		<panel margin="7,3,1,3" height="18" dock="top">
+		  <panel dock="left" width="50" />
+		  <panel dock="left" jsml-base="rtepropcheckbox" propname="multiple" truestring="1" falsestring="" />
+		  <label dock="left" vertical_align="middle" width="80" text="@multiple"/>
+		</panel>
+	  </panel>
+	  <panel dock="left" width="20" />
+	  <panel dock="left" width="144">
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" text="@ACCESSKEY|:" width="60" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel jsml-base="rteproptextbox" dock="left" propname="accesskey" width="80" />
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" text="@TABINDEX|:" text_align="right" width="60"/>
+		  <panel dock="left" width="4" />
+		  <panel jsml-base="rteproptextbox" dock="left" propname="tabindex" width="80" />
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="60" text="@CSSCLASS|:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rteproptextbox" width="80" propname="class"/>
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="60" text="@WIDTH|:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rtepropunitbox" propname="style:width" width="80"/>
+		</panel>
+		<panel margin="3,3,3,3" height="18" dock="top">
+		  <label dock="left" vertical_align="middle" width="60" text="@HEIGHT|:" text_align="right"/>
+		  <panel dock="left" width="4" />
+		  <panel dock="left" jsml-base="rtepropunitbox" width="80" propname="style:height"/>
+		</panel>
+	  </panel>
+	  <panel dock="left" width="15" />
+	  <panel dock="left" width="144">
+		<panel margin="3,3,3,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@COLOR|:"  width="65" text_align="right"/>
+		  <panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="75" />
+	  </panel>
+	  <panel margin="3,3,3,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@BACKCOLOR|:"  width="65" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropcolorbox" propname="style:background-color"  width="75" />
+		</panel>
+	  </panel>
+
+	</groupbox>
+
+		<groupbox text="@ITEMS" dock="top" overflow="visible" margin="3">
+			<groupbox jsml-local="itempanel" text="@ITEM" dock="right" width="180" height="120" margin="5">
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="@TEXT|:"  width="65"/>
+					<panel dock="left" jsml-base="rteproptextbox" propname="text" autoupdate="false" width="89">
+						<method name="get_node_value">
+							return self.find_node().GetInnerText();
+						</method>
+						<method name="set_node_value">
+							self.find_node().SetInnerText(value);
+						</method>
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="@VALUE|:"  width="65"/>
+					<panel dock="left" jsml-base="rteproptextbox" propname="value" autoupdate="false" width="89"/>
+				</panel>
+				<panel margin="7,3,1,3" dock="bottom" overflow="visible">
+					<button jsml-local="btninsert" text="@ADD" width="45" height="20" left="5">
+						<attach name="click">
+							<![CDATA[
+							itempanel._rtenode=new $rte.DataElement("option");
+							itempanel.invoke_recursive("savevalue");
+							var opt=document.createElement("OPTION");
+							itempanel._rtenode._targetoption=opt;
+							opt.innerHTML=jsml.html_encode(itempanel._rtenode.GetInnerText());
+							opt.value=itempanel._rtenode.GetAttribute("value");
+							opt.ownedNode=itempanel._rtenode;
+							option.targetnode.AppendChild(itempanel._rtenode);
+							instance.listbox.appendChild(opt);
+							instance.listbox.selectedIndex=instance.listbox.options.length-1;
+							itempanel.invoke_event("updatecontrols");
+							]]>
+						</attach>
+					</button>
+					<button jsml-local="btnupdate" text="@UPDATE" width="45" height="20" left="55">
+						<attach name="click">
+							<![CDATA[
+							itempanel.invoke_recursive("savevalue");
+							var opt=itempanel._rtenode._targetoption;
+							if(opt==null)return;
+							opt.innerHTML=jsml.html_encode(itempanel._rtenode.GetInnerText());
+							opt.value=itempanel._rtenode.GetAttribute("value");
+							opt.ownedNode=itempanel._rtenode;
+							itempanel.invoke_event("updatecontrols");
+							]]>
+						</attach>
+					</button>
+					<button jsml-local="btndelete" text="@DELETE" width="45" height="20" left="105">
+						<attach name="click">
+							<![CDATA[
+							itempanel.invoke_recursive("savevalue");
+							var opt=itempanel._rtenode._targetoption;
+							if(opt==null)return;
+							itempanel._rtenode.RemoveNode(true);
+							instance.listbox.removeChild(opt);
+							instance.listbox.selectedIndex=-1;
+							itempanel._rtenode=new $rte.DataElement("option");
+							itempanel.invoke_event("updatecontrols");
+							]]>
+						</attach>
+					</button>
+				</panel>
+				<initialize>
+					itempanel._rtenode=new $rte.DataElement("option");
+					itempanel.invoke_event("updatecontrols");
+				</initialize>
+				<attach name="updatecontrols">
+					<![CDATA[
+					var par=itempanel._rtenode.GetParent();
+					if(par==null)
+					{
+						btnupdate.set_disabled(true);
+						btndelete.set_disabled(true);
+					}
+					else
+					{
+						btnupdate.set_disabled(false);
+						btndelete.set_disabled(false);
+					}
+					]]>
+				</attach>
+			</groupbox>
+			<htmlcontrol dock="fill" height="120" margin="5">
+				<initialize>
+					<![CDATA[
+					var lb=document.createElement("SELECT");
+					instance.listbox=lb;
+					lb.setAttribute("size",9);
+					lb.style.height="120px";
+					lb.style.width="300px";
+					lb.onchange=function()
+					{
+						if(lb.selectedIndex==-1)
+							itempanel._rtenode=new $rte.DataElement("option");
+						else
+							itempanel._rtenode=lb.options[lb.selectedIndex].ownedNode;
+						itempanel.invoke_recursive("loadvalue");	
+						itempanel.invoke_event("updatecontrols");
+					}
+					self._content.appendChild(lb);
+					var c=option.targetnode.GetChildCount();
+					for(var i=0;i<c;i++)
+					{
+						var optnode=option.targetnode.GetChildAt(i);
+						if(optnode.GetNameLower()!="option")
+							continue;
+						var opt=document.createElement("OPTION");
+						opt.innerHTML=jsml.html_encode(optnode.GetInnerText());
+						opt.value=optnode.GetAttribute("value");
+						opt.ownedNode=optnode;
+						optnode._targetoption=opt;
+						lb.appendChild(opt);
+					}
+					]]>
+				</initialize>
+			</htmlcontrol>
+		</groupbox>
+
+	</panel>
+
+	<panel jsml-base="properties_tagtextarea" />
+
+
+</jsml>

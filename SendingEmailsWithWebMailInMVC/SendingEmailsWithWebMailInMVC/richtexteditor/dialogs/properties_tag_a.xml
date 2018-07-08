@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_taga" dock="fill">
+
+		<groupbox text="@LINK" dock="top" overflow="visible" margin="3">
+
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@URL|:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="href" width="300" jsml-local="tbhref">
+					<attach name="change,loadvalue,attach_dom">
+						<![CDATA[
+						instance.syncurltotext();
+						var ddltext=ddltype.get_text();
+						var href=self.get_text();
+						if(ddltext&&href.substring(0,ddltext.length)==ddltext)return;
+						for(var i=0;i<ddltype._items.length;i++)
+						{
+							ddltext=ddltype._items[i].get_value();
+							if(href.substring(0,ddltext.length)!=ddltext)
+								continue;
+							ddltype.set_text(ddltext);
+							break;
+						}
+						]]>
+					</attach>
+				</panel>
+				<!--
+				<image jsml-base="imagebutton" dock="left" width="20" src="{folder}images/anchor.png" padding="-1,1,1,-1" margin="0,1,0,1">
+					<attach name="click">
+						instance.showfindanchor(self);
+					</attach>
+				</image>
+				-->
+				<panel dock="left" width="6" />
+				<image jsml-base="imagebutton" dock="left" width="20" tooltip="@INTERNALLINK" src="{folder}images/node-tree.png" padding="-1,1,1,-1" margin="0,1,0,1">
+					<attach name="click">
+						instance.showfindurl(self);
+					</attach>
+				</image>
+				<panel dock="left" width="6" />
+				<button dock="left" width="65" text="@BROWSE|.." height="22" css_class="dialogbutton">
+					<attach name="click">
+						instance.showuploadfile(self);
+					</attach>
+				</button>
+
+			</panel>
+
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@TYPE|:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<dropdown dock="left" jsml-local="ddltype" width="100" border_color="#cccccc">
+					<attach name="change">
+						tbhref.set_text(self.get_text());
+						tbhref.invoke_event("change");
+					</attach>
+					<listitem text="http://" value="http://" />
+					<listitem text="https://" value="https://" />
+					<listitem text="news://" value="news://" />
+					<listitem text="ftp://" value="ftp://" />
+					<listitem text="mailto:" value="mailto:" />
+					<listitem text="@OTHER" value="" />
+				</dropdown>
+				<panel dock="left" width="12" />
+				<label dock="left" vertical_align="middle" text="@ATTR_TARGET|:" text_align="right" width="60"/>
+				<panel dock="left" width="6" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="target" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="_blank" text="@ATTR_TARGETBLANK" />
+					<listitem value="_parent" text="@ATTR_TARGETPARENT" />
+					<listitem value="_self" text="@ATTR_TARGETSELF" />
+					<listitem value="_top" text="@ATTR_TARGETTOP" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="ID:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="id" width="100"/>
+				<panel dock="left" width="12"/>
+				<label dock="left" vertical_align="middle" text="@CSSCLASS|:" text_align="right" width="60"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="class" width="100" />
+				<panel dock="left" width="12"/>
+				<label dock="left" vertical_align="middle" width="60" text="@NOFOLLOW|:" text_align="right" unselectable="true">
+					<attach name="click,dblclick">
+						cbnofollow.toggle_checked();
+					</attach>
+				</label>
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="rel" truestring="nofollow" falsestring="" jsml-local="cbnofollow" />
+			</panel>
+
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@ACCESSKEY|:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="accesskey" width="100" />
+				<panel dock="left" width="12" />
+				<label dock="left" vertical_align="middle" text="@TABINDEX|:" text_align="right" width="60"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="tabindex" width="100" />
+			</panel>
+
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="72" text_align="right" text="@CURSOR|:"/>
+				<panel dock="left" width="6" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:cursor" width="100">
+					<listitem value="" text="@NOTSET" />
+		  <listitem value="auto" text="auto" />
+		  <listitem value="pointer" text="pointer" />
+		  <listitem value="default" text="default" />
+		  <listitem value="text" text="text" />
+		  <listitem value="wait" text="wait" />
+		  <listitem value="move" text="move" />
+		  <listitem value="help" text="help" />
+		  <listitem value="crosshair" text="crosshair" />
+		  <listitem value="progress" text="progress" />
+		  <listitem value="e-resize" text="e-resize" />
+		  <listitem value="n-resize" text="n-resize" />
+		  <listitem value="ne-resize" text="ne-resize" />
+		  <listitem value="nw-resize" text="nw-resize" />
+		  <listitem value="s-resize" text="s-resize" />
+		  <listitem value="se-resize" text="se-resize" />
+		  <listitem value="sw-resize" text="sw-resize" />
+		  <listitem value="w-resize" text="w-resize" />
+				</panel>
+				<panel dock="left" width="12" />
+				<label dock="left" vertical_align="middle" text_align="right" width="60" text="@COLOR|:"/>
+				<panel dock="left" width="6" />
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="100" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@LINKTEXT|:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="text" width="300" jsml-local="tbtext">
+					<method name="get_node_value">
+						var node=self.find_node();
+						return node.GetInnerText();
+					</method>
+					<method name="set_node_value">
+						var node=self.find_node();
+						node.SetInnerText(value);
+					</method>
+					<attach name="change">
+						instance.stopsynctext();
+					</attach>
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@TOOLTIP|:" width="72" text_align="right"/>
+				<panel dock="left" width="6" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="title" width="300" />
+			</panel>
+			<panel margin="15,3,30,3" dock="top" height="18" overflow="visible">
+				<panel dock="left" width="78" />
+				<panel dock="left" jsml-base="panelbutton" border_color="#CDCDCD" overflow="visible" back_color="#f7f7f7" padding="0,3,0,3" width="254" css_class="dialogbutton">
+					<image dock="left" src="{folder}images/anchor.png" width="20" />
+					<label text="@EXISTINGANCHOR" dock="left" width="230" vertical_align="middle" cursor="pointer" />
+					<attach name="click">
+						instance.showfindanchor(self);
+					</attach>
+				</panel>
+			</panel>
+		</groupbox>
+
+		<initialize>
+			self.setDelegateTimeout(self.delegate(self.initsynctext),100);
+		</initialize>
+		<method name="stopsynctext">
+			self.initsynctext();
+		</method>
+		<method name="initsynctext">
+			<![CDATA[
+			self._synctotext=false;
+					 
+			if(editor._config.dialog_tag_a_disablesynclinktotext)
+				return;
+			
+			var child=option.targetnode.GetChildAt(0);
+			if(child&&child.nodeType==1&&child.IsControl())
+				return;
+			
+			var text=tbtext.get_ctrl_value();
+			if(!text||text==editor._config.default_link_text)
+				self._synctotext=true;
+			else if(text==option.targetnode.GetAttribute("href"))
+				self._synctotext=true;
+			]]>
+		</method>
+		<method name="syncurltotext">
+			<![CDATA[
+			if(!self._synctotext)return;
+			option.targetnode.SetInnerText(option.targetnode.GetAttribute("href")||"")
+			tbtext.invoke_event("loadvalue");
+			]]>
+		</method>
+
+		<method name="showfindanchor" arguments="ctrl">
+			<![CDATA[
+			var newoption={};
+			newoption.control=ctrl
+			newoption.handlehref=function(href)
+			{
+				tbhref.set_text(href);
+				tbhref.invoke_event("change");
+			}
+			editor.ShowXmlFloatBox(editor.BuildDialogUrl("insertlink_findanchor.xml"),newoption);
+			]]>
+		</method>
+		<method name="showfindurl" arguments="ctrl">
+			<![CDATA[
+			var newoption={};
+			newoption.control=ctrl
+			newoption.handlehref=function(href)
+			{
+				tbhref.set_text(href);
+				tbhref.invoke_event("change");
+			}
+			editor.ShowXmlFloatBox(editor.BuildDialogUrl("insertlink_findurl.xml"),newoption);
+			]]>
+		</method>
+		<method name="showuploadfile" arguments="anchor">
+			<![CDATA[
+			var newoption={width:640,height:420,targetnode:option.targetnode};
+			newoption.nestedmode=true;
+			newoption.callback=function()
+			{
+				self.bubble_event("reloadvalue");
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertdocument.xml"),newoption);
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="properties_taga" />
+
+
+</jsml>

@@ -1,0 +1,655 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Cute Editor Menus and Toolbars </title>
+    <meta name="KEYWORDS" content="ASP.NET, HTML, WYSIWYG, Editor, richtextbox, HTML Editor, ASP.NET Content Management,ASP.NET WYSIWYG" />
+    <meta name="DESCRIPTION" content="Menus and Toolbars" />
+    <style type="text/css">
+	        body{margin:2px;}
+	        table.Grid
+            {
+	            border-width: 5px;
+	            border-style: none;
+	            background-color: White;
+	            border-color: #dddddd;
+            }
+ 
+            table.Grid TD, table.Grid TH
+            {
+	            padding: 4px 6px 4px 6px;
+	            border: solid 1px #dddddd;
+	            vertical-align: top;
+				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-size:12px;
+            }
+ 
+            table.Grid TH
+            {
+	            background-color: #f0f0f0;
+	            font-weight: normal;
+	            color: #505050;
+            }
+            td
+            {
+	            vertical-align:top;	
+            }
+            img
+            {
+	            border:0;
+	            vertical-align:middle;
+            }
+	    </style>
+</head>
+<body>
+    <div>
+        <img alt="" src="toolbar.png" /></div>
+    <table style="border-collapse: collapse; margin-top: 5px;width:773px" class="Grid" border="0" cellspacing="0" cellpadding="3">
+        <tr>
+            <th style="width:150px">
+                <b>Menu/Button</b></th>
+            <th>
+                <b>Function Description</b></th>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/paste.png" alt="" />
+                <b>Paste</b></td>
+            <td>
+                Inserts content from the clipboard into the editor at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/PasteText.png" alt="" />&nbsp;<b>Paste Plain Text</b></td>
+            <td>
+                Pastes plain text (no formatting) into the editor</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/Pasteword.png" alt="" />&nbsp;<b>Paste from word</b></td>
+            <td>
+                Pastes the content copied form the Microsoft Word and removes any web-unfriendly
+                tags</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/save.png" alt="" />&nbsp;<b>Save</b></td>
+            <td>
+                Saves the active content in the editor's content area</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/newdoc.png" alt="" />&nbsp;<b>New Document</b></td>
+            <td>
+                Creates a new document</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/print.png" alt="" />&nbsp;<b>Print</b></td>
+            <td>
+                Prints the current page</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/spell.png" alt="" />&nbsp;<b>Spell</b>
+            </td>
+            <td>
+                Launchs the spell checker</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/cut.png" alt="" />
+                <b>Cut</b></td>
+            <td>
+                Performs normal function of cutting</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/copy.png" alt="" />
+                <b>Copy</b></td>
+            <td>
+                Copies the current selection and stores it in the clipboard</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/delete.png" alt="" />
+                <b>Delete</b></td>
+            <td>
+                Deletes the current selection</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/find.png" alt="" />&nbsp;<b>Find and replace</b></td>
+            <td>
+                Finds and allows replacements of text in the editor's content area</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/undo.png" alt="" />
+                <b>Undo</b></td>
+            <td>
+                Undoes the last operation in the editor</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/redo.png" alt="" />
+                <b>Redo</b></td>
+            <td>
+                Redoes the previously undone action</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/formatpainter.png" alt="" />&nbsp;Format painter</b></td>
+            <td>
+                Format Painter takes the formatting from one piece of text and pastes it onto content you select. </td>
+        </tr>
+        <tr>
+            <td>
+                <img src="fontname.png" alt="" /></td>
+            <td>
+                Font name drop-down menu sets the font face. If a selection is active, the font formatting
+                will be applied to it</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="fontsize.png" alt="" /></td>
+            <td>
+                Size drop-down menu sets the font size. If a selection is active, the font size
+                formatting will be applied to it</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/bold.png" alt="" />
+                <b>Bold</b></td>
+            <td>
+                Bolds the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/italic.png" alt="" />
+                <b>Italicize</b></td>
+            <td>
+                Italicizes the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/under.png" alt="" />
+                <b>Underline</b></td>
+            <td>
+                Underlines the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/strike.png" alt="" />
+                <b>Strike Through</b></td>
+            <td>
+                Strikes through the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/overline.png" alt="" />
+                <b>Overline</b></td>
+            <td>
+                Overline the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/forecolor.png" alt="" /><img src="../images/tbdown.gif" alt="" />
+                <b>Font Color</b></td>
+            <td>
+                Changes the color of the selected text to desired color</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/backcolor.png" alt="" /><img src="../images/tbdown.gif" alt="" />
+                <b>Highlight</b></td>
+            <td>
+                Highlights the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/subscript.png" alt="" />
+                <b>Subscript</b></td>
+            <td>
+                Changes the selected text to subscript</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/superscript.png" alt="" />
+                <b>Superscript</b></td>
+            <td>
+                Changes the selected text to superscript</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/ucase.png" alt="" />&nbsp;<b>Upper Case</b></td>
+            <td>
+                Converts the selected text to upper case lettering</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/lcase.png" alt="" />&nbsp;<b>Lower Case</b></td>
+            <td>
+                Converts the selected text to lower case lettering</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/unformat.png" alt="" />
+                <b>Remove Format</b></td>
+            <td>
+                Removes formatting from the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/cleanup.png" alt="" />&nbsp;<b>Code Cleaner</b></td>
+            <td>
+                Cleans up all "garbage" HTML-tags</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/selectall.png" alt="" />
+                <b>Select All</b></td>
+            <td>
+                Selects all content</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="paragraph.png" alt="" /></td>
+            <td>
+                Paragraph drop-down menu changes the paragraph style of the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="style.png" alt="" /></td>
+            <td>
+                Style drop-down menu changes the CSS class and CSS style of the selected text</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/left.png" alt="" />
+                <b>Justify Left</b></td>
+            <td>
+                Aligns the selected content to the left</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/center.png" alt="" />
+                <b>Justify Center</b></td>
+            <td>
+                Centers the selected content</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/right.png" alt="" />
+                <b>Justify Right</b></td>
+            <td>
+                Aligns the selected content to the right</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/justifyfull.png" alt="" />&nbsp;<b>Justify Full</b></td>
+            <td>
+                Stretches the lines so that each line has equal width</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/justifynone.png" alt="" />&nbsp;<b>Justify None</b></td>
+            <td>
+                The justification is disabled</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/lineheight.png" alt="" />&nbsp;<b>Line Height</b></td>
+            <td>
+                Set the line height in percent</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/dir_ltr.png" alt="" />
+                <b>Left to right</b></td>
+            <td>
+                Set the text direction to "left-to-right"</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/dir_rtl.png" alt="" />
+                <b>Right to left</b></td>
+            <td>
+                Set the text direction to "right-to-left"</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/break.png" alt="" />&nbsp;<b>Break</b></td>
+            <td>
+                Inserts a line break (br)</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/wbr.png" alt="" />&nbsp;<b>Insert WBR (HTML5)</b></td>
+            <td>
+                Inserts a line break (wbr)</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/div.png" alt="" />&nbsp;<b>Insert div line break</b></td>
+            <td>
+                Inserts a line break (div)</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/p.png" alt="" />&nbsp;<b>Paragraph</b></td>
+            <td>
+                Inserts a paragraph (p)</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/rule.png" alt="" />
+                <b>Insert Rule</b>
+            </td>
+            <td>
+                Inserts a horizontal rule at the selected position in the editor</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/InsertPageBreak.png" alt="" />&nbsp;<b>Insert Page Break</b></td>
+            <td>
+                Inserts a print page break</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/topline.png" alt="" />&nbsp;<b>Insert top line</b></td>
+            <td>
+                Inserts a line break in the top of the document</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/bottomline.png" alt="" />&nbsp;<b>Insert bottom line</b></td>
+            <td>
+                Inserts a line break in the bottom of the document</td>
+        </tr>        
+        <tr>
+            <td>
+                <img src="../images/numlist.png" alt="" />
+                <b>Ordered List</b></td>
+            <td>
+                Inserts an ordered list</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/bullist.png" alt="" />
+                <b>Unordered List</b></td>
+            <td>
+                Inserts an unordered list</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/indent.png" alt="" />
+                <b>Indent</b></td>
+            <td>
+                Indents the selected content</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/outdent.png" alt="" />
+                <b>Outdent</b></td>
+            <td>
+                Outdents the selected content</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/blockquote.png" alt="" />
+                <b>Insert blockquote</b></td>
+            <td>
+                Inserts a block quote into your document</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/instable.png" alt="" />
+                <b>Insert Table</b></td>
+            <td>
+                Inserts a table into your document</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/gallery.png" alt="" />&nbsp;Image gallery </b>
+            </td>
+            <td>
+                Inserts a local image from the image gallery folder; thumbnail images are dynamically
+                created and supports uploading of new images</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/image.png" alt="" />&nbsp;Insert image </b>
+            </td>
+            <td>
+                Inserts an image at the selected position in the editor and allows you to set it's
+                properties</td>
+        </tr> <tr>
+            <td>
+                <img src="../images/InsertForm.png" alt="" />&nbsp;<b>Form</b></td>
+            <td>
+                Inserts a form at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/textarea.png" alt="" />&nbsp;<b>TextArea</b></td>
+            <td>
+                Inserts a textarea at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/textbox.png" alt="" />&nbsp;<b>Input Text Box</b></td>
+            <td>
+                Inserts an input text box at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/passwordfield.png" alt="" />&nbsp;<b>Password field </b>
+            </td>
+            <td>
+                Inserts a password field at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/hiddenfield.png" alt="" />&nbsp;<b>Hidden field </b>
+            </td>
+            <td>
+                Inserts a hidden field at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/listbox.png" alt="" />&nbsp;<b>ListBox</b></td>
+            <td>
+                Inserts a list box at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/dropdownbox.png" alt="" />&nbsp;<b>Dropdown Box</b></td>
+            <td>
+                Inserts a dropdown box at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/optionbutton.png" alt="" />&nbsp;<b>Radio Button</b></td>
+            <td>
+                Inserts a radio button at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/checkbox.png" alt="" />&nbsp;<b>Checkbox</b></td>
+            <td>
+                Inserts a checkbox at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/imagebutton.png" alt="" />&nbsp;<b>Image Button</b></td>
+            <td>
+                Inserts an image button at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/submit.png" alt="" />&nbsp;<b>Submit Button</b></td>
+            <td>
+                Inserts a submit button at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/reset.png" alt="" />&nbsp;<b>Reset Button</b></td>
+            <td>
+                Inserts a reset button at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/pushbutton.png" alt="" />&nbsp;<b>Input Button</b></td>
+            <td>
+                Inserts aninput button at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/box.png" alt="" />&nbsp;<b>Insert a layout box</b></td>
+            <td>
+                Inserts a layout box on your web page creates a DIV tag and set its formatting</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/layer.png" alt="" />&nbsp;<b>Insert a layer </b></b>
+            </td>
+            <td>
+                Allows you to insert a layer (absolutely-positioned div)</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/groupbox.png" alt="" />&nbsp;<b>Insert groupbox</b></b></td>
+            <td>
+                Allows you to a group box (FieldSet) at the selected position in the editor</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/html5.png" alt="" />
+                <b>HTML5 tags</b></td>
+            <td>
+                Allows you to insert HTML5 tags</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/borders.png" alt="" />&nbsp;<b>Toggle Border</b></td>
+            <td>
+                Toggles the visibility of borders</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/fit.png" alt="" />&nbsp;Fit to window</b></td>
+            <td>
+                Edits in full screen mode, maximizing your available space</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/help.png" alt="" />&nbsp;<b>Help</b></td>
+            <td>
+                Displays a user guide</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/link.png" alt="" /><img src="../images/tbdown.gif" alt="" />
+                <b>Insert Link</b></td>
+            <td>
+                The image button allows you add a link to the text. The arrow button allows you add predefined links into the current selection</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/unlink.png" alt="" />
+                <b>Remove Link</b></td>
+            <td>
+                Removes the hyperlink from the selected content</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/anchor.png" alt="" />
+                <b>Insert Anchor</b></td>
+            <td>
+                Adds an anchor to the text on your page</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/ImageMap.png" alt="" />&nbsp;<b>Add image map</b></td>
+            <td>
+                Adds an image map</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/insertdate.png" alt="" />&nbsp;<b>Insert date and time</b></td>
+            <td>
+                Inserts the current date and time. The date format used is the date format configured on
+                the client's machine</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/specialchar.png" alt="" />&nbsp;<b>Special Chars</b></td>
+            <td>
+                Inserts a special character from a predefined list</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/keyboard.png" alt="" />&nbsp;<b>Universal Keyboard</b></td>
+            <td>
+                Universal Online Keyboard</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/page.png" alt="" />&nbsp;<b>Page Properties</b></td>
+            <td>
+                Allows you modify the page properties</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/template.png" alt="" /><img src="../images/tbdown.gif" alt="" />&nbsp;Insert Template</b></td>
+            <td>
+                The image button allows you add the predefined templates into the current selection. The arrow button allows you add predefined code snippets into the current selection.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/document.png" alt="" />&nbsp;Insert Document</b></td>
+            <td>
+                Inserts a link to a document on the server (PDF,DOC, ZIP,etc.) at the selected position</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/media.png" alt="" />&nbsp;Insert video</b></td>
+            <td>
+                Inserts a video at the selected position and allows you to set it's properties</td>
+        </tr>
+        <tr>
+            <td>
+                <img src="../images/code.png" alt="" />&nbsp;<b>SyntaxHighlighter</b></td>
+            <td>
+                Allows you to easily post syntax highlighted code</td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/youtube.png" alt="" />&nbsp;YouTube</b></td>
+            <td>
+                Embeds a youtube video at the selected position and allows you to set it's properties.
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <b>
+                    <img src="../images/map.png" alt="" />&nbsp;Google map</b></td>
+            <td>
+                Inserts a Google map at the selected position.
+            </td>
+        </tr>
+        
+    </table>
+</body>
+</html>

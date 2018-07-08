@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phoneparagraphdialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel jsml-local="subbuttonpanel" dock="top" overflow="visible">
+
+			<panel jsml-base="phone_{skin}_{color}" command="JustifyLeft" text="@JUSTIFYLEFT" imagename="m_left" />
+			<panel jsml-base="phone_{skin}_{color}" command="JustifyCenter" text="@JUSTIFYCENTER" imagename="m_center" />
+			<panel jsml-base="phone_{skin}_{color}" command="JustifyRight" text="@JUSTIFYRIGHT" imagename="m_right" />
+			<panel jsml-base="phone_{skin}_{color}" command="JustifyFull" text="@JUSTIFYFULL"  imagename="m_justifyfull"/>
+			<panel jsml-base="phone_{skin}_{color}" command="JustifyNone" text="@JUSTIFYNONE"  imagename="m_justifynone" noactive="true" />
+
+			<panel jsml-base="phone_{skin}_{color}" command="Outdent" text="@OUTDENT"  imagename="m_outdent" />
+			<panel jsml-base="phone_{skin}_{color}" command="Indent" text="@INDENT"  imagename="m_indent" />
+
+		</panel>
+		<groupbox dock="top" overflow="visible" text="@ORDEREDLIST" margin="10,0,0,0">
+			<initialize>
+				<![CDATA[
+				self._fieldset.style.fontSize = "14px";
+				self._fieldset.style.fontWeight = "bold";
+				]]>
+			</initialize>
+			<panel jsml-base="rtemenuitem"  command="InsertOrderedList" arguments="decimal" noactive="1" text="1,2,3,4,5" margin="5,0,0,0" />
+			<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="lower-latin" noactive="1" text="a,b,c,d,e"  />
+			<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="lower-roman" noactive="1" text="ⅰ,ⅱ,ⅲ,ⅳ,ⅴ"  />
+			<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="upper-latin" noactive="1" text="A,B,C,D,E"  />
+			<panel jsml-base="rtemenuitem" command="InsertOrderedList" arguments="upper-roman" noactive="1" text="Ⅰ,Ⅱ,ⅢⅢ,Ⅳ,Ⅴ"  />
+		</groupbox>
+		<groupbox dock="top" overflow="visible" text="@UNORDEREDLIST" margin="10,0,0,0">
+			<initialize>
+				<![CDATA[
+				self._fieldset.style.fontSize = "14px";
+				self._fieldset.style.fontWeight = "bold";
+				]]>
+			</initialize>
+			<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="disc" noactive="1" imagename="ul-disc" text="@UL_DISC" margin="5,0,0,0" />
+			<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="circle" noactive="1" imagename="ul-circle" text="@UL_CIRCLE"  />
+			<panel jsml-base="rtemenuitem" command="InsertUnorderedList" arguments="square" noactive="1" imagename="ul-square" text="@UL_SQUARE"  />
+		</groupbox>
+	</panel>
+
+	<panel jsml-base="phoneparagraphdialog">
+	</panel>
+
+</jsml>

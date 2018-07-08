@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="properties_text" dock="fill">
+		<groupbox text="@BOX" dock="top" overflow="visible" margin="4">
+			<panel dock="left" width="180">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="padding:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<checkbox dock="left" jsml-local="cbpadding" />
+					<label dock="left" vertical_align="middle" width="70" text="@SAMEFORALL" unselectable="true">
+						<attach name="click">
+							cbpadding.set_checked(!cbpadding.get_checked());
+							cbpadding.invoke_event("change");
+						</attach>
+					</label>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="top:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:padding-top" jsml-local="tbpaddingtop"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="right:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:padding-right" jsml-local="tbpaddingright"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="bottom:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:padding-bottom" jsml-local="tbpaddingbottom"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="left:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:padding-left" jsml-local="tbpaddingleft"/>
+				</panel>
+			</panel>
+			<panel dock="left" width="200">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="margin:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<checkbox dock="left" jsml-local="cbmargin" />
+					<label dock="left" vertical_align="middle" width="70" text="@SAMEFORALL" unselectable="true">
+						<attach name="click">
+							cbmargin.set_checked(!cbmargin.get_checked());
+							cbmargin.invoke_event("change");
+						</attach>
+					</label>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="top:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:margin-top" jsml-local="tbmargintop"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="right:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:margin-right" jsml-local="tbmarginright"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="bottom:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:margin-bottom" jsml-local="tbmarginbottom"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="left:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:margin-left"  jsml-local="tbmarginleft"/>
+				</panel>
+			</panel>
+		</groupbox>
+		<groupbox text="@boxshadow" dock="top" overflow="visible" margin="4">
+			<panel dock="left" width="180">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="x*:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:top"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="blur:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="color:" width="80" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="100" />
+				</panel>
+			</panel>
+			<panel dock="left" width="200">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="y*:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:top"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="spread*:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="inset*:" width="80" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-align" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="left" text="@LEFT" />
+						<listitem value="center" text="@CENTER" />
+						<listitem value="right" text="@RIGHT" />
+						<listitem value="justify" text="@JUSTIFY" />
+					</panel>
+				</panel>
+			</panel>
+		</groupbox>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" text="*Requires a CSS 3 compliant browser to view" width="300"/>
+		</panel>
+
+		<method name="bindrectlogic" arguments="mainstyle,cb,a,b,c,d">
+			<![CDATA[
+			var arr=[a,b,c,d];
+			
+			function handletbchange()
+			{
+				if(cb.get_checked())
+				{
+					var v=a.get_node_value();
+					a.set_node_value(null);
+					option.targetnode.SetStyle(mainstyle,v);
+				}
+			}
+			function handlecbchange()
+			{
+				var v=option.targetnode.GetStyle(mainstyle)||a.get_node_value();
+				if(cb.get_checked())
+				{
+					option.targetnode.SetStyle(mainstyle,v);
+					for(var i=0;i<arr.length;i++)
+					{
+						arr[i].set_node_value(null);
+						arr[i].set_ctrl_value("");
+					}
+					a.set_node_value(null);
+					a.set_ctrl_value(v);
+				}
+				else
+				{
+          var attrs = [mainstyle+"-top",mainstyle+"-right",mainstyle+"-bottom",mainstyle+"-left"];
+					for(var i=0;i<arr.length;i++)
+					{
+						arr[i].set_node_value(option.targetnode.GetStyle(attrs[i])||(!!cb._hasloaded?v:null));
+						arr[i].set_ctrl_value(option.targetnode.GetStyle(attrs[i])||(!!cb._hasloaded?v:""));
+					}
+					option.targetnode.SetStyle(mainstyle,null);
+				}
+				for(var i=0;i<arr.length;i++)
+				{
+					if(i>0)arr[i].set_disabled(cb.get_checked());
+				}
+        cb._hasloaded = true;
+			}
+			
+			cb.attach_event("change",handlecbchange);
+			
+			var anyval=null;
+			for(var i=0;i<arr.length;i++)
+			{
+				if(!anyval)anyval=arr[i].get_node_value();
+				arr[i].attach_event("change",handletbchange);
+			}
+			cb.set_checked(!anyval);
+			handlecbchange();
+			]]>
+		</method>
+		<method name ="bindallrect">
+			<![CDATA[
+			self.bindrectlogic("padding",cbpadding,tbpaddingtop,tbpaddingright,tbpaddingbottom,tbpaddingleft);
+			self.bindrectlogic("margin",cbmargin,tbmargintop,tbmarginright,tbmarginbottom,tbmarginleft);
+			]]>
+		</method>
+
+		<initialize>
+			self.setDelegateTimeout(self.delegate(self.bindallrect),111);
+		</initialize>
+		
+	</panel>
+	<panel jsml-base="properties_text" />
+</jsml>

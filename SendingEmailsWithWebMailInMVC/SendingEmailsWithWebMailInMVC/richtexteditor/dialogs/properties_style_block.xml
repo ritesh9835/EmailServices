@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="properties_text" dock="fill">
+		<groupbox text="@BLOCK" dock="top" overflow="visible" margin="4">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="text-indent:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:text-indent"/>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="line-height:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:line-height"/>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="vertical-align:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:vertical-align" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="top" text="@TOP" />
+					<listitem value="middle" text="@MIDDLE" />
+					<listitem value="bottom" text="@BOTTOM" />
+					<listitem value="sub" text="@SUBSCRIPT" />
+					<listitem value="super" text="@SUPERSCRIPT" />
+					<listitem value="baseline" text="baseline" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="text-align:" width="120" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-align" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="justify" text="@JUSTIFY" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="direction:" width="120" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:direction" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="ltr" text="@DIRECTION_LTR" />
+					<listitem value="rtl" text="@DIRECTION_RTL" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="white-space:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:white-space" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="pre" text="pre" />
+					<listitem value="nowrap" text="nowrap" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="word-spacing:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:word-spacing"/>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="letter-spacing:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:letter-spacing"/>
+			</panel>
+			
+		</groupbox>
+		
+	</panel>
+	<panel jsml-base="properties_text" />
+</jsml>

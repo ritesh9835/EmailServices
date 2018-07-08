@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="promptdialogpanel" dock="fill" margin="0" padding="18" overflow="visible">
+		<panel dock="top" overflow="visible">
+			<label jsml-local="label" dock="fill" margin="4,4,0,4" max_width="640"/>
+		</panel>
+		<panel dock="top" overflow="visible">
+			<textbox jsml-local="textbox" dock="fill" margin="12" border_color="gray" border_style="solid" border_width="1">
+				<attach name="enterkey">
+					instance.commitinput();
+				</attach>
+			</textbox>
+		</panel>
+		<panel dock="bottom">
+			<panel dock="right" overflow="visible">
+				<button dock="left"  width="82" margin="0,12,0,0" text="@OK" jsml-local="btnok">
+					<attach name="click">
+						instance.commitinput();
+					</attach>
+				</button>
+				<button dock="left"  width="82" margin="0,12,0,0" text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<method name="getvalidvalue" arguments="allowUI">
+			<![CDATA[
+			var val=textbox.get_text();
+			if(!option.stoptrim)val=val.replace(/(^\s+|\s+$)/g,"")
+			
+			if(val=="")return option.allowempty?"":null;
+			if(option.minlen&&val.length<option.minlen)return null;
+			if(option.maxlen&&val.length>option.maxlen)return null;
+			if(option.regexp&&!option.regexp.test(val))return null;
+			
+			if(option.precheckvalue)
+				val=option.precheckvalue(val,allowUI);
+				
+			return val;
+			]]>
+		</method>
+		<method name="commitinput">
+			<![CDATA[
+			var val=self.getvalidvalue(true);
+			if(val==null)
+				return;
+			dialog.result=val;
+			dialog.close();
+			]]>
+		</method>
+		<initialize>
+			<![CDATA[
+			label.set_text(option.message);
+			textbox.set_text(option.defaultvalue||"");
+			self.setDelegateTimeout(function()
+			{
+				textbox.focus();
+				if(textbox.get_text())
+				{
+					try{textbox._input.select();}catch(x){}
+				}
+			},1);
+			function checkvalue()
+			{
+				if(self._jsml_disposed)return;
+				self.setDelegateTimeout(checkvalue,10);
+				var val=self.getvalidvalue();
+				btnok.set_disabled(val==null);
+			}
+			self.setDelegateTimeout(checkvalue,10);
+			]]>
+		</initialize>
+	</panel>
+
+	<object jsml-base="promptdialogpanel">
+
+	</object>
+
+</jsml>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="properties_font_decoration" jsml-base="rtepropctrl" propname="style:text-decoration" overflow="visible">
+
+		<panel margin="7,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" width="100" text="text-decoration:"/>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbu">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbu);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="underline" unselectable="true">
+				<attach name="click,dblclick">
+					cbu.set_checked(!cbu.get_checked());
+					instance.invoke_event("checkedchange",cbu);
+				</attach>
+			</label>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbo">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbo);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="overline" unselectable="true">
+				<attach name="click,dblclick">
+					cbo.set_checked(!cbo.get_checked());
+					instance.invoke_event("checkedchange",cbo);
+				</attach>
+			</label>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbs">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbs);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="line-through" unselectable="true">
+				<attach name="click,dblclick">
+					cbs.set_checked(!cbs.get_checked());
+					instance.invoke_event("checkedchange",cbs);
+				</attach>
+			</label>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbb">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbb);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="blink" unselectable="true">
+				<attach name="click,dblclick">
+					cbb.set_checked(!cbb.get_checked());
+					instance.invoke_event("checkedchange",cbb);
+				</attach>
+			</label>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbi">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbi);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="inherit" unselectable="true">
+				<attach name="click,dblclick">
+					cbi.set_checked(!cbi.get_checked());
+					instance.invoke_event("checkedchange",cbi);
+				</attach>
+			</label>
+		</panel>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<checkbox dock="left" jsml-local="cbn">
+				<attach name="change,click">
+					instance.invoke_event("checkedchange",cbn);
+				</attach>
+			</checkbox>
+			<label dock="left" vertical_align="middle" width="70" text="none" unselectable="true">
+				<attach name="click,dblclick">
+					cbn.set_checked(!cbn.get_checked());
+					instance.invoke_event("checkedchange",cbn);
+				</attach>
+			</label>
+		</panel>
+		<attach name="checkedchange" arguments="je,cb">
+			<![CDATA[
+			var arr=[cbn,cbi,cbb,cbu,cbo,cbs];
+			if(cb.get_checked())
+			{
+				if(cb==cbn||cb==cbi||cb==cbb)
+				{
+					for(var i=0;i<arr.length;i++)
+					{
+						if(arr[i]==cb)
+							continue;
+						arr[i].set_checked(false);
+					}
+				}
+				if(cb==cbu||cb==cbo||cb==cbs)
+				{
+					cbn.set_checked(false);
+					cbi.set_checked(false);
+					cbb.set_checked(false);
+				}
+			}
+			self.invoke_event("change");
+			]]>
+		</attach>
+		<property name="ctrl_value">
+			<get>
+				<![CDATA[
+				if(cbn.get_checked())
+					return "none";
+				if(cbb.get_checked())
+					return "blink";
+				if(cbi.get_checked())
+					return "inherit";
+				var arr=[];
+				if(cbu.get_checked())arr.push("underline");
+				if(cbo.get_checked())arr.push("overline");
+				if(cbs.get_checked())arr.push("line-through");
+				return arr.join(" ");
+				]]>
+			</get>
+			<set>
+				value=String(value||"");
+				cbu.set_checked(value.indexOf("underline")!=-1)
+				cbo.set_checked(value.indexOf("overline")!=-1)
+				cbs.set_checked(value.indexOf("line-through")!=-1)
+				cbb.set_checked(value.indexOf("blink")!=-1)
+				cbi.set_checked(value.indexOf("inherit")!=-1)
+				cbn.set_checked(value.indexOf("none")!=-1)
+			</set>
+		</property>
+	</panel>
+
+
+
+	<panel jsml-class="properties_font" dock="fill" >
+		<groupbox text="@FONT" dock="top" overflow="visible" margin="4">
+			<panel dock="top" overflow="visible">
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="font-family:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:font-family" width="250">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="Arial" text="Arial" />
+						<listitem value="Verdana" text="Verdana" />
+						<listitem value="Tahoma" text="Tahoma" />
+						<listitem value="Segoe UI" text="Segoe UI" />
+						<listitem value="Sans-Serif" text="Sans-Serif" />
+						<listitem value="Comic Sans MS" text="Comic Sans MS" />
+						<listitem value="Courier New" text="Courier New" />
+						<listitem value="Georgia" text="Georgia" />
+						<listitem value="Impact" text="Impact" />
+						<listitem value="Lucida Console" text="Lucida Console" />
+						<listitem value="Times New Roman" text="Times New Roman" />
+						<listitem value="Trebuchet MS" text="Trebuchet MS" />
+						<listitem value="Monospace" text="Monospace" />
+						<listitem value="caption" text="Caption" />
+						<listitem value="small-caption" text="Small caption" />
+						<listitem value="icon" text="Icon labels" />
+						<listitem value="menu" text="Menu text" />
+						<listitem value="message-box" text="Message box" />
+						<listitem value="status-bar" text="Status bar" />
+					</panel>
+				</panel>
+			</panel>
+			<panel dock="left" width="200">
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="100" text="font-size:" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:font-size"/>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="font-weight:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:font-weight" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="normal" text="normal" />
+						<listitem value="bold" text="bold" />
+						<listitem value="bolder" text="bolder" />
+						<listitem value="lighter" text="lighter" />
+						<listitem value="inherit" text="inherit" />
+						<listitem value="100" text="100" />
+						<listitem value="200" text="200" />
+						<listitem value="300" text="300" />
+						<listitem value="400" text="400" />
+						<listitem value="500" text="500" />
+						<listitem value="600" text="600" />
+						<listitem value="700" text="700" />
+						<listitem value="800" text="800" />
+						<listitem value="900" text="900" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="font-style:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:font-style" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="normal" text="normal" />
+						<listitem value="italic" text="italic" />
+						<listitem value="oblique" text="oblique" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="font-variant:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:font-variant" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="normal" text="normal" />
+						<listitem value="small-caps" text="small-caps" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="text-transform:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-transform" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="capitalize" text="@CAPITALIZE" />
+						<listitem value="uppercase" text="@UPPERCASE" />
+						<listitem value="lowercase" text="@LOWERCASE" />
+						<listitem value="none" text="@none" />
+						<listitem value="inherit" text="@inherit" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="text-align:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-align" width="100">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="left" text="@LEFT" />
+						<listitem value="center" text="@CENTER" />
+						<listitem value="right" text="@RIGHT" />
+						<listitem value="justify" text="@JUSTIFY" />
+					</panel>
+				</panel>
+				<panel margin="7,3,1,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" text="color:" width="100" text_align="right"/>
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="100" />
+				</panel>
+			</panel>
+			<panel dock="left" width="30">
+			</panel>
+			<panel dock="right" width="200">
+				<panel dock="fill" jsml-base="properties_font_decoration" />
+			</panel>
+		</groupbox>
+		
+	</panel>
+	<panel jsml-base="properties_font" />
+</jsml>

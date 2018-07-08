@@ -1,0 +1,16 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+<h2>Index</h2>
+@{ 
+    var c = Session["Email"];
+    if (c != null)
+    {
+@c
+    }
+
+    <label> Select your configured email. If not yet then add new configuration </label>
+}

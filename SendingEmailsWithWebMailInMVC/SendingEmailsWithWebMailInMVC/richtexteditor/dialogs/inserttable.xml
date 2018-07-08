@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="inserttabledialog_edittable" jsml-base="floatmenu">
+
+		<panel jsml-base="rtemenuitem" command="mergecells" imagename="mrgcell" htmlcode="@MERGECELLS" />
+		<panel jsml-base="rtemenuitem" command="splitcells" imagename="spltcell" htmlcode="@SPLITCELLS" />
+		<panel jsml-base="rtemenuspliter" />
+		<panel jsml-base="rtemenuitem" command="deleterow" htmlcode="@DELETEROW" imagename="delrow"  />
+		<panel jsml-base="rtemenuitem" command="deletecolumn" htmlcode="@DELETECOLUMN" imagename="delcol"  />
+		<panel jsml-base="rtemenuitem" command="insertrowtop" htmlcode="@INSERTROWTOP" imagename="insrow_t"  />
+		<panel jsml-base="rtemenuitem" command="insertrowbottom" htmlcode="@INSERTROWBOTTOM" imagename="insrow_b"  />
+		<panel jsml-base="rtemenuspliter" />
+		<panel jsml-base="rtemenuitem" command="insertcolumnleft" htmlcode="@INSERTCOLUMNLEFT" imagename="inscol_l"  />
+		<panel jsml-base="rtemenuitem" command="insertcolumnright" htmlcode="@INSERTCOLUMNRIGHT" imagename="inscol_r" />
+
+	</panel>
+
+
+	<panel jsml-class="inserttabledialog" dock="fill" margin="3" padding="3" overflow="visible">
+
+		<htmlcontrol dock="top" background="transparent url({folder}dialogs/images/insert_table_bg1.png) no-repeat 1px 1px" height="160" overflow="none">
+			<initialize>
+				<![CDATA[
+				var t=document.createElement("TABLE");
+				
+				for(var y=0;y<8;y++)
+				{
+					var row=t.insertRow(-1);
+					for(var x=0;x<10;x++)
+					{
+						var cell=row.insertCell(-1);
+						var cs=cell.style;
+						cs.width="10px";
+						cs.height="10px";
+						cs.cursor="pointer";
+						cs.fontSize="1px";
+						cell.setAttribute("rowy",y+1);
+						cell.setAttribute("cellx",x+1);
+						cell.innerHTML="&nbsp;";
+						
+					}
+				}
+				t.border=0;
+				t.cellSpacing=3;
+				t.cellPadding=0;
+				t.style.height="160px";
+				t.style.width="192px";
+				self._content.appendChild(t);
+				self.table=t;
+				]]>
+			</initialize>
+			<method name="set_hovered_cells" arguments="mx,my">
+				<![CDATA[
+				self.county=my;
+				self.countx=mx;
+
+				var ts=self._content.style;
+				if(!ts.backgroundImage)
+				{
+					ts.backgroundImage="url({folder}dialogs/images/insert_table_bg2.png)";
+					ts.backgroundRepeat="no-repeat";
+				}
+				var x=mx*19-189
+				var y=my*19-151
+				ts.backgroundPosition=x+"px "+y+"px";
+				if(mx>0&&my>0)
+				{
+					self.table.rows[my-1].cells[mx-1].title=my+" x "+mx;
+				}
+				]]>
+			</method>
+			<attach name="mousemove" arguments="jevent,devent">
+				var src=devent.get_element();
+				if(src.nodeName!="TD")return;
+				var y=parseInt(src.getAttribute("rowy"));
+				var x=parseInt(src.getAttribute("cellx"));
+				if(!y||!x)return;
+				self.set_hovered_cells(x,y);
+			</attach>
+			<attach name="mousehover">
+				self._hovered=true;
+			</attach>
+			<attach name="mouseleave">
+				self._hovered=false;
+				self.setDelegateTimeout(function(){if(!self._hovered)self.set_hovered_cells(0,0);},1);
+			</attach>
+			<attach name="click">
+				<![CDATA[
+				if(self.county&&self.countx)
+				{
+					var table=editor.ParseHtmlCode(editor._config.default_code_table)[0];
+					var tbody=table.GetChildAt(0);
+					for(var y=0;y<self.county;y++)
+					{
+						var row=editor.ParseHtmlCode(editor._config.default_code_tr)[0];
+						(tbody||table).AppendChild(row);
+						for(var x=0;x<self.countx;x++)
+						{
+							var td=editor.ParseHtmlCode(editor._config.default_code_td)[0];
+							row.AppendChild(td);
+						}
+					}
+					dialog.close();
+					if(jsml.msie5678)
+					{
+						editor.InsertHTML(table.GetHtmlCode(),true);
+					}
+					else
+					{
+						editor.InsertNode(table);
+						editor.SelectControl(table);
+						if(jsml.msie)
+						{
+							self.setDelegateTimeout(function()
+							{
+								editor.Focus();
+								editor.SelectControl(table);
+							},200);
+						}
+					}
+					editor.Focus();
+				}
+				]]>
+			</attach>
+		</htmlcontrol>
+
+		<panel dock="top" overflow_y="visible">
+			<panel dock="left" width="96" overflow_x="none" jsml-base="rtemenuitem" border_width="1" text="@INSERTTABLE" command="inserttable" />
+			<panel dock="left" width="96" overflow_x="none" jsml-base="rtemenuitem" border_width="1" text="@TEMPLATE" command="inserttabletemplate" imagename="inserttable" />
+		</panel>
+
+		<panel jsml-base="rtemenuspliter" margin="3" />
+
+		<panel dock="top" overflow="visible" margin="3,0,3,0"  padding="3">
+			<panel jsml-base="tbgroup_{skin}_{color}" dock="none">
+
+				<image jsml-base="image_{skin}_{color}" command="mergecells" tooltip="@MERGECELLS" imagename="mrgcell"/>
+				<image jsml-base="image_{skin}_{color}" command="splitcells" tooltip="@SPLITCELLS" imagename="spltcell" />
+				<image jsml-base="image_{skin}_{color}" command="insertrowtop" tooltip="@INSERTROWTOP" imagename="insrow_t"/>
+				<image jsml-base="image_{skin}_{color}" command="insertrowbottom" tooltip="@INSERTROWBOTTOM" imagename="insrow_b" />
+				<image jsml-base="image_{skin}_{color}" command="insertcolumnleft" tooltip="@INSERTCOLUMNLEFT" imagename="inscol_l"/>
+				<image jsml-base="image_{skin}_{color}" command="insertcolumnright" tooltip="@INSERTCOLUMNRIGHT" imagename="inscol_r"/>
+				<image jsml-base="image_{skin}_{color}" command="deleterow" tooltip="@DELETEROW" imagename="delrow"/>
+				<image jsml-base="image_{skin}_{color}" command="deletecolumn" tooltip="@DELETECOLUMN" imagename="delcol"/>
+
+			</panel>
+		</panel>
+
+		<!--
+
+		<panel jsml-base="rtemenuopener" menuclass="inserttabledialog_edittable" imagename="inserttable" text="@EDITTABLE">
+			<initialize>
+				var table=editor.IsIncludedByTag("table");
+				if(table==null)return self.set_disabled(true);
+			</initialize>
+		</panel>
+		
+		
+
+		<panel jsml-base="rtemenuitem" command="mergecells" imagename="mrgcell" htmlcode="@MERGECELLS" />
+		<panel jsml-base="rtemenuitem" command="splitcells" imagename="spltcell" htmlcode="@SPLITCELLS" />
+		<panel jsml-base="rtemenuspliter" />
+		<panel jsml-base="rtemenuitem" command="deleterow" htmlcode="@DELETEROW" imagename="delrow"  />
+		<panel jsml-base="rtemenuitem" command="deletecolumn" htmlcode="@DELETECOLUMN" imagename="delcol"  />
+		<panel jsml-base="rtemenuitem" command="insertrowtop" htmlcode="@INSERTROWTOP" imagename="insrow_t"  />
+		<panel jsml-base="rtemenuitem" command="insertrowbottom" htmlcode="@INSERTROWBOTTOM" imagename="insrow_b"  />
+		<panel jsml-base="rtemenuspliter" />
+		<panel jsml-base="rtemenuitem" command="insertcolumnleft" htmlcode="@INSERTCOLUMNLEFT" imagename="inscol_l"  />
+		<panel jsml-base="rtemenuitem" command="insertcolumnright" htmlcode="@INSERTCOLUMNRIGHT" imagename="inscol_r" />
+		
+		-->
+
+
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+	<panel jsml-base="inserttabledialog" />
+
+
+</jsml>

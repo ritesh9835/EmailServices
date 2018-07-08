@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phoneinsertdialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel jsml-local="subbuttonpanel" dock="top" overflow="visible">
+			<panel jsml-base="phone_{skin}_{color}" command="InsertText" imagename="m_text" text="@INSERTTEXT">
+				<attach name="click">
+					<![CDATA[
+					editor.ExecShowXmlDialog(self.get_element(), "phone_text.xml", {});
+					dialog.close();
+					]]>
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" command="InsertTable" imagename="m_table" text="@INSERTTABLE" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertBox" text="@INSERTBOX" imagename="m_insertdiv" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertFieldSet" text="@INSERTFIELDSET" imagename="m_groupbox" />
+
+
+			<panel jsml-base="phone_{skin}_{color}" command="InsertLink" text="@INSERTLINK" imagename="m_link" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertAnchor" text="@INSERTANCHOR" imagename="m_anchor" />
+			<panel jsml-base="phone_{skin}_{color}" command="ExecPlugin" arguments="insertchars" imagename="m_specialchar" text="@INSERTCHARS" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertDate" imagename="m_insertdate" text="@INSERTDATE" />
+
+
+			<panel jsml-base="phone_{skin}_{color}" command="InsertBlockQuote" text="@INSERTBLOCKQUOTE" imagename="m_blockquote" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertBreak" text="@INSERTBREAKRULE" imagename="m_break" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertWbr" text="@INSERTWBR" imagename="m_div" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertParagraph" text="@INSERTPARAGRAPH" imagename="m_paragraph" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertHorizontalRule" text="@INSERTHORIZONTALRULE" imagename="m_rule" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertPageBreak" text="@INSERTPAGEPRINTBREAK" imagename="m_insertpagebreak" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertTopLine" text="@INSERTTOPLINE" imagename="m_topline" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertBottomLine" text="@INSERTBOTTOMLINE" imagename="m_bottomline" />
+
+			<panel jsml-base="phone_{skin}_{color}" command="InsertImage" text="@INSERTIMAGE" imagename="m_image" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertVideo" text="@INSERTVIDEO" imagename="m_media" />
+			<panel jsml-base="phone_{skin}_{color}" command="InsertDocument" text="@INSERTDOCUMENT" imagename="m_document" />
+			<panel jsml-base="phone_{skin}_{color}" command="ExecPlugin" arguments="insertyoutube" text="@INSERTYOUTUBE" imagename="m_youtube"/>
+			<panel jsml-base="phone_{skin}_{color}" command="ExecPlugin" arguments="googlemap" text="@GOOGLEMAP" imagename="m_map"/>
+		</panel>
+		
+	</panel>
+
+	<panel jsml-base="phoneinsertdialog">
+	</panel>
+
+</jsml>

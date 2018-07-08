@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../../core/jsml.xsd">
+
+
+	<include src="{folder}skins/_shared/_toolbartemplate.xml?{timems}" />
+
+	<jsml-def name="toolbar_{toolbar}_{skin}_{color}">
+		<method name="find_config">
+			<![CDATA[
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+				if(ctrl._rteconfig)return ctrl._rteconfig;
+			]]>
+		</method>
+		<attach name="editor_ready" arguments="je,editor">
+			editor.ParseItemList(self,editor._config.toolbaritems||editor._config.toolbars[editor._config.toolbar]||"");
+		</attach>
+	</jsml-def>
+
+</jsml>
+
+
+

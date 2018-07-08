@@ -1,0 +1,161 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>WebPalette</title>
+	<meta http-equiv="Page-Enter" content="blendTrans(Duration=0.1)" />
+	<meta http-equiv="Page-Exit" content="blendTrans(Duration=0.1)" />
+
+	<script type="text/javascript" src="resx/Dialog_ColorPicker.js"></script>
+
+	<link type="text/css" rel="stylesheet" href='resx/dialog.css' />
+	<style type="text/css">
+			.colorcell
+			{
+				width:22px;
+				height:11px;
+				cursor:hand;
+			}
+			.colordiv
+			{
+				border:solid 1px #808080;
+				width:22px;
+				height:11px;
+				font-size:1px;
+			}
+			#ajaxdiv{padding:10px;margin:0;text-align:center; background:#eeeeee;}
+		</style>
+
+	<script>
+function DoubleHex(v)
+{
+	if(v<16)return "0"+v.toString(16);
+	return v.toString(16);
+}
+function ToHexString(r,g,b)
+{
+	return ("#"+DoubleHex(r*51)+DoubleHex(g*51)+DoubleHex(b*51)).toUpperCase();
+}
+function MakeHex(z,x,y)
+{
+	//hor->ver
+	var l=z%2
+	var t=(z-l)/2
+	z=l*3+t
+
+	//left column , l/r mirrow
+	if(z<3)x=5-x;
+	
+	//middle row , t/b mirrow
+	if(z==1||z==4)y=5-y;
+	
+	return ToHexString(5-y,5-x,5-z);
+}
+var colors=new Array(216);
+for(var z=0;z<6;z++)
+{
+	for(var x=0;x<6;x++)
+	{
+		for(var y=0;y<6;y++)
+		{
+			var hex=MakeHex(z,x,y)
+			var xx=(z%2)*6+x;
+			var yy=Math.floor(z/2)*6+y;
+			colors[yy*12+xx]=hex;
+		}
+	}
+}
+
+var arr=[];
+for(var i=0;i<colors.length;i++)
+{
+	if(i%12==0)arr.push("<tr>");
+	arr.push("<td class='colorcell'><div class='colordiv' style='background-color:")
+	arr.push(colors[i]);
+	arr.push("' cvalue='");
+	arr.push(colors[i]);
+	arr.push("' title='")
+	arr.push(colors[i]);
+	arr.push("'>&nbsp;</div></td>");
+	if(i%12==11)arr.push("</tr>");
+}
+	</script>
+
+</head>
+<body>
+	<div id="ajaxdiv">
+		<div class="tab-pane-control tab-pane" id="tabPane1">
+			<div class="tab-row">
+				<h2 class="tab selected">
+					<a tabindex="-1" href='colorpicker.htm'><span style="white-space: nowrap;" langtext='1'>
+						WebPalette </span></a>
+				</h2>
+				<h2 class="tab">
+					<a tabindex="-1" href='colorpicker_basic.htm'><span style="white-space: nowrap;"
+						langtext='1'>NamedColors </span></a>
+				</h2>
+				<h2 class="tab">
+					<a tabindex="-1" href='colorpicker_more.htm'><span style="white-space: nowrap;" langtext='1'>
+						CustomColor </span></a>
+				</h2>
+			</div>
+			<div class="tab-page">
+				<table cellspacing='2' cellpadding="1" align="center">
+
+					<script>
+							document.write(arr.join(""));
+					</script>
+
+					<tr>
+						<td colspan="12" height="12">
+							<p style="text-align: left">
+							</p>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="12" valign="middle" height="24">
+							<span style="height: 24px; width: 50px;" langtext='1'>Color</span>: &nbsp;
+							<input type="text" id="divpreview" size="7" maxlength="7" style="width: 180px; height: 24px;
+								border: #a0a0a0 1px solid; padding: 4;" />
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div id="container-bottom">
+			<input type="button" id="buttonok" value="OK" class="formbutton" style="width: 70px"
+				onclick="do_insert();" langtext='1' />
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="button" id="buttoncancel" value="Cancel" class="formbutton" style="width: 70px"
+				onclick="do_Close();" langtext='1' />
+		</div>
+	</div>
+</body>
+
+<script>
+
+new function()
+{
+	var editor=parent.rtecolorpickereditor;
+	var ns=document.getElementsByTagName("*");
+	for(var i=0;i<ns.length;i++)
+	{
+		var n=ns[i];
+		if(n.getAttribute('langtext')!="1")continue;
+		var t=n.innerText||n.textContent||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.innerText=t;
+			n.textContent=t;
+		}
+		var t=n.value||"";
+		if(t)
+		{
+			t=editor.GetLangText(t);
+			n.value=t;
+		}
+	}
+}
+
+</script>
+
+</html>

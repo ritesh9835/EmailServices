@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="cleancode_item" dock="top">
+		<checkbox dock="left" jsml-local="checkbox" width="20" height="16" margin="1,0,3,0">
+			<attach name="change,click">
+				instance.filter.IsChecked=self.get_checked();
+			</attach>
+		</checkbox>
+		<label dock="left" jsml-local="label" vertical_align="middle"/>
+		<method name="bind_item" arguments="arg0">
+			self.filter=arg0;
+			label.set_text(self.filter.Filter.LangText);
+			self.set_opacity(self.filter.IsMatch?100:80)
+			checkbox.set_disabled(!self.filter.IsMatch);
+		</method>
+	</panel>
+
+	<panel jsml-class="cleancode_dialog" dock="fill" margin="0" padding="6" overflow="visible" back_color="#f9f9f9">
+		<label dock="bottom" jsml-local="scaninfo" />
+		<panel dock="fill" margin="12">
+			<panel dock="right">
+				<button text="@APPLY" >
+					<attach name="click">
+						instance.DoExecute();
+					</attach>
+				</button>
+
+				<button text="@UNDO" jsml-local="btnundo" top="30">
+					<attach name="click">
+						instance.DoUndo();
+					</attach>
+				</button>
+				<button text="@REDO" jsml-local="btnredo" top="60">
+					<attach name="click">
+						instance.DoRedo();
+					</attach>
+				</button>
+
+				<button text="@CLOSE" top="90">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+
+			</panel>
+			<panel dock="fill" overflow_y="scroll" margin="0,10,0,0" border_style="solid" border_width="0,1,0,0" border_color="#cccccc">
+				<panel dock="top" overflow="visible">
+					<label dock="left" text="@CLEAN_MATCHITEMS|:" padding="0,0,0,5" width="90"/>
+					<panel dock="left" width="400" overflow="visible">
+						<panel dock="top" jsml-local="enablelist" overflow="visible">
+						</panel>
+						<panel dock="top">
+							<label dock="left" text="@TAGSTOREMOVE|:" vertical_align="middle" margin="0,5,0,5"></label>
+							<textbox dock="left" jsml-local="specifytags" border_width="1" width="160" border_color="#a0a0a0"></textbox>
+						</panel>
+					</panel>
+				</panel>
+				<panel dock="top"/>
+				<panel dock="top" overflow="visible">
+					<label dock="left" text="@CLEAN_UNMATCHITEMS|:" padding="0,0,0,5" width="90" />
+					<panel dock="left" jsml-local="disablelist" overflow="visible">
+					</panel>
+				</panel>
+			</panel>
+		</panel>
+
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+
+
+		<initialize>
+			self.LoadUI();
+		</initialize>
+		<method name="ReloadUI">
+			enablelist.dispose_children();
+			disablelist.dispose_children()
+			self.LoadUI();
+		</method>
+		<method name="LoadUI">
+			<![CDATA[
+			self.loadingfilter=true;
+			var filters=self.filters=editor.GetHtmlFilterList();
+
+			var html=editor.GetHtmlCode();
+			var nodes=editor.ParseHtmlCode(html);
+			
+			var ver=editor.GetFrameVersion();
+			
+			var index=-1;
+			function NextFilter()
+			{
+				if(self._jsml_disposed)
+					return;
+				if(ver!=editor.GetFrameVersion())
+					return;
+					
+				index++;
+				var filter=filters[index];
+				if(!filter)
+				{
+					jsml.suppend_layout();
+					scaninfo.set_text("")
+					self.FillFilters();
+					jsml.resume_layout();
+					self.loadingfilter=false;
+					return;
+				}
+				self.setDelegateTimeout(NextFilter,10);
+				
+				scaninfo.set_text(filter.LangText+".."+Math.floor(100*(index+1)/filters.length)+"%")
+				
+				filter={Filter:filter}
+				filters[index]=filter;
+				
+				if(filter.Filter.ParamType=="NodeArray")
+					filter.IsMatch=filter.Filter.Match(nodes)
+				else
+					filter.IsMatch=filter.Filter.Match(html)
+			}
+			
+			scaninfo.set_text("Loading...")
+			self.setDelegateTimeout(NextFilter,10);
+			
+			self.setDelegateTimeout(function()
+			{
+				btnundo.set_disabled(!editor.CanExecCommand("undo"));
+				btnredo.set_disabled(!editor.CanExecCommand("redo"));
+			},200);
+			
+			]]>
+		</method>
+		<method name="FillFilters">
+			<![CDATA[
+			
+			var matchcount=0;
+			
+			for(var i=0;i<self.filters.length;i++)
+			{
+				var filter=self.filters[i];
+				
+				var list=filter.IsMatch?enablelist:disablelist;
+				var item=jsml.class_create_instance("cleancode_item");
+				item.bind_item(filter);
+				list.append_child(item);
+				if(filter.IsMatch)matchcount++;
+			}
+			
+			if(matchcount==0)
+			{
+				var label=jsml.class_create_instance("label");
+				label.set_text(editor.GetLangText("msg_cleancode_nomatches"));
+				label.set_vertical_align("middle");
+				label.set_padding([0,0,0,5]);
+				label._estyle.fontWeight="bold";
+				//label.set_margin([0,0,12,0]);
+				label.set_dock("fill");
+				enablelist.append_child(label);
+			}
+
+			
+			]]>
+		</method>
+		<method name="DoUndo">
+			editor.ExecCommand("undo");
+			self.ReloadUI();
+		</method>
+		<method name="DoRedo">
+			editor.ExecCommand("redo");
+			self.ReloadUI();
+		</method>
+
+		<method name="DoExecute">
+			<![CDATA[
+			
+			if(self.loadingfilter)
+				return;
+			
+			var arr1=[];
+			var arr2=[];
+			
+			
+			var tags=specifytags.get_text().split(' ').join(',').split(',');
+			for(var i=0;i<tags.length;i++)
+			{
+				var tag=tags[i].replace(/(^\s+)|(\s+$)/g,'');
+				if(!tag)
+				{
+					tags.splice(i,1);
+					i--;
+				}
+				else
+				{
+					tags[i]=tag;
+				}
+			}
+			if(tags.length)
+			{
+				var rtf=editor.CreateRemoveTagsFilter(tags);
+				arr1.push({Filter:rtf,IsChecked:1});
+			}
+			
+			for(var i=0;i<self.filters.length;i++)
+			{
+				var filter=self.filters[i];
+				if(!filter.IsChecked)continue;
+				if(filter.Filter.ParamType=="NodeArray")
+					arr1.push(filter);
+				else
+					arr2.push(filter);
+			}
+			
+			
+			var html=editor.GetHtmlCode();
+			if(arr2.length)
+			{
+				for(var i=0;i<arr2.length;i++)
+					html=arr2[i].Filter.Filter(html);
+			}
+			if(arr1.length)
+			{
+				var nodes=editor.ParseHtmlCode(html);
+				for(var i=0;i<arr1.length;i++)
+					nodes=arr1[i].Filter.Filter(nodes);
+				var sb=[]
+				for(var i=0;i<nodes.length;i++)
+					sb.push(nodes[i].GetHtmlCode());
+				html=sb.join("");
+			}
+			editor.SetHtmlCode(html);
+			
+			self.ReloadUI();
+
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="cleancode_dialog" />
+
+	<execute>
+		dialog.set_title(editor.GetLangText("cleancode"));
+	</execute>
+
+</jsml>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Untitled Page</title>
+	<style type="text/css">
+        body {font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 12px;}
+        .jsml_label {
+font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 12px!important;
+color: black;
+}
+    </style>
+</head>
+<body style="padding: 0px; margin: 0px; overflow: hidden;">
+	<div id="container_panel">
+	</div>
+
+	<script type="text/javascript">
+    
+		var editor=parent.rteimageeditoreditor;
+		var dialog=parent.rteimageeditordialog;
+		var option=parent.rteimageeditoroption;
+		
+		document.write('<script type="text/javascript" src="../core/jsml.js?'+editor._config._urlsuffix+'"></scr'+'ipt>');
+		
+		if(editor._config.servertype=="AspNet")
+		{
+			document.write('<script type="text/javascript" src="Language.aspx"></scr'+'ipt>');
+		}
+		else
+		{
+			document.write('<script type="text/javascript" src="language/en_us.js"></scr'+'ipt>');
+		}
+		
+	</script>
+
+	<script type="text/javascript">
+		
+		var fileurl=option.storage.UrlPrefix+option.storage.UrlPath+option.fileitem.Name;
+		dialog.set_title(editor.GetLangText("imageeditor")+" : "+fileurl);
+
+		window.RefreshImage=function(url,callback)
+		{
+			var iframe=document.createElement("IFRAME");
+			iframe.style.width="1px";
+			iframe.style.height="1px";
+			iframe.style.position="absolute";
+			iframe.style.top="-1px";
+			
+			window.rterefreshimagecallback=callback;
+			window.rterefreshimageiframe=iframe;
+			
+			var src="refreshimage.htm?url="+url;
+			iframe.src=src;
+			document.body.insertBefore(iframe,document.body.firstChild);
+			
+		}
+		window.OnRefreshImage=function()
+		{
+			var cb=window.rterefreshimagecallback;
+			if(cb)setTimeout(cb,1);
+			
+			var iframe=window.rterefreshimageiframe;
+			iframe.parentNode.removeChild(iframe);
+		}
+		
+
+		window.SaveImageBase64=function(data)
+	    {
+			function callback(call)
+			{
+				var pathitem=call.ReturnValue;
+				if(!pathitem)
+				{
+					alert("failed..");
+					return;
+				}
+				window.RefreshImage(fileurl,function()
+				{
+					if(option.onsaveimage)
+					{
+						option.onsaveimage(pathitem);
+					}
+					//alert("Saved OK");
+					dialog.close();
+				});
+			}
+			editor.CallAjax("AjaxSaveImage",callback,option.storage,option.fileitem.Name,data)
+	    }
+    
+		jsml.jsmlfolder="../core";
+    
+        jsml.parse_xmldoc_translate_value = function (val) {
+            if (!val) return val;
+            if (val.charAt(0) == "@") {
+                var key = val.substring(1);
+                return imageeditor_lang[key];
+            }
+            if (val.indexOf("{now}") != -1) {
+                return val.replace(/{now}/g,new Date().getTime());
+            }
+            return val;
+            clearTimeout()
+        }
+	</script>
+
+	<script type="text/javascript" src="tools.js"></script>
+
+	<script type="text/javascript" src="html5.js"></script>
+
+	<script type="text/javascript">
+	    var xh=jsml.xmlhttp();
+	    xh.onreadystatechange = function () {
+	        if (xh.readyState < 4) return;
+	        xh.onreadystatechange = new Function();
+	        if (xh.status == 0) return;
+	        jsml.parse_xmldoc(xh.responseXML);
+	        jsml.new_html5_ui();
+	    }
+	    xh.open("GET","html5ui.xml?"+new Date().getTime(),true);
+	    xh.send("");
+
+        
+	    ImageEditorDocument.SetOption("LockFileName", true);
+	    ImageEditorDocument.SetOption("LockOverwrite", true);
+	    ImageEditorDocument.SetOption("Overwrite", true);
+	    
+	    ImageEditorDocument.LoadUrl(option.fileitem.Name, fileurl);
+	    
+	    		
+		dialog.onqueryclose=function()
+		{
+			if(ImageEditorDocument._historylist.length>1)
+				return confirm(editor.GetLangText("closediscardchanges"));
+		}
+			
+	    
+	</script>
+
+	<script type="text/javascript" src="effect.js"></script>
+
+</body>
+</html>

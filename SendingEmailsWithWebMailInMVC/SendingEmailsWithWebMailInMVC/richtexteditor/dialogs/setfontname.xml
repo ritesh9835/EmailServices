@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<htmlcontrol jsml-class="setfontnamedialogitem" dock="top" overflow="visible" vertical_align="middle" margin="0" padding="0" border_width="1" border_color="transparent" cursor="pointer" background="url({folder}images/font.png) center left no-repeat" unselectable="true">
+		<initialize>
+			self._estyle.fontFamily='arial';
+
+			<![CDATA[
+			if(!editor._config.preview_disabletooltip&&!editor._config.preview_disablefontname)
+			{
+				self._previewhtml=editor.GetRangePreviewHTML("fontname");
+			}
+			]]>
+
+		</initialize>
+
+		<attach name="mousehover" arguments="je,e">
+			self.set_border_color('#DCAC6C');
+			self.set_back_color('#FFF5D4');
+			self.set_text_color('blue');
+		</attach>
+		<attach name="mouseleave">
+			self.set_border_color('white');
+			self.set_back_color('');
+			self.set_text_color('');
+		</attach>
+		<attach name="click">
+			editor.ExecCommand("fontname",self.get_text());
+			dialog.close();
+		</attach>
+		<method name="set_html" arguments="value" overrideas="basesethtml">
+			value=value.replace('(Default)',editor.GetLangText("default"))
+			self.basesethtml(value);
+		</method>
+	</htmlcontrol>
+
+	<panel dock="fill" margin="0" padding="0" overflow="visible" width="160">
+		<panel dock="fill" overflow="visible" padding="3">
+			<htmlcontrol jsml-base="setfontnamedialogitem" text="!">
+				<xmldata>
+					<div style="width:125px;font-size:13px;padding:0 20px;">(Default)</div>
+				</xmldata>
+			</htmlcontrol>
+
+			<initialize>
+				<![CDATA[
+				var namelist=editor._config.fontnamelist||'Arial,Verdana,Tahoma,Segoe UI,Sans-Serif,Comic Sans MS,Courier New,Georgia,Impact,Lucida Console,Times New Roman,Trebuchet MS,Monospace';
+				namelist=namelist.split(',');
+				for(var i=0;i<namelist.length;i++)
+				{
+					var item=jsml.class_create_instance("setfontnamedialogitem");
+					item.set_text(namelist[i]);
+					item.set_html('<div style="width:125px;font-size:13px;padding:0 20px;font-family:'+namelist[i]+';">'+namelist[i]+'</div>');
+					self.append_child(item);
+				}
+				]]>
+			</initialize>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+
+</jsml>

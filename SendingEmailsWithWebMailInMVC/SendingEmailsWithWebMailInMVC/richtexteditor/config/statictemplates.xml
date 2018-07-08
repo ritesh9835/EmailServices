@@ -1,0 +1,49 @@
+<templates>
+	<group text="Websites">
+		<group text="CuteSoft">
+			<template text="CuteSoft">
+				<![CDATA[
+					<h1>CuteSoft</h1>
+					<h2 class="CommonTitle" style="color: #224488; font-size: 16px; padding: 15px 0px 15px 8px; margin: 0px; font-family: 'segoe ui', arial, verdana, helvetica, sans-serif; line-height: 16px; text-align: left; background-color: #ffffff; ">About CuteSoft Components</h2>
+					<table style="font-family: 'segoe ui', arial, verdana, helvetica, sans-serif; line-height: 16px; text-align: left; background-color: #ffffff; ">
+						<tbody>
+							<tr>
+								<td style="vertical-align: top; ">
+									<h3 style="font-size: 13px; ">Leading provider of online HTML Editing, Upload component, ASP.NET Live Support, ASP.NET Chat and Web Messenger applications.</h3>
+									<p style="margin: 0px 0px 3px; ">
+										CuteSoft Components Inc. is a privately held company incorporated in Ontario, Canada, specializing in building high quality, reusable .net/ASP/PHP components and enterprise class software solutions. We are the Leading provider of online HTML Editing, upload component, ASP.NET Live Support, ASP.NET Chat and Web Messenger applications. These tools are distributed and used worldwide.<br/>
+										<br/>
+										CuteSoft was founded on the principle of offering products and services of the highest quality to our clients. Our target markets are the .NET/ASP/PHP developer community for components and various other key markets for our web based software solutions.
+									</p>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				]]>
+			</template>
+      <template text="Free Live Chat">
+        <![CDATA[
+				<h1>My Live Chat</h1>
+				<p>A Free Live Chat Software for your website.</p>
+			]]>
+      </template>
+      <template text="Free Javascript Obfuscator">
+        <![CDATA[
+				<p>Free Javascript Obfuscator is a professional tool for obfuscation of javascript. It Converts JavaScript source code into scrambled and completely unreadable form, preventing it from analysing and theft.</p>
+			]]>
+      </template>
+      <template text="Ajax Uploader">
+        <![CDATA[
+				<h1>Ajax Uploader</h1>
+				<p>Ajax Uploader is an easy to use, hi-performance ASP.NET File Upload Control which allows you to upload files to web server without refreshing the page. </p>
+			]]>
+      </template>
+		</group>
+		<template text="My Snippet">
+			<![CDATA[
+				<h1>Hello World!</h1>
+				<p>This is a code snippet example.</p>
+			]]>
+		</template>
+	</group>
+</templates>

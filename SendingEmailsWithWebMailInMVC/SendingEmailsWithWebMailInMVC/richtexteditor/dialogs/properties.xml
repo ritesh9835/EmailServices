@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<!-- TAB BUTTON -->
+
+	<panel jsml-class="properties_tabbtn" cursor="pointer" height="18" width="60" border_color="#CDCDCD" border_width="0,0,1,0">
+		<label jsml-local="label"  dock="fill" text_align="center" vertical_align="middle" cursor="pointer"/>
+
+		<attach name="set_text">
+			label.set_text(self.get_text());
+		</attach>
+
+		<attach name="mousehover">
+			label.set_text_color("blue");
+		</attach>
+		<attach name="mouseleave">
+			label.set_text_color("");
+		</attach>
+
+		<attach name="mousedown">
+			self.SetActive();
+		</attach>
+		<method name="SetActive">
+			<![CDATA[
+			var p=this.get_parent();
+			if(!p)return;
+			var cs=p._childs;
+			var isprev=true;
+			for(var i=0;i<cs.length;i++)
+			{
+				var header=cs[i];
+				if(header==self)
+				{
+					isprev=false;
+					if(i==cs.length-1)
+					{
+						if(i==0)
+							header.SetMode("active_full");
+						else
+							header.SetMode("active_end");
+					}
+					else
+					{
+						if(i==0)
+							header.SetMode("active_begin");
+						else
+							header.SetMode("active_middle");
+					}
+				}
+				else
+				{
+					if(i==0)
+						header.SetMode("first");
+					else if(isprev)
+						header.SetMode("prev");
+					else if(i==cs.length-1)
+						header.SetMode("last");
+					else
+						header.SetMode("next");
+				}
+			}
+			]]>
+		</method>
+		<method name="IsActive">
+			return self._isactive;
+		</method>
+		<method name="SetMode" arguments="mode">
+			<![CDATA[
+			if(self._tabmode==mode)
+				return;
+			self._tabmode=mode;
+			self._isactive=mode.substring(0,7)=="active_";
+			switch(mode)
+			{
+				case "active_begin":
+				case "active_end":
+				case "active_middle":
+				case "active_full":
+					self.set_border_color("#f6f6f6");
+					label.set_border_color("#CDCDCD");
+					label.set_back_color("#f6f6f6");
+					label.set_border_width([1,1,0,1]);
+					label.set_padding([3,0,1,0]);
+					label.set_margin([0,0,0,0]);
+					self.set_min_height(self.get_height()+2);
+					break;
+				case "first":
+				case "prev":
+					self.set_border_color("#CDCDCD");
+					label.set_border_color("#DEDEDE");
+					label.set_back_color("#F5F5F5");
+					label.set_border_width([1,0,0,1]);
+					label.set_padding([0,1,1,0]);
+					label.set_margin([3,0,0,0]);
+					self.set_min_height(self.get_height()+1);
+					break;
+				case "next":
+				case "last":
+					self.set_border_color("#CDCDCD");
+					label.set_border_color("#DEDEDE");
+					label.set_back_color("#F5F5F5");
+					label.set_border_width([1,1,0,0]);
+					label.set_padding([0,0,1,1]);
+					label.set_margin([3,0,0,0]);
+					self.set_min_height(self.get_height()+1);
+					break;
+			}
+
+			if(self._isactive)
+				self.invoke_event("active");
+			else
+				self.invoke_event("deactive");
+			if(self._isactive)
+				self.bubble_event("tabactived",self._active_argument,self);
+			]]>
+		</method>
+		<property name="active_argument">
+			<get>
+				return self._active_argument;
+			</get>
+			<set>
+				self._active_argument=value;
+			</set>
+		</property>
+	</panel>
+
+	<!-- DIALOG -->
+
+	<panel jsml-class="properties_dialog" dock="fill" padding="8" back_color="#EEEEEE">
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+		<panel dock="top" overflow="visible" jsml-local="tabspanel">
+
+			<panel dock="left"  border_width="0,0,1,0" border_color="#CDCDCD" width="20"></panel>
+
+			<panel dock="left" overflow="visible" jsml-local="tabpanel">
+				<panel dock="left" jsml-base="properties_tabbtn" text="" active_argument="special" jsml-local="firsttabbtn"/>
+				<panel dock="left" jsml-base="properties_tabbtn" text="@COMMON" active_argument="tag_common" />
+				<panel dock="left" jsml-base="properties_tabbtn" text="@STYLES" active_argument="style" />
+			</panel>
+			<panel dock="fill"  border_width="0,0,1,0" border_color="#CDCDCD">
+			</panel>
+			<attach name="tabactived" arguments="je,arg">
+				<![CDATA[
+				mainpanel.dispose_children();
+				
+				var urlhandler=function(res,err)
+				{
+					if(!res)
+					{
+						if(err)self.setDelegateTimeout(function(){throw(err)},1);
+						return;
+					}
+				};
+				
+				var processinst=function(inst){
+					mainpanel.append_child(inst);
+					inst.invoke_recursive("editor_ready",editor);
+				};
+				
+				var dialogvars={editor:editor,dialog:dialog,option:option}
+				
+				var file="properties_"+arg;
+				if(arg=="special")
+					file="properties_"+instance.specialfile;
+				file+=".xml";
+				
+				editor._LoadXmlUrl(editor.BuildDialogUrl(file),urlhandler,processinst,dialogvars);
+				
+				je.ReturnValue=false;
+				]]>
+			</attach>
+
+		</panel>
+		
+		<panel jsml-local="mainpanel" dock="fill" border_width="0,1,1,1" border_color="#CDCDCD" padding="6" back_color="#f6f6f6">
+		</panel>
+
+		<attach name="reloadvalue">
+			self.invoke_recursive("loadvalue");
+		</attach>
+		<initialize>
+			<![CDATA[
+			
+			self._rtenode=option.targetnode;
+			
+			var title=editor.CreateControlProvider(option.targetnode).GetTitle();
+			
+			dialog.set_title(title)
+
+			var index=0;
+					
+			instance.specialfile="tag_common";
+			var nl=option.targetnode.GetNameLower();
+			switch(nl)
+			{
+				case "a":
+				case "div":
+				case "table":
+				case "form":
+				case "select":
+				case "input":
+				case "textarea":
+				case "button":
+				case "audio":
+				case "video":
+					firsttabbtn.set_text(title)
+					instance.specialfile="tag_"+nl;
+					if(option.styletab)index=2;
+					break;
+				default:
+					tabpanel.remove_child(firsttabbtn);
+					firsttabbtn.dispose();
+					firsttabbtn.set_visible(false);
+					if(option.styletab)index=1;
+					break;
+			}
+
+			tabpanel._childs[index].SetActive();
+			
+			if(option.hidetabs)
+			{
+				tabspanel.set_visible(false);
+				mainpanel.set_border_width(0);
+			}
+			
+			self.setDelegateTimeout(function()
+			{
+				editor.PreloadDialogUrl("properties_style.xml");
+			},3000);
+			
+			]]>
+		</initialize>
+	</panel>
+
+	<panel jsml-base="properties_dialog">
+
+	</panel>
+
+
+
+</jsml>

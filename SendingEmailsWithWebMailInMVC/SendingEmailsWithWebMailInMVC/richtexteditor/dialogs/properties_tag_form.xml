@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagform" dock="fill">
+		<groupbox text="Form" dock="top" overflow="visible" margin="3">
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@ACTION|:" width="100" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" propname="action"  width="380" />
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@METHOD|:" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="method" width="200">
+					<listitem text="post" value="post" />
+					<listitem text="get" value="get" />
+				</panel>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@ATTR_TARGET|:" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="target" width="200">
+		  <listitem value="" text="@NOTSET" />
+		  <listitem value="_blank" text="@ATTR_TARGETBLANK" />
+		  <listitem value="_parent" text="@ATTR_TARGETPARENT" />
+		  <listitem value="_self" text="@ATTR_TARGETSELF" />
+		  <listitem value="_top" text="@ATTR_TARGETTOP" />
+		</panel>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@encodingtype|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropdropdown" propname="target" width="200">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="multipart/form-data" text="multipart/form-data" />
+					<listitem value="application/x-www-form-urlencoded" text="application/x-www-form-urlencoded" />
+				</panel>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@NAME|:" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="name" width="200" />
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="ID:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="id" width="200" />
+	  </panel>
+	  <panel margin="7,3,20,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@CSSCLASS|:" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="class"  width="200" />
+	  </panel>
+	</groupbox>
+	</panel>
+
+	<panel jsml-base="properties_tagform" />
+
+
+</jsml>

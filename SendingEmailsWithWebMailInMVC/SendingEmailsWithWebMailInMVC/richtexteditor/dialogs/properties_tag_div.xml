@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.tdhover=new Function("","this.style.backgroundColor='#eeeeee'");
+		dialog.tdleave=new Function("","this.style.backgroundColor=''");
+	</execute>
+
+	<panel jsml-class="properties_div" dock="fill">
+
+		<panel dock="top" height="135">
+
+			<panel dock="left" width="60"/>
+
+			<panel dock="left" width="120" margin="5" overflow_y="scroll" border_width="1" border_color="#666666">
+				<htmlcontrol>
+					<xmldata rawhtml="true">
+						<![CDATA[
+						<table style="width:100px;border-collapse:collapse;margin:1px;" >
+							<tr><td style='font-size:11px'>-</td></tr>
+							<tr><td val='solid'><div style='margin-top:3px;border-top:solid 2px black;'></div></td></tr>
+							<tr><td val='dotted'><div style='margin-top:3px;border-top:dotted 2px black;'></div></td></tr>
+							<tr><td val='dashed'><div style='margin-top:3px;border-top:dashed 2px black;'></div></td></tr>
+							<tr><td val='double'><div style='margin-top:3px;border:double 3px;height:10px'></div></td></tr>
+							<tr><td val='groove'><div style='margin-top:1px;border:groove 2px;height:10px'></div></td></tr>
+							<tr><td val='inset'><div style='margin-top:1px;border:inset 2px;height:10px'></div></td></tr>
+							<tr><td val='outset'><div style='margin-top:1px;border:outset 2px;height:10px'></div></td></tr>
+						</table>
+						]]>
+					</xmldata>
+					<method name="setupcell" arguments="cell">
+						<![CDATA[
+						var bstyle=cell.getAttribute("val")||null;
+						cell.onclick=function()
+						{
+							option.targetnode.SetStyle("border-style",bstyle);
+							self.invoke_event("loadvalue");
+						}
+						if(bstyle)
+							cell.setAttribute("title",bstyle);
+						else
+							cell.innerHTML=editor.GetLangText("notset");
+			cell.className="jsml_label";
+						cell.style.cursor="pointer";
+						cell.style.height="20px";
+						cell.onmouseover=dialog.tdhover;
+						cell.onmouseout=dialog.tdleave;
+						]]>
+					</method>
+					<initialize>
+						<![CDATA[
+						self.cells=[];
+						var rs=self._content.firstChild.rows;
+						for(var ri=0;ri<rs.length;ri++)
+						{
+							var cell=rs.item(ri).cells.item(0);
+							self.setupcell(cell);
+							self.cells.push(cell);
+						}
+						]]>
+					</initialize>
+					<attach name="attach_dom,loadvalue">
+						<![CDATA[
+						var val=option.targetnode.GetStyle("border-style");
+						for(var i=0;i<self.cells.length;i++)
+						{
+							var cell=self.cells[i];
+							var row=cell.parentNode;
+							if(cell.getAttribute("val")==val)
+								row.style.backgroundColor='yellow';
+							else
+								row.style.backgroundColor='';
+						}
+						]]>
+					</attach>
+				</htmlcontrol>
+			</panel>
+			<panel dock="left" width="30"/>
+			<panel dock="left" width="110" margin="5" overflow_y="scroll" border_width="1" border_color="#666666">
+				<htmlcontrol>
+					<xmldata rawhtml="true">
+						<![CDATA[
+						<table style="width:90px;border-collapse:collapse;margin:1px;" >
+							<tr><td style='font-size:11px'>-</td></tr>
+							<tr><td val='1px'><div style='margin-top:3px;border-top:solid 1px black;'></div></td></tr>
+							<tr><td val='2px'><div style='margin-top:3px;border-top:solid 2px black;'></div></td></tr>
+							<tr><td val='3px'><div style='margin-top:3px;border-top:solid 3px black;'></div></td></tr>
+							<tr><td val='4px'><div style='margin-top:3px;border-top:solid 4px black;'></div></td></tr>
+							<tr><td val='5px'><div style='margin-top:3px;border-top:solid 5px black;'></div></td></tr>
+							<tr><td val='6px'><div style='margin-top:3px;border-top:solid 6px black;'></div></td></tr>
+							<tr><td val='7px'><div style='margin-top:3px;border-top:solid 7px black;'></div></td></tr>
+						</table>
+						]]>
+					</xmldata>
+					<method name="setupcell" arguments="cell">
+						<![CDATA[
+						var bstyle=cell.getAttribute("val")||null;
+						cell.onclick=function()
+						{
+							option.targetnode.SetStyle("border-width",bstyle);
+							self.invoke_event("loadvalue");
+						}
+						if(bstyle)
+							cell.setAttribute("title",bstyle);
+						else
+							cell.innerHTML=editor.GetLangText("notset");
+			cell.className="jsml_label";
+						cell.style.cursor="pointer";
+						cell.style.height="20px";
+						cell.onmouseover=dialog.tdhover;
+						cell.onmouseout=dialog.tdleave;
+						]]>
+					</method>
+					<initialize>
+						<![CDATA[
+						self.cells=[];
+						var rs=self._content.firstChild.rows;
+						for(var ri=0;ri<rs.length;ri++)
+						{
+							var cell=rs.item(ri).cells.item(0);
+							self.setupcell(cell);
+							self.cells.push(cell);
+						}
+						]]>
+					</initialize>
+					<attach name="attach_dom,loadvalue">
+						<![CDATA[
+						var val=option.targetnode.GetStyle("border-width");
+						for(var i=0;i<self.cells.length;i++)
+						{
+							var cell=self.cells[i];
+							var row=cell.parentNode;
+							if(cell.getAttribute("val")==val)
+								row.style.backgroundColor='yellow';
+							else
+								row.style.backgroundColor='';
+						}
+						]]>
+					</attach>
+				</htmlcontrol>
+			</panel>
+
+			<panel dock="fill" padding="0,0,0,6">
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="@BORDER|:" />
+				</panel>
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:border-color" width="100"/>
+				</panel>
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="@COLOR|:" />
+				</panel>
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="100"/>
+				</panel>
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="@BACKGROUNDCOLOR|:" />
+				</panel>
+				<panel margin="2,3,2,3" height="18" dock="top">
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:background-color" width="100"/>
+				</panel>
+			</panel>
+		</panel>
+
+		<groupbox text="@ATTRIBUTES" dock="top" overflow="visible" margin="3">
+
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@CSSCLASS|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="100" propname="class"/>
+				<label dock="left" vertical_align="middle" text="@FLOAT|:" text_align="right" width="140"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:float">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="none" text="@none" />
+				</panel>
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="ID:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="100" propname="id"/>
+				<label dock="left" vertical_align="middle" text="@TEXTALIGN|:" width="140" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:text-align" width="100">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="justify" text="@JUSTIFY" />
+				</panel>
+			</panel>
+
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@WIDTH|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:width"/>
+				<label dock="left" vertical_align="middle" text="@MARGIN|:" width="140" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" width="80" jsml-base="rtepropnumupdown" propname="style:margin" suffix="px" />
+				<image dock="left" width="20" cursor="pointer" src="{folder}images/box.png">
+					<attach name="click">
+						marginfloatbox._rtenode=option.targetnode;
+						marginfloatbox.invoke_recursive("editor_ready",editor);
+						marginfloatbox._estyle.zIndex=editor._config.dialog_zindex;
+						marginfloatbox.show({control:self,stopDispose:true});
+					</attach>
+				</image>
+				<attach name="disposing">
+					marginfloatbox.dispose();
+				</attach>
+				<panel jsml-base="floatbox" jsml-local="marginfloatbox" jsml-append="false" height="180" padding="18">
+
+					<panel dock="bottom" margin="5">
+						<button text="@RESET" right="0">
+							<attach name="click">
+								option.targetnode.SetStyle("margin-left",null);
+								option.targetnode.SetStyle("margin-right",null);
+								option.targetnode.SetStyle("margin-top",null);
+								option.targetnode.SetStyle("margin-bottom",null);
+								marginfloatbox.invoke_recursive("loadvalue");
+							</attach>
+						</button>
+					</panel>
+
+					<panel dock="left" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="1" overflow="visible" text="@LEFT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-left" suffix="px" />
+						</panel>
+					</panel>
+
+					<panel dock="right" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@RIGHT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-right" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="top" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@TOP|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-top" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="bottom" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@BOTTOM|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-bottom" suffix="px" />
+						</panel>
+					</panel>
+				</panel>
+
+			</panel>
+			<panel margin="7,3,2,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="80" text="@HEIGHT|:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:height"/>
+
+				<label dock="left" vertical_align="middle" text="@PADDING|:" width="140" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" width="80" jsml-base="rtepropnumupdown" propname="style:padding" suffix="px" min_value="0" />
+				<image dock="left" width="20" cursor="pointer" src="{folder}images/box.png">
+					<attach name="click">
+						paddingfloatbox._rtenode=option.targetnode;
+						paddingfloatbox.invoke_recursive("editor_ready",editor);
+						paddingfloatbox._estyle.zIndex=editor._config.dialog_zindex;
+						paddingfloatbox.show({control:self,stopDispose:true});
+					</attach>
+				</image>
+				<attach name="disposing">
+					paddingfloatbox.dispose();
+				</attach>
+				<panel jsml-base="floatbox" jsml-local="paddingfloatbox" jsml-append="false" height="180" padding="18">
+
+					<panel dock="bottom" margin="5">
+						<button text="@RESET" right="0">
+							<attach name="click">
+								option.targetnode.SetStyle("padding-left",null);
+								option.targetnode.SetStyle("padding-right",null);
+								option.targetnode.SetStyle("padding-top",null);
+								option.targetnode.SetStyle("padding-bottom",null);
+								paddingfloatbox.invoke_recursive("loadvalue");
+							</attach>
+						</button>
+					</panel>
+
+					<panel dock="left" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="1" overflow="visible" text="@LEFT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:padding-left" suffix="px" />
+						</panel>
+					</panel>
+
+					<panel dock="right" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@RIGHT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:padding-right" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="top" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@TOP|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:padding-top" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="bottom" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@BOTTOM|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:padding-bottom" suffix="px" />
+						</panel>
+					</panel>
+				</panel>
+			</panel>
+			<panel margin="10,3,5,3" height="32" dock="top">
+				<label dock="left" vertical_align="middle" text="@TOOLTIP|:" text_align="right" width="80"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="title" width="348">
+					<initialize>
+						self.textbox.set_text_mode("multipleline");
+					</initialize>
+				</panel>
+			</panel>
+		</groupbox>
+
+	</panel>
+
+	<panel jsml-base="properties_div" />
+
+
+</jsml>

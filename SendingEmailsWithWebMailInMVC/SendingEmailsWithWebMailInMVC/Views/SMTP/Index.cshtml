@@ -1,0 +1,27 @@
+﻿@model SendingEmailsWithWebMailInMVC.Models.CnfiEmail
+@using SendingEmailsWithWebMailInMVC.Common
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Dashboard.cshtml";
+}
+
+
+<h2>Index</h2>
+@using (Html.BeginForm("Select", "SMTP", FormMethod.Post, new { role = "form", enctype = "multipart/form-data", @id = "examForm" }))
+{
+    @Html.AntiForgeryToken()
+<div class="col-md-6 form-group">
+    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+    <div class="col-md-9">
+       @Html.DropDownListFor(model => model.Email, new SelectList(ViewBag.Categories, "id", "Email"),
+      "Select Email",
+      new { @class = "form-control", id = "combobox1" })
+        @Html.ValidationMessageFor(model => model.id, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Select" class="btn btn-success" />
+    </div>
+</div>
+}

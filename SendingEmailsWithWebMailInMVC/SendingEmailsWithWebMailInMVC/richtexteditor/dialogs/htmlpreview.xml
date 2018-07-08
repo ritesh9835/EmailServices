@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		if(!dialog.get_title())dialog.set_title(editor.GetLangText("preview"));
+	</execute>
+
+	<panel jsml-class="htmlpreview_dialog" dock="fill" overflow="visible" vertical_align="middle" horizontal_align="center">
+		<htmlcontrol overflow="visible">
+			<initialize>
+				self._content.innerHTML=option.htmlcode;
+				self.invoke_notify_content();
+			</initialize>
+		</htmlcontrol>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+	<panel jsml-base="htmlpreview_dialog" />
+
+
+</jsml>

@@ -1,0 +1,13 @@
+<links>
+	<group text="Websites">
+		<group text="CuteSoft">
+			<link text="Cute Chat" href="http://cutesoft.net/ASP.NET+Chat/" />
+			<link text="Cute Live Support" href="http://cutesoft.net/live-support/" />
+			<link text="Web Messenger" href="http://cutesoft.net/web-messenger/" />
+			<link text="Ajax Uploader" href="http://ajaxuploader.com" />
+		</group>
+		<link text="RichTextEditor" href="http://www.richtexteditor.com" />
+		<link text="Free Live Chat" href="http://www.mylivechat.com" />
+		<link text="Free Javascript Obfuscator" href="http://www.javascriptobfuscator.com" />
+	</group>
+</links>

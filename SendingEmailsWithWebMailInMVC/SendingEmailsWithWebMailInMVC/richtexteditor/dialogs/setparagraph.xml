@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="setparagraphdialogitem" dock="flow" width="120" height="70"  margin="2" padding="3" >
+		<htmlcontrol jsml-local="hc" vertical_align="middle" border_width="1" border_style="solid" border_color="#afb4ba" cursor="pointer" unselectable="true" dock="fill">
+		</htmlcontrol>
+		<method name="jsml_append_xmldata">
+			hc.jsml_append_xmldata(value);
+		</method>
+		<initialize>
+			self._estyle.fontFamily='arial';
+		</initialize>
+		<attach name="mousehover">
+			self.set_back_color("#ffdc63");
+			hc.set_border_color('orange');
+			hc.set_back_color('#eeeeee');
+			hc.set_text_color('blue');
+			self._estyle.boxShadow="3px 3px 12px #999999";
+		</attach>
+		<attach name="mouseleave">
+			self.set_back_color("");
+			hc.set_border_color('gray');
+			hc.set_back_color('');
+			hc.set_text_color('');
+			self._estyle.boxShadow="";
+		</attach>
+		<attach name="click">
+			editor.ExecCommand("FormatBlock",self.get_text());
+			dialog.close();
+		</attach>
+	</panel>
+
+	<panel dock="fill" margin="5" padding="5" width="520" overflow_y="visible">
+		<panel dock="bottom" height="20" overflow="visible">
+
+			<panel jsml-base="panelbutton" overflow="visible" width="60" padding="0,8,0,3">
+				<initialize>
+					if(!editor.QueryStyle("paragraph"))self.set_disabled(true);
+				</initialize>
+				<image dock="left" src="{folder}images/unformat.png" width="16" height="16" margin="2"/>
+				<label text="@REMOVE" vertical_align="middle" horizontal_align="center" cursor="pointer" dock="fill" width="10"/>
+				<attach name="click">
+					editor.ExecCommand("FormatBlock","!");
+				</attach>
+			</panel>
+
+		</panel>
+		<panel dock="fill" overflow="visible">
+			<panel jsml-base="setparagraphdialogitem" text="p">
+				<xmldata>
+					<p style="text-align:center;width:115px;margin:0px">AaBbCc</p>
+					<div style="text-align:center;width:115px;">Normal(P)</div>
+				</xmldata>
+			</panel>
+
+			<panel jsml-base="setparagraphdialogitem" text="div">
+				<xmldata>
+					<div style="text-align:center;width:115px;margin:0px">AaBbCc</div>
+					<div style="text-align:center;width:115px;">Div</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="pre">
+				<xmldata>
+					<pre style="text-align:center;width:115px;margin:0px">AaBbCc(Pre)</pre>
+					<div style="text-align:center;width:115px;">Preformatted</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="address">
+				<xmldata>
+					<address style="text-align:center;width:115px;margin:0px">AaBbCc</address>
+					<div style="text-align:center;width:115px;">Address</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h1">
+				<xmldata>
+					<h1 style="text-align:center;width:115px;margin:0px;">AaBbCc</h1>
+					<div style="text-align:center;width:115px;">Headline 1</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h2">
+				<xmldata>
+					<h2  style="text-align:center;width:115px;margin:0px">AaBbCc</h2>
+					<div style="text-align:center;width:115px;">Headline 2</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h3">
+				<xmldata>
+					<h3  style="text-align:center;width:115px;margin:0px">AaBbCc</h3>
+					<div style="text-align:center;width:115px;">Headline 3</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h4">
+				<xmldata>
+					<h4  style="text-align:center;width:115px;margin:0px">AaBbCc</h4>
+					<div style="text-align:center;width:115px;">Headline 4</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h5">
+				<xmldata>
+					<h5  style="text-align:center;width:115px;margin:0px">AaBbCc</h5>
+					<div style="text-align:center;width:115px;">Headline 5</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="h6">
+				<xmldata>
+					<h6  style="text-align:center;width:115px;margin:0px">AaBbCc</h6>
+					<div style="text-align:center;width:115px;">Headline 6</div>
+				</xmldata>
+			</panel>
+			<panel width="500" height="20" dock="flow">
+				<label text="HTML5:" />
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="article">
+				<xmldata>
+					<article style="text-align:center;width:115px;margin:0px">AaBbCc</article>
+					<div style="text-align:center;width:115px;">Article</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="section">
+				<xmldata>
+					<section style="text-align:center;width:115px;margin:0px">AaBbCc</section>
+					<div style="text-align:center;width:115px;">Section</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="header">
+				<xmldata>
+					<header style="text-align:center;width:115px;margin:0px">AaBbCc</header>
+					<div style="text-align:center;width:115px;">Header</div>
+				</xmldata>
+			</panel>
+			<panel jsml-base="setparagraphdialogitem" text="footer">
+				<xmldata>
+					<footer style="text-align:center;width:115px;margin:0px">AaBbCc</footer>
+					<div style="text-align:center;width:115px;">Footer</div>
+				</xmldata>
+			</panel>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+
+</jsml>

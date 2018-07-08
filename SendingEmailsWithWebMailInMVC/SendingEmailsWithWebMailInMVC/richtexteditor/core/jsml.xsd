@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="jsml" targetNamespace="http://cutesoft.net/jsml" elementFormDefault="qualified" xmlns="http://cutesoft.net/jsml" xmlns:mstns="http://cutesoft.net/jsml" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<xs:simpleType name="jsml-var">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^=]?[0-9a-zA-Z_${}]*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="jsml-var-list">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="[^=]?[0-9a-zA-Z_${},]*" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="visibility">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="visible" />
+			<xs:enumeration value="hidden" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="jsml-dock">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="top" />
+			<xs:enumeration value="left" />
+			<xs:enumeration value="right" />
+			<xs:enumeration value="bottom" />
+			<xs:enumeration value="fill" />
+			<xs:enumeration value="over" />
+			<xs:enumeration value="flow" />
+			<xs:enumeration value="none" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="content-flow">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="left" />
+			<xs:enumeration value="right" />
+			<xs:enumeration value="bottomleft" />
+			<xs:enumeration value="bottomright" />
+			<xs:enumeration value="uptoleft" />
+			<xs:enumeration value="downtoleft" />
+			<xs:enumeration value="uptoright" />
+			<xs:enumeration value="downtoright" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="flow-clear">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none" />
+			<xs:enumeration value="both" />
+			<xs:enumeration value="prev" />
+			<xs:enumeration value="next" />
+			<xs:enumeration value="follow" />
+			<xs:enumeration value="newline" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="jsml-overflow">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none" />
+			<xs:enumeration value="visible" />
+			<xs:enumeration value="scroll" />
+			<xs:enumeration value="default" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="zoom-mode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="none" />
+			<xs:enumeration value="both" />
+			<xs:enumeration value="in" />
+			<xs:enumeration value="out" />
+			<xs:pattern value="(none)|(both)|(in)|(out)|([0-9%\.]+)" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="vertical-align">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="top" />
+			<xs:enumeration value="middle" />
+			<xs:enumeration value="bottom" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="horizontal-align">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="left" />
+			<xs:enumeration value="center" />
+			<xs:enumeration value="right" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="text-mode">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="singleline" />
+			<xs:enumeration value="multipleline" />
+			<xs:enumeration value="password" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="jsml-xmldata" mixed="true">
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:any />
+		</xs:choice>
+		<xs:attribute name="rawhtml" type="xs:boolean" />
+	</xs:complexType>
+	<xs:complexType name="jsml-constructor">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+				<xs:attribute name="arguments" type="jsml-var-list" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-initialize">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-method">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+				<xs:attribute name="name" type="jsml-var" use="required" />
+				<xs:attribute name="arguments" type="jsml-var-list" />
+				<xs:attribute name="overrideas" type="jsml-var" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-attach">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+				<xs:attribute name="name" type="jsml-var-list" use="required" />
+				<xs:attribute name="arguments" type="jsml-var-list" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-propgetset">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+				<xs:attribute name="arguments" type="jsml-var-list" />
+				<xs:attribute name="overrideas" type="jsml-var" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="list-item">
+		<xs:simpleContent>
+			<xs:extension base="xs:string">
+				<xs:attribute name="jsml-enable" type="xs:boolean" />
+				<xs:attribute name="value" type="xs:string" />
+				<xs:attribute name="text" type="xs:string" />
+			</xs:extension>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-jsml">
+		<xs:attribute name="jsml-enable" type="xs:boolean" />
+		<xs:attribute name="jsml-append" type="xs:boolean" />
+		<xs:attribute name="jsml-class" type="jsml-var" />
+		<xs:attribute name="jsml-base" type="jsml-var" />
+		<xs:attribute name="jsml-local" type="jsml-var" />
+		<xs:attribute name="jsml-member" type="jsml-var" />
+		<xs:attribute name="id" type="xs:string" />
+		<xs:attribute name="var" type="jsml-var" />
+		<xs:attribute name="vars" type="jsml-var-list" />
+		<xs:anyAttribute />
+	</xs:complexType>
+	<xs:complexType name="jsml-control">
+		<xs:complexContent>
+			<xs:extension base="jsml-jsml">
+				<xs:attribute name="parent" type="xs:string" />
+				<xs:attribute name="top" type="xs:string" />
+				<xs:attribute name="left" type="xs:string" />
+				<xs:attribute name="right" type="xs:string" />
+				<xs:attribute name="bottom" type="xs:string" />
+				<xs:attribute name="width" type="xs:string" />
+				<xs:attribute name="height" type="xs:string" />
+				<xs:attribute name="min_width" type="xs:string" />
+				<xs:attribute name="min_height" type="xs:string" />
+				<xs:attribute name="max_width" type="xs:string" />
+				<xs:attribute name="max_height" type="xs:string" />
+				<xs:attribute name="unselectable" type="xs:boolean" />
+				<xs:attribute name="visible" type="xs:boolean" />
+				<xs:attribute name="visibility" type="visibility" />
+				<xs:attribute name="disabled" type="xs:boolean" />
+				<xs:attribute name="dock" type="jsml-dock" />
+				<xs:attribute name="flow_clear" type="flow-clear"/>
+				<xs:attribute name="margin" type="xs:string" />
+				<xs:attribute name="border_width" type="xs:string" />
+				<xs:attribute name="border_style" type="xs:string" />
+				<xs:attribute name="border_color" type="xs:string" />
+				<xs:attribute name="back_color" type="xs:string" />
+				<xs:attribute name="text_color" type="xs:string" />
+				<xs:attribute name="background" type="xs:string" />
+				<xs:attribute name="text" type="xs:string" />
+				<xs:attribute name="tooltip" type="xs:string" />
+				<xs:attribute name="font" type="xs:string" />
+				<xs:attribute name="font_size" type="xs:string" />
+				<xs:attribute name="cursor" type="xs:string" />
+				<xs:attribute name="opacity" type="xs:string" />
+				<xs:attribute name="css_class" type="xs:string" />
+				<xs:attribute name="css_text" type="xs:string" />
+				<xs:attribute name="overflow" type="jsml-overflow"/>
+				<xs:attribute name="overflow_x" type="jsml-overflow"/>
+				<xs:attribute name="overflow_y" type="jsml-overflow"/>
+				<xs:attribute name="horizontal_align" type="horizontal-align" />
+				<xs:attribute name="vertical_align" type="vertical-align" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-simplecontrol">
+		<xs:complexContent>
+			<xs:extension base="jsml-control">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:group ref="class-member-group" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-complexcontrol">
+		<xs:complexContent>
+			<xs:extension base="jsml-control">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:group ref="class-member-group" />
+					<xs:group ref="sub-element-group" />
+				</xs:choice>
+				<xs:attribute name="padding" type="xs:string" />
+				<!--<xs:attribute name="zoom" type="zoom-mode" />-->
+				<xs:attribute name="content_flow" type="content-flow" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="jsml-panel">
+		<xs:complexContent>
+			<xs:extension base="jsml-complexcontrol">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-groupbox">
+		<xs:complexContent>
+			<xs:extension base="jsml-panel">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!--<xs:complexType name="jsml-grid">
+		<xs:complexContent>
+			<xs:extension base="jsml-complexcontrol">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="row" type="jsml-row" />
+				</xs:choice>
+				<xs:attribute name="cell_border_width" type="xs:string" />
+				<xs:attribute name="cell_border_style" type="xs:string" />
+				<xs:attribute name="cell_border_color" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-row">
+		<xs:complexContent>
+			<xs:extension base="jsml-complexcontrol">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="cell" type="jsml-cell" />
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-cell">
+		<xs:complexContent>
+			<xs:extension base="jsml-complexcontrol">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>-->
+
+	<xs:complexType name="jsml-jsmlelement">
+		<xs:complexContent>
+			<xs:extension base="jsml-simplecontrol">
+				<xs:attribute name="zoom" type="zoom-mode" />
+				<xs:attribute name="padding" type="xs:string"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-htmlcontrol">
+		<xs:complexContent>
+			<xs:extension base="jsml-jsmlelement">
+				<xs:attribute name="html" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-image">
+		<xs:complexContent>
+			<xs:extension base="jsml-jsmlelement">
+				<xs:attribute name="src" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-label">
+		<xs:complexContent>
+			<xs:extension base="jsml-jsmlelement">
+				<xs:attribute name="text_align" type="horizontal-align" />
+				<xs:attribute name="word_wrap" type="xs:boolean" />
+				<xs:attribute name="font_size" type="xs:string" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-textbox">
+		<xs:complexContent>
+			<xs:extension base="jsml-simplecontrol">
+				<xs:attribute name="text_mode" type="text-mode" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-checkbox">
+		<xs:complexContent>
+			<xs:extension base="jsml-jsmlelement">
+				<xs:attribute name="checked" type="xs:boolean" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="jsml-dropdown">
+		<xs:complexContent>
+			<xs:extension base="jsml-simplecontrol">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element name="listitem" type="list-item"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:group name="class-member-group">
+		<xs:choice>
+			<xs:element name="jsml-ref">
+				<xs:complexType>
+					<xs:attribute name="jsml-enable" type="xs:boolean" />
+					<xs:attribute name="name" type="xs:string" use="required" />
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="constructor" type="jsml-constructor" />
+			<xs:element name="initialize" type="jsml-initialize" />
+			<xs:element name="method" type="jsml-method" />
+			<xs:element name="attach" type="jsml-attach" />
+			<xs:element name="xmldata" type="jsml-xmldata" />
+			<xs:element name="property">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="get" type="jsml-propgetset" minOccurs="1" maxOccurs="1" />
+						<xs:element name="set" type="jsml-propgetset" minOccurs="0" maxOccurs="1" />
+					</xs:sequence>
+					<xs:attribute name="name" type="jsml-var" use="required" />
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="sub-element-group">
+		<xs:choice>
+			<xs:element name="htmlcontrol" type="jsml-htmlcontrol" />
+			<xs:element name="button" type="jsml-simplecontrol" />
+			<xs:element name="image" type="jsml-image" />
+			<xs:element name="label" type="jsml-label" />
+			<xs:element name="textbox" type="jsml-textbox" />
+			<xs:element name="dropdown" type="jsml-dropdown" />
+			<xs:element name="checkbox" type="jsml-checkbox" />
+			<xs:element name="panel" type="jsml-panel" />
+			<xs:element name="groupbox" type="jsml-groupbox" />
+			<!--<xs:element name="grid" type="jsml-grid" />-->
+			<xs:element name="object">
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="jsml-complexcontrol">
+							<xs:attribute name="jsml-base" type="jsml-var" use="required" />
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="jsml-comment">
+				<xs:complexType>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:any processContents="skip" />
+					</xs:choice>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="jsml-block">
+				<xs:complexType>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:group ref="sub-element-group" />
+					</xs:choice>
+					<xs:attribute name="jsml-enable" type="xs:boolean" />
+				</xs:complexType>
+			</xs:element>
+		</xs:choice>
+	</xs:group>
+	<xs:element name="jsml">
+		<xs:complexType>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:group ref="sub-element-group" />
+				<xs:element name="execute">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="jsml-enable" type="xs:boolean" />
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="include">
+					<xs:complexType>
+						<xs:simpleContent>
+							<xs:extension base="xs:string">
+								<xs:attribute name="jsml-enable" type="xs:boolean" />
+								<xs:attribute name="src"/>
+							</xs:extension>
+						</xs:simpleContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="jsml-def">
+					<xs:complexType>
+						<xs:choice minOccurs="0" maxOccurs="unbounded">
+							<xs:group ref="class-member-group" />
+							<xs:group ref="sub-element-group" />
+						</xs:choice>
+						<xs:attribute name="jsml-enable" type="xs:boolean" />
+						<xs:attribute name="name" type="xs:string" use="required" />
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

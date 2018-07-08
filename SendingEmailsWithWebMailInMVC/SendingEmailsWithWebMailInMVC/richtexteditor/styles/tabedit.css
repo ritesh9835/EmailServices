@@ -1,0 +1,74 @@
+﻿
+body
+{
+	margin:3px;
+}
+body,table
+{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+p,div
+{
+	font:inherits;
+}
+p
+{
+	margin-top:3px;
+}
+
+
+.printpagebreak
+{
+	height:5px;
+	border-bottom:dotted 1px #999999!important;
+	border-top:dotted 1px #999999!important;
+	clear: both !important; 
+	page-break-after: always; 
+	background-image:url(images/pagebreak.gif)!important;
+	background-position: 50% 50%; background-repeat: no-repeat no-repeat !important;
+}
+.printpagebreak:before
+{
+	
+}
+
+.dragcontrol,.dragcontrol *
+{
+	cursor:default!important;
+}
+.dragcontrol .dragcontrol
+{
+	background-color:#eeeeee;
+	opacity:0.5;
+	alpha(opacity=50);
+}
+
+.designborder div.rtelayer
+{
+	border:2px solid #0099ff;
+}
+.designborder form
+{
+	border:1px dotted #ff0000;
+}
+
+.designborder table
+{
+	border:dotted 1px #7F7C75;
+}
+.designborder tr
+{
+	min-height:10px;
+}
+.designborder td
+{
+	border:dotted 1px #7F7C75;
+}
+
+
+
+/*fix opera*/
+body > br:first-child { display:none; }
+
+

@@ -1,0 +1,2233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		<![CDATA[
+		jsml.brsw1=["border-top-width","border-right-width","border-bottom-width","border-left-width"];
+		jsml.brsw2=["borderTopWidth","borderRightWidth","borderBottomWidth","borderLeftWidth"];
+		if(!jsml.rteallpngurl)jsml.rteallpngurl="{folder}images/all.png?{timems}";
+		jsml.grayimagemap={}
+		jsml.loadgrayimagepending={};
+		jsml.loadgrayimage=function(url,callback)
+		{
+			var targetval=jsml.grayimagemap[url];
+			if(targetval)
+			{
+				callback(targetval);
+				return;
+			}
+			var pending=jsml.loadgrayimagepending[url];
+			if(pending)
+			{
+				pending.callbacks.push(callback);
+				return;
+			}
+			pending={url:url,callbacks:[callback]};
+			var img=document.createElement("img");
+			img.onload=function()
+			{
+				var canvas=document.createElement("CANVAS");
+				var w=img.width;
+				var h=img.height;
+				canvas.width = w;
+				canvas.height = h;
+				var ctx = canvas.getContext("2d");
+				ctx.drawImage(img,0,0);
+				var imgdata = ctx.getImageData(0, 0, w, h);
+				var data = imgdata.data;
+				var times = w * h;
+				for (var i = 0; i < times; i++) {
+					var gray = (data[i * 4] * 299 + data[i * 4 + 1] * 587 + data[i * 4+2] * 114 + 500) / 1000;
+					data[i * 4] = gray;
+					data[i * 4 + 1] = gray;
+					data[i * 4 + 2] = gray;
+				}
+				imgdata.data = data;
+				ctx.putImageData(imgdata, 0, 0);
+				targetval=canvas.toDataURL();
+				jsml.grayimagemap[url]=targetval;
+				for(var i=0;i<pending.callbacks.length;i++)
+					pending.callbacks[i](targetval);
+			}
+			img.setAttribute("src",url);
+		}
+		]]>
+	</execute>
+
+	<jsml-def name="rteborderstyle">
+		<attach name="attach_dom">
+			<![CDATA[
+			if(self._border)return;
+			var sty=jsml.msie?self._element.currentStyle:window.getComputedStyle(self._element,null);
+			var arr=jsml.msie?jsml.brsw2:jsml.brsw1;
+			var bor=[];
+			var maxbor=0;
+			for(var i=0;i<arr.length;i++)
+			{
+				var val=jsml.msie?sty[arr[i]]:sty.getPropertyValue(arr[i]);
+				val=parseInt(val)||0;
+				bor[i]=val;
+				if(val>maxbor)maxbor=val;
+			}
+			self.set_border_width(bor);
+			if(jsml.msie&&maxbor>0)
+			{
+				self.set_border_color(sty.borderColor);
+			}
+			]]>
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtemousecontrol">
+		<jsml-ref name="rteborderstyle"/>
+		<initialize>
+			self._element.ondragstart=new Function("","return false");
+		</initialize>
+		<attach name="mousehover">
+			if(self._hovered)return;
+			self._hovered=true;
+			self.invoke_event("tooglecssclass","hovered",self._hovered);
+		</attach>
+		<attach name="mousedown" arguments="jevent,devent">
+			self._isclicked=true;
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+			if(devent)devent.cancel_default();
+		</attach>
+		<attach name="mouseup">
+			self._isclicked=false;
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+		</attach>
+		<attach name="mouseleave">
+			<![CDATA[
+			self._hovered=false;
+			self.setDelegateTimeout(function()
+			{
+				if(self._hovered)return;
+				self._isclicked=false;
+				self.invoke_event("tooglecssclass","hovered",self._hovered);
+				self.invoke_event("tooglecssclass","clicked",self._isclicked);
+			},1);
+			]]>
+		</attach>
+		<attach name="detach_dom">
+			self._hovered=false;
+			self._isclicked=false;
+			self.invoke_event("tooglecssclass","hovered",self._hovered);
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtebuttoncontrol">
+		<jsml-ref name="rtemousecontrol"/>
+		<initialize>
+			self.toggle_css_class("tbcontrol",true);
+		</initialize>
+		<property name="checked">
+			<get>return self._checked</get>
+			<set>self._checked=!!value;this.invoke_event("set_checked");</set>
+		</property>
+		<property name="disabled">
+			<get>return self._disabled</get>
+			<set>self._disabled=!!value;this.invoke_event("set_disabled");</set>
+		</property>
+		<attach name="set_checked">
+			self.invoke_event("tooglecssclass","checked",self._checked);
+		</attach>
+		<attach name="set_disabled">
+			self.invoke_event("tooglecssclass","disabled",self._disabled);
+		</attach>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("tbcontrol_"+name,mode);
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtecommandcontrol">
+		<property name="command">
+			<get>
+				return self._command;
+			</get>
+			<set>
+				self._command=value;
+				self.update_image();
+			</set>
+		</property>
+		<property name="arguments">
+			<get>
+				return self._arguments;
+			</get>
+			<set>
+				self._arguments=value;
+			</set>
+		</property>
+		<property name="imagename">
+			<get>
+				return self._imagename;
+			</get>
+			<set>
+				self._imagename=value;
+				self.update_image();
+			</set>
+		</property>
+		<method name="find_config">
+			<![CDATA[
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+				if(ctrl._rteconfig)return ctrl._rteconfig;
+			var editor=self.find_editor();
+			if(editor)return editor._config;
+			]]>
+		</method>
+		<method name="find_editor">
+			<![CDATA[
+			if(self._rteinstance)return self._rteinstance;
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+			{
+				if(!ctrl._rteinstance)continue;
+				self._rteinstance=ctrl._rteinstance;
+				return ctrl._rteinstance;
+			}
+			]]>
+		</method>
+		<method name="_ResetFCButton" arguments="cmd,node">
+			var editor=self.find_editor();if(!editor)return;
+			editor._ResetFCButton(self._element,cmd||self.get_command(),node,function(){self.invoke_event("mousehover")},function(){self.invoke_event("mouseleave")},function(){self.invoke_event("mousedown")},function(){self.invoke_event("mouseup")},function(){self.invoke_event("fcclick")});
+		</method>
+		
+		<method name="change_src" arguments="image,value">
+			<![CDATA[
+
+			
+			if(!value||!self._config||self._config.color!="gray")
+			{
+				image.set_src(value);
+				return;
+			}
+			if(!jsml.html5)
+			{
+				image.set_src(value);
+				image._img.style.filter="progid:DXImageTransform.Microsoft.BasicImage(grayscale=1)";
+				if(image._grayhandlerattached)return;
+				image._grayhandlerattached=true;
+				image.attach_event("mousehover",function(je,e)
+				{
+					self._hovered=true;
+					image._img.style.filter="";
+				});
+				image.attach_event("mouseleave",function(je,e)
+				{
+					self._hovered=false;
+					self.setDelegateTimeout(function()
+					{
+						if(self._hovered)return;
+						image._img.style.filter="progid:DXImageTransform.Microsoft.BasicImage(grayscale=1)";
+					},11);
+				});
+				return;
+			}
+			jsml.loadgrayimage(value,function(targetval)
+			{
+				image.set_src(targetval);
+				if(image._grayhandlerattached)return;
+				image._grayhandlerattached=true;
+				image.attach_event("mousehover",function(je,e)
+				{
+					self._hovered=true;
+					image._img.setAttribute("src",value);
+				});
+				image.attach_event("mouseleave",function(je,e)
+				{
+					self._hovered=false;
+					self.setDelegateTimeout(function()
+					{
+						if(self._hovered)return;
+						image._img.setAttribute("src",targetval);
+					},11);
+				});
+			});
+			]]>
+		</method>
+		<method name="update_image">
+			<![CDATA[
+			
+			var image=self.image||self;
+			
+			if(!self._dom_attached)return;
+			var imgname=self._imagename||self._command;
+			if(!imgname)
+				return;
+
+			imgname=imgname.toLowerCase();
+			
+			var padding=self._savedpadding;
+			if(padding==null)
+			{
+				padding=image.get_padding().concat();
+				self._savedpadding=padding;
+			}
+
+			var imgfile="images/"+imgname+".png";
+			if(jsml.html5)
+			{
+				if(self._config&&self._config._rte_image_cache)
+				{
+					var dataurl=self._config._rte_image_cache[imgfile];
+					if(dataurl)
+					{
+						padding=padding.concat();
+						padding[0]+=-1;
+						padding[1]+=1;
+						padding[2]+=1;
+						padding[3]+=-1;
+						if(self.get_width()<=22)image.set_padding(padding);
+						self.change_src(image,dataurl);
+						return;
+					}
+				}
+			}
+			
+			var config=self._config;
+			if(config.allimageindexdata&&!(jsml.mobile||config.skin=="phone"))
+			{
+				var dict=self._config.allimageindexdata_dict;
+				if(dict==null)
+				{
+					dict={};
+					var arr=self._config.allimageindexdata.split(',');
+					for(var i=0;i<arr.length;i++)
+						dict[arr[i]]=i;
+					self._config.allimageindexdata_dict=dict;
+				}
+				var index=dict[imgname];
+				if(typeof(index)=="number")
+				{
+					self.change_src(image,jsml.rteallpngurl);
+					padding=padding.concat();
+					padding[0]+=-index*20;
+					image.set_padding(padding);
+					return;
+				}
+			}
+			
+			self.change_src(image,"{folder}"+imgfile);
+
+			]]>
+		</method>
+		<attach name="attach_dom">
+			self._config=self.find_config();
+			self.update_image();
+		</attach>
+		<attach name="click,dblclick">
+			self.exec_command();
+		</attach>
+		<method name="exec_command" arguments="suffix,splitcmd">
+			<![CDATA[
+			var editor=self.find_editor();
+			if(!editor)return;
+			if(!splitcmd)
+			{
+				splitcmd=self.get_command();
+				if(!splitcmd)return;
+				if(suffix)splitcmd+=suffix;
+			}
+			var args=self.get_arguments();
+			if(!args)args=[];
+			else args=args.split(',');
+			var target=self._commandelement||self._element;
+			editor.ExecUICommand(target,splitcmd,args[0],args[1],args[2],args[3]);
+			]]>
+		</method>
+
+	</jsml-def>
+
+	<jsml-def name="rtetoolbarcontrol">
+
+		<jsml-ref name="rtecommandcontrol" />
+
+		<attach name="contextmenu" arguments="je,de">
+			de.cancel_default();
+		</attach>
+
+		<property name="noactive">
+			<get>return self._noactive;</get>
+			<set>self._noactive=value;</set>
+		</property>
+		<attach name="editor_ready" arguments="jevent,arg0">
+			<![CDATA[
+			self._rteinstance=arg0;
+			self._rteinstanceeventid=self._rteinstance.AttachEvent("UpdateUI",function(editor,e){
+				self.invoke_event("update_statusui");
+			});
+			self.invoke_event("update_statusui");
+			]]>
+		</attach>
+		<attach name="disposing">
+			if(self._rteinstanceeventid)self._rteinstance.DetachEvent("UpdateUI",self._rteinstanceeventid);
+		</attach>
+		<attach name="update_statusui">
+			<![CDATA[
+			var command=self.get_command();
+			if(!command)return;
+
+			var dc=!self._rteinstance.IsCommandReady(command)
+			if(dc!=(!!self._disabled))
+			{
+				self.set_disabled(dc);
+			}
+			var qc=this._noactive?false:(!!self._rteinstance.IsCommandActive(command));
+			if(qc!=(!!self._checked))
+			{
+				self.set_checked(qc);
+			}
+			]]>
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtecommandcolor">
+		<panel id="colorpanel" width="16" height="4" left="2" bottom="2" back_color="transparent" />
+
+		<attach name="update_statusui">
+			<![CDATA[
+			var image=self.image;
+			var editor=self._rteinstance;
+			var cmdlower=self.get_command().toLowerCase();
+			var colorpanel=self.find_child("colorpanel");
+			if(cmdlower=='forecolor')
+			{
+				var color=editor.current_forecolor||editor._config.default_forecolor;
+				colorpanel.set_back_color(color);
+			}
+			if(cmdlower=='backcolor')
+			{
+				var color=editor.current_backcolor||editor._config.default_backcolor;
+				colorpanel.set_back_color(color);
+			}
+			]]>
+		</attach>
+	</jsml-def>
+
+
+	<panel jsml-class="panelbutton" cursor="pointer">
+		<jsml-ref name="rtebuttoncontrol"/>
+
+		<initialize>
+			self.toggle_css_class("panelbutton");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("panelbutton_"+name,mode);
+		</attach>
+	</panel>
+
+	<image jsml-class="imagebutton" cursor="pointer" overflow="none">
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol"/>
+		<initialize>
+			self.toggle_css_class("imagebutton");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("imagebutton_"+name,mode);
+		</attach>
+	</image>
+
+	<image jsml-class="image_skin_base" cursor="pointer" width="22" height="20" overflow="none">
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol"/>
+	</image>
+
+	<panel jsml-class="splitbtn_skin_base" dock="left" cursor="pointer">
+		<image jsml-member="image" css_class="splitbtnimage" dock="left" width="20" overflow="none"/>
+		<image jsml-member="split" css_class="splitbtnsplit" dock="left" width="10" overflow="none" border_width="0,0,0,1" src="{folder}images/tbdown.gif">
+			<initialize>
+				if(jsml.msie8)self.set_border_color('transparent');
+			</initialize>
+			<attach name="click" arguments="jevent,devent">
+				instance.invoke_event("splitclick");
+				devent.cancel();
+			</attach>
+		</image>
+
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol"/>
+
+		<initialize>
+			self.toggle_css_class("splitbtn_skin");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("splitbtn_skin_"+name,mode);
+		</attach>
+		<property name="splitcommand">
+			<get>return self._splitcmd;</get>
+			<set>self._splitcmd=value;</set>
+		</property>
+		<attach name="splitclick">
+			self.exec_command("_dropdown",self._splitcmd);
+		</attach>
+	</panel>
+
+	<panel  jsml-class="dropdown_skin_base" dock="left" margin="1,0,1,1">
+		<image jsml-local="split" css_class="dropdownsplit" dock="right" width="12" overflow="none" vertical_align="middle" border_width="0,0,0,1" padding="2,0,0,1" src="{folder}images/tbdown.gif">
+			<initialize>
+				if(jsml.msie8)self.set_border_color('transparent');
+			</initialize>
+		</image>
+		<label jsml-local="label" css_class="dropdownlabel" dock="fill" font="Normal 11px Tahoma, Verdana, Arial, sans-serif" margin="1,0,0,5" vertical_align="middle" />
+
+		<jsml-ref name="rtebuttoncontrol"/>
+
+		<property name="arguments">
+			<get>
+				return self._arguments;
+			</get>
+			<set>
+				self._arguments=value;
+			</set>
+		</property>
+		<property name="command">
+			<get>
+				return self._command;
+			</get>
+			<set>
+				self._command=value;
+			</set>
+		</property>
+		<property name="stylename">
+			<get>
+				return self._stylename;
+			</get>
+			<set>
+				self._stylename=value;
+			</set>
+		</property>
+		<attach name="set_text">
+			label.set_text(self.get_text());
+		</attach>
+		<attach name="editor_ready" arguments="jevent,arg0">
+			<![CDATA[
+			self._rteinstance=arg0;
+
+			self._rteinstanceeventid=self._rteinstance.AttachEvent("UpdateUI",function(editor,e){
+
+				if(!self._stylename)
+					return;
+			
+				var val=editor.QueryStyle(self._stylename);
+				if(val)
+				{
+					if(self._stylename=="paragraph")
+						val=this.GetLangText("paragraph_"+val);
+					label.set_text(val)
+				}
+				else
+				{
+					label.set_text(self.get_text())
+				}
+
+			});
+			
+			]]>
+		</attach>
+		<attach name="disposing">
+			if(self._rteinstanceeventid)self._rteinstance.DetachEvent("UpdateUI",self._rteinstanceeventid);
+		</attach>
+		<method name="find_editor">
+			<![CDATA[
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+				if(ctrl._rteinstance)return ctrl._rteinstance;
+			]]>
+		</method>
+		<attach name="mousedown">
+			<![CDATA[
+			var editor=self.find_editor();
+			if(!editor)return;
+			if(self.get_command())
+			{
+				var args=self.get_arguments();
+				if(!args)
+					args=[];
+				else
+					args=args.split(',');
+				editor.ExecUICommand(self._element,self.get_command(),args[0],args[1],args[2],args[3]);
+			}
+			]]>
+		</attach>
+		<attach name="mousehover">
+			<![CDATA[
+			if(!jsml._currentfloatbox)
+				return;
+			if(self.get_command()!="ShowXmlFloatbox")
+				return;
+			var editor=self.find_editor();
+			if(!editor)return;
+			
+			return;//auto toggle opened floatbox?
+				
+			if(new Date().getTime()-jsml._currentfloatbox._showtime<11)
+				return;
+			self.invoke_event("click");
+			
+			]]>
+		</attach>
+		<attach name="attach_dom,editor_ready">
+			<![CDATA[
+			if(self.preloadedurl)
+				return;
+			if(self.get_command()!="ShowXmlFloatbox")
+				return;
+			var editor=self.find_editor();
+			if(!editor)return;
+
+			if(editor._config._debugmode)
+				return;
+
+			self.preloadedurl=true;
+			var args=self.get_arguments();
+			if(!args)return;
+			args=args.split(',');
+			
+			self.setDelegateTimeout(function(){
+				editor.PreloadDialogUrl(args[0]);
+			},2000);
+			]]>
+		</attach>
+
+
+	</panel>
+
+	<panel jsml-class="rtemenuspliter" css_class="menuspliter" dock="top" margin="3,-2,2,24" height="1" border_width="1,0,1,0">
+		<initialize>
+			self._estyle.borderTopColor='#eeeeee';
+			self._estyle.borderBottomColor='#ffffff';
+		</initialize>
+	</panel>
+
+	<panel jsml-class="rtemenuitem" css_class="menuitem" dock="top" height="22" overflow_x="visible" cursor="pointer">
+		<image jsml-member="image" css_class="menuitemimage" dock="left" width="20" overflow="none"></image>
+		<image jsml-member="arrow" css_class="menuitemarrow" dock="right" width="12" vertical_align="middle" overflow="none" src="{folder}images/arrow_r.gif" visible="false" />
+		<label jsml-member="label" css_class="menuitemlabel" height="22" dock="fill" overflow_x="visible" margin="0,0,0,6" vertical_align="middle" cursor="pointer"/>
+
+		<!--important:_onmenuclick must be called before the button command be sent-->
+		<attach name="click,fcclick">
+			if(self._disabled)return;
+			var floatbox=self.find_parent("floatbox");
+			if(floatbox)floatbox._onmenuclick();
+		</attach>
+
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol" />
+
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("menuitem_"+name,mode);
+		</attach>
+
+
+		<property name="src">
+			<get>return self.image.get_src();</get>
+			<set>self.image.set_src(value);</set>
+		</property>
+		<property name="text">
+			<get>return self.label.get_text();</get>
+			<set>self.label.set_text(value);</set>
+		</property>
+		<property name="htmlcode">
+			<get>return self.label._content.innerHTML;</get>
+			<set>self.label._content.innerHTML=value;self.label.invoke_notify_content();</set>
+		</property>
+		<property name="arrow">
+			<get>
+				return self.arrow.get_visible();
+			</get>
+			<set>
+				self.arrow.set_visible(value);
+			</set>
+		</property>
+		<property name="xmlfile">
+			<get>
+				return self.xmlfilepath;
+			</get>
+			<set>
+				self.xmlfilepath=value;
+			</set>
+		</property>
+		<attach name="mousehover" arguments="je,e">
+			<![CDATA[
+			self._hovered=true;
+			
+			self.image.invoke_event("mousehover",[je,e]);
+			
+			var editor=self.find_editor();
+			
+			if(!self.xmlfilepath)
+			{
+				var pare=self._element.parentNode;
+				while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+				if(pare)
+				{
+					var fb=pare._floatboxinstance;
+					if(fb._childfloatbox!=self.currentdialog)
+					{
+						var timeout=editor?editor._config.floatbox_leaveclosetimer:500;
+						fb.startclosechildtimer(timeout);
+					}
+				}
+				return;
+			}
+			
+			if(!editor||self._disabled)
+				return;
+
+			self.setDelegateTimeout(function()
+			{
+				if(!self._hovered||!self.get_visible())
+					return;
+					
+				if(self.currentdialog&&self.currentdialog.get_visible())
+					return;
+
+				var option={floatboxClass:self._floatboxClass||"floatbox",control:self,floatMode:'r-b',stopToggle:true};
+				if(self.get_command())
+				{
+					option.buttonClick=function()
+					{
+						self.invoke_event("click");
+					}
+				}
+				if(self.initoption)self.initoption(option);
+				self.currentdialog=editor.ShowXmlFloatBox(editor.BuildDialogUrl(self.xmlfilepath),option);
+			},333);
+			]]>
+		</attach>
+		<attach name="mouseleave" arguments="je,e">
+			self._hovered=false;
+			self.image.invoke_event("mouseleave",[je,e]);
+		</attach>
+	</panel>
+
+	<panel jsml-class="rtemenuopener" jsml-base="rtemenuitem" arrow="true">
+		<property name="menuclass">
+			<get>
+				return self._menuclass;
+			</get>
+			<set>
+				self._menuclass=value;
+			</set>
+		</property>
+		<attach name="mousehover">
+			<![CDATA[
+			if(!self._menuclass)return;
+			var editor=self.find_editor();
+			
+			if(!editor||self._disabled)
+				return;
+				
+			self.setDelegateTimeout(function()
+			{
+				if(!self._hovered||!self.get_visible())
+					return;
+					
+				if(self.currentdialog&&self.currentdialog.get_visible())
+					return;
+
+				var newoption={control:self,floatMode:'r-b',stopToggle:true};
+				newoption.buttonClick=function()
+				{
+					self.invoke_event("click");
+				}
+				if(self.initoption)self.initoption(newoption);
+				self.currentdialog=jsml.class_create_instance(self._menuclass);
+				self.currentdialog.invoke_recursive("editor_ready",editor);
+				self.currentdialog.show(newoption);
+			},11);
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-class="floatbox" width="60" height="40" border_color="darkgray" border_style="solid" border_width="1" back_color="white" overflow="visible" visible="false">
+		<initialize>
+			self._element._floatboxinstance=self;
+		</initialize>
+		<method name="show" arguments="option">
+			<![CDATA[
+			if(!option)option={};
+			if(!option.floatMode)option.floatMode="b-r"
+			
+			var anchor=option.anchor;
+			
+			if(!anchor&&option.control)
+				anchor=option.control._element;
+			
+			var x=parseInt(option.x)||0;
+			var y=parseInt(option.y)||0;
+			
+			self._closed=false;
+			
+			self._fbOwner=anchor;
+			
+			self._showtime=new Date().getTime();
+			self._stopdispose=option.stopDispose;
+			
+			var pose=anchor||document.body;
+			var pare;
+	
+			if(anchor)
+			{
+				pare=anchor.parentNode;
+				while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+			}
+			
+			if(pare!=null)
+			{
+				self._parentfloatbox=pare._floatboxinstance;
+				self._parentfloatbox._onchildshow(self);
+			}
+			else
+			{
+				if(jsml._currentfloatbox)
+					jsml._currentfloatbox._onothershow(self);
+				jsml._currentfloatbox=self;
+			}
+			
+			
+			self.set_visibility("hidden");
+			self.set_visible(true);
+			
+			var s=self._estyle;
+			s.top=s.left='0px';
+			s.boxShadow="3px 3px 12px #999999";
+			if(!self.get_parent())
+			{
+				self._dommode='absolute';
+				self.set_parent(document.body);
+			}
+			
+			var bgcolor=jsml.get_current_style(self._element,"background-color")||"white";
+			var bordercolor=self.get_border_color()||"darkgray";
+
+			var ods;
+			var odsborder;
+
+			self._disposeoverdiv();
+
+			var w,h,pew,peh,pos;
+			
+			function InitPosInfo()
+			{
+				w=self.get_current_width();
+				h=self.get_current_height();
+				pos=jsml.calc_position(self._element,pose);
+				pew=pose.offsetWidth;
+				peh=pose.offsetHeight;
+				var s=pose.style;
+				if(!parseInt(s.borderTopWidth))
+				{
+					peh++;
+					pos.top--;
+					
+				}
+				if(!parseInt(s.borderLeftWidth))
+				{
+					pew++;
+					pos.left--;
+				}
+				if(!parseInt(s.borderRightWidth))pew++;
+				if(!parseInt(s.borderBottomWidth))peh++;
+			}
+			
+			
+			function CreateOverlay()
+			{
+				self._overdiv=document.createElement("DIV");
+				self._overdiv.setAttribute("unselectable","on");
+				self._overdiv.onselectstart=jsml.cancel_event_function;
+				ods=self._overdiv.style;
+				ods.position='absolute';
+				ods.width=Math.max(0,pew-2)+"px";
+				ods.height=Math.max(0,peh-2)+"px";
+				ods.border="solid 1px "+bordercolor;
+				ods.zIndex=self._estyle.zIndex;
+				ods.top="-1000px";
+				ods.left="-1000px";
+
+				ods.backgroundColor=(bgcolor);
+				ods.overflow='hidden';
+				self._overdiv.innerHTML=anchor.innerHTML;
+				function removebgc(nodes)
+				{
+					for(var i=0;i<nodes.length;i++)
+					{
+						var child=nodes.item(i);
+						if(!child.style)
+							continue;
+
+						if(child.childNodes)
+							removebgc(child.childNodes);
+						if(child.nodeName=="DIV")
+							child.style.borderColor=jsml.msie6?bgcolor:'transparent';
+						child.style.backgroundColor=jsml.msie6?bgcolor:'transparent';
+					}
+				}
+				removebgc(self._overdiv.childNodes);
+
+				self._overdiv.oncontextmenu=jsml.cancel_event_function;
+				
+				self._overdiv.onmousedown=function(e)
+				{
+					if(!option.buttonClick&&!option.stopToggle&&(new Date().getTime()-self._showtime>400))
+						self.close("outer_click");
+					return jsml.cancel_bubble_function(e);
+				}
+
+				self._overdiv.onclick=function()
+				{
+					if(option.buttonClick)
+					{
+						self.close();
+						option.buttonClick();
+					}
+				}
+				
+				self._overdiv.onmouseover=function()
+				{
+					if(self._parentfloatbox)
+					{
+						self._parentfloatbox.clearclosechildtimer();
+					}
+					
+					if(option.control)
+					{
+						option.control.invoke_event("mousehover");
+					}
+				}
+				self._overdiv.onmouseout=function()
+				{
+					if(option.control)
+					{
+						option.control.invoke_event("mouseleave");
+					}
+				}
+				
+				
+				
+				document.body.appendChild(self._overdiv);
+
+				if(option.onoverlay)
+				{
+					option.onoverlay(self._overdiv,self);
+				}
+				
+			}
+			
+			function ResetBorderColor()
+			{
+				if(ods&&odsborder&&self.get_opacity()>70)
+				{
+					ods.borderTopColor=bordercolor;
+					ods.borderLeftColor=bordercolor;
+					ods.borderRightColor=bordercolor;
+					ods.borderBottomColor=bordercolor;
+					ods[odsborder]=bgcolor;
+				}
+			}
+			
+			var opacity=60;
+			function NextOpacity()
+			{
+				clearTimeout(self.nextopacitytimerid);
+				
+				if(!self._closed&&self._parentfloatbox&&self._parentfloatbox._closed)
+				{
+					//sometimes, unknown condition
+					self.close();
+					return;
+				}
+				
+				opacity+=10;
+				if(opacity>=self.get_opacity())
+				{
+					opacity=self.get_opacity();
+				}
+				else
+				{
+					self.nextopacitytimerid=self.setDelegateTimeout(NextOpacity,30);
+				}
+				if(opacity>0)
+				{
+					jsml.set_opacity(self._element,opacity);
+					if(self._overdiv)jsml.set_opacity(self._overdiv,opacity);
+					ResetBorderColor();
+				}
+			}
+			
+			function SetPosition()
+			{
+				if(self._closed)
+					return;
+				
+				InitPosInfo();
+				
+				if(ods)
+				{
+					ods.top=pos.top+"px";
+					ods.left=pos.left+"px";
+				}
+				else
+				{
+					pos.top+=y;
+					pos.left+=x;
+				}
+				
+				pos.srcleft=pos.left;
+				pos.srctop=pos.top;
+
+				odsborder=null;
+				
+				var nomovex=false;
+				var nomovey=false;
+				
+				if(anchor)
+				{
+					var fmpair=option.floatMode.split('-');
+					
+					if(ods)
+					{
+						switch(fmpair[0])
+						{
+							case "t":
+								ods.top=pos.top-1+"px";
+								//ods.height=Math.max(0,peh+1)+"px";
+								ods.borderTopWidth="2px";
+								odsborder="borderTopColor";
+								break;
+							case "r":
+								ods.width=Math.max(0,pew-1)+"px";
+								odsborder="borderRightColor";
+								break;
+							case "b":
+								ods.height=peh-1+"px";
+								odsborder="borderBottomColor";
+								break;
+						}
+					}
+					
+					switch(fmpair[0])
+					{
+						case "t":
+							nomovey=true;
+							pos.top+=-h;
+							break;
+						case "b":
+							nomovey=true;
+							pos.top+=peh;
+							break;
+						case "l":
+							nomovex=true;
+							pos.left+=-w;
+							break;
+						case "r":
+							nomovex=true;
+							pos.left+=pew;
+							break;
+					}
+					
+					switch(fmpair[1])
+					{
+						case "l":
+							if(pew<w)pos.left+=pew-w;
+							break;
+						case "r":
+							if(pew>w)pos.left+=pew-w;
+							break;
+						case "t":
+							if(peh<h)pos.top+=peh-h;
+							break;
+						case "b":
+							if(peh>h)pos.top+=peh-h;
+							break;
+					}
+					
+					
+					
+				}
+
+				if(option.floatMirror!==false)
+				{
+					jsml.adjust_mirror(self._element,pose.nodeName=="BODY"?null:pose,pos,nomovex,nomovey);
+					if(pos.xflip)
+					{
+						if(odsborder=='borderRightColor')
+						{
+							odsborder='borderLeftColor';
+							pos.left+=1;
+						}
+					}
+					if(pos.yflip)
+					{
+						if(odsborder=='borderBottomColor')
+						{
+							odsborder='borderTopColor';
+							pos.top+=1;
+						}
+						ResetBorderColor();
+					}
+				}
+
+				s.top=pos.top+"px";
+				s.left=pos.left+"px";
+			}
+			
+			
+			InitPosInfo();
+			
+			jsml.set_opacity(self._element,opacity);
+			
+			if(anchor && !option.stopOverlay)
+			{	
+				CreateOverlay();
+				jsml.set_opacity(self._overdiv,1);
+			}
+			
+			self._reposfunc=SetPosition;
+			SetPosition();
+			
+			self.setDelegateTimeout(NextOpacity,1);
+			self.setDelegateTimeout(SetPosition,10);
+			
+			self.setDelegateTimeout(function()
+			{
+				self.set_visibility("visible");
+			},20);
+			
+			self.invoke_recursive("showing");
+			
+			]]>
+		</method>
+		<attach name="resize">
+			if(!self._reposfunc)return;
+			self._reposfunc();
+			self.setDelegateTimeout(function(){if(self._reposfunc)self._reposfunc();},1);
+		</attach>
+		<property name="title">
+			<get>return self.get_text();</get>
+			<set>self.set_text(value);</set>
+		</property>
+		<method name="dispose" overrideas="panel_dispose">
+			self.close("dispose");
+			self.panel_dispose();
+		</method>
+		<method name="_disposeoverdiv">
+			<![CDATA[
+			if(self._overdiv)
+			{
+				if(self._overdiv.parentNode)
+				{
+					self._overdiv.parentNode.removeChild(self._overdiv);
+					self._overdiv.onclick=jsml.empty_function;
+					self._overdiv.onmousedown=jsml.empty_function;
+					self._overdiv.onmouseover=jsml.empty_function;
+					self._overdiv.onmouseout=jsml.empty_function;
+				}
+			}
+			self._overdiv=null;
+			]]>
+		</method>
+		<method name="close" arguments="reason">
+			<![CDATA[
+			if(self._closed)return;
+			self._closed=true;
+
+			if(jsml._currentfloatbox==self)
+				jsml._currentfloatbox=null;
+
+			self._disposeoverdiv();
+			if(!self._stopdispose)
+			{
+				self.setDelegateTimeout(function(){
+					self.panel_dispose();
+				},1);
+			}
+			
+			self.set_visible(false);
+			
+			self.close_child();
+			
+			if(self._parentfloatbox&&reason!="child_close")
+				self._parentfloatbox._onchildclose(reason)
+			
+			self.invoke_event("closing");
+			]]>
+		</method>
+		<method name="startclosechildtimer">
+			<![CDATA[
+			var currentchild=self._childfloatbox;
+			clearTimeout(self._cctimerid);
+			self._cctimerid=self.setDelegateTimeout(function(){
+				if(currentchild==self._childfloatbox)
+					self.close_child();
+			},value||500);
+			]]>
+		</method>
+		<method name="clearclosechildtimer">
+			clearTimeout(self._cctimerid);
+		</method>
+		<attach name="mousehover">
+			if(self._parentfloatbox)self._parentfloatbox.clearclosechildtimer();
+		</attach>
+		<method name="close_child">
+			self.clearclosechildtimer();
+			if(!self._childfloatbox)return;
+			self._childfloatbox.close("close_child");
+			self._childfloatbox=null;
+		</method>
+		<method name="_onchildshow" arguments="childfloatbox">
+			self.clearclosechildtimer();
+			if(self._childfloatbox==childfloatbox)return;
+			if(self._childfloatbox)self._childfloatbox._onothershow();
+			self._childfloatbox=childfloatbox;
+		</method>
+		<method name="_onothershow" arguments="otherfloatbox">
+			self.close("other_show");
+		</method>
+		<method name="_onouterclick">
+			self.close("outer_click");
+		</method>
+		<method name="_onmenuclick">
+			self.close("menu_click");
+		</method>
+		<method name="_onchildclose">
+			<![CDATA[
+			switch(value)
+			{
+				case "other_show":
+				case "outer_click":
+				case "close_child":
+					break;
+				case "menu_click":
+				default:
+					self.close("child_close");
+					break;
+			}
+			]]>
+		</method>
+		<method name="resize" arguments="width,height">
+			if(width)self.set_width(width);
+			if(height)self.set_height(height);
+		</method>
+	</panel>
+
+	<panel jsml-class="floatmenu" jsml-base="floatbox" css_class="floatmenu" width="160" height="22" padding="3,3,3,2">
+
+		<jsml-ref name="rteborderstyle"/>
+
+		<initialize>
+			self._element.oncontextmenu=jsml.cancel_event_function;
+		</initialize>
+
+		<attach name="showing">
+			self.invoke_recursive("updateui");
+		</attach>
+
+		<method name="close" arguments="reason" overrideas="floatbox_close">
+			<![CDATA[
+			if(!reason||reason=="menu_click")
+			{
+				self.close_recursive(reason);
+			}
+			else
+			{
+				self.floatbox_close(reason);
+			}
+			]]>
+		</method>
+
+		<method name="close_recursive" arguments="reason">
+			<![CDATA[
+			var pare=self._fbOwner;
+			while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+			if(pare&&pare._floatboxinstance.is_jsml_type("floatmenu"))
+				pare._floatboxinstance._onmenuclick();
+			else
+				self.floatbox_close(reason);
+			]]>
+		</method>
+		<attach name="editor_ready" arguments="jevent,editor">
+			<![CDATA[
+			self._rteinstance=editor;
+			self._estyle.zIndex=editor._config.dialog_zindex
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-class="rtepluginholder" overflow="visible">
+		<property name="plugin">
+			<get>
+				return self.rtepluginname;
+			</get>
+			<set>
+				self.rtepluginname=value;
+			</set>
+		</property>
+		<property name="configname">
+			<get>
+				return self.rteconfigname;
+			</get>
+			<set>
+				self.rteconfigname=value;
+			</set>
+		</property>
+		<attach name="editor_ready" arguments="jevent,arg0">
+			<![CDATA[
+			self._rteinstance=arg0;
+			if(!self.rtepluginname)return;
+			if(self._rteinstance._config["show"+self.rtepluginname]===false)
+				return jsml.dispose_delay(self);
+			self.setDelegateTimeout(function()
+			{
+				self._rteinstance.LoadPlugin(self.rtepluginname,function(plugin)
+				{
+					if(!plugin||!plugin.LoadUI)return;
+					plugin.LoadUI(self);
+				});
+			},self._rteinstance._config.delay_plugin||800);
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-class="scrollitemspanel" dock="fill" overflow_x="none" overflow_y="scroll">
+		<!--
+		<panel jsml-local="noitempanel" dock="fill" vertical_align="middle" horizontal_align="center" visible="false">
+			<label text="@noitems" overflow="visible" width="10"/>
+		</panel>
+		-->
+		<initialize>
+			self._itemheight=21;
+			self._itemwidth=-1;
+		</initialize>
+		<method name="get_demand_content_height">
+			<![CDATA[
+			if(!self._items)return 0;
+			var colcount=self.calc_column_count();
+			if(colcount==1)
+				return self._items.length * self._itemheight+12;
+			return Math.ceil(self._items.length/colcount) * self._itemheight+12;
+			]]>
+		</method>
+		<method name="calc_column_count">
+			<![CDATA[
+			if(self._itemwidth<=0)
+				return 1;
+			var cw=self.get_client_width()-16;
+			return Math.floor(cw/self._itemwidth)||1;
+			]]>
+		</method>
+		<property name="itemheight">
+			<get>
+				return self._itemheight;
+			</get>
+			<set>
+				self._itemheight=parseInt(value)||22;
+			</set>
+		</property>
+		<property name="itemwidth">
+			<get>
+				return self._itemwidth;
+			</get>
+			<set>
+				self._itemwidth=parseInt(value)||-1;
+			</set>
+		</property>
+		<method name="reset_items">
+			<![CDATA[
+			//noitempanel.set_visible(true);
+			self.disposeslots();
+			var cs=self.get_children();
+			for(var i=cs.length-1;i>=1;i--)cs[i].set_parent(null);
+			self._items=null;
+			self._slots=null;
+			self._scroll_y=0;
+			]]>
+		</method>
+		<method name="add_items" arguments="arr,ctrlfunc">
+			<![CDATA[
+			
+			self.ctrlfunc=ctrlfunc;
+			if(!self._items)
+			{
+				self._items=[];
+				self._slots=[];
+			}
+			self._items=self._items.concat(arr);
+			//noitempanel.set_visible(!self._items.length);
+			self._draw_visible_items();
+			self.invoke_notify_content();
+			]]>
+		</method>
+		<method name="foreach_slot" arguments="func">
+			<![CDATA[
+			if(!self._slots)return;
+			for(var i=0;i<self._slots.length;i++)
+			{
+				var s=self._slots[i];
+				if(s)func(s);
+			}
+			]]>
+		</method>
+
+		<method name="_draw_visible_items">
+			<![CDATA[
+			if(!self._items)return;
+
+			var KEEP_HEAD_COUNT=20;
+			
+			self._drawtime=1+(self._drawtime||0);
+			var dt=self._drawtime;
+			
+			var colcount=self.calc_column_count();
+			
+			var sy=self._scroll_y||0;
+			var ch=self.get_client_height();
+			var cw=self.get_client_width()-16;
+			var ww=Math.floor(cw/colcount);
+			
+			var start=Math.floor(sy*colcount/self._itemheight);
+			var count=Math.ceil(ch*colcount/self._itemheight);
+			
+			if(start>colcount)start-=colcount;
+			count+=colcount*4;
+			
+			var usedown=false;
+			var lastsy=self.lastscrolly||0;
+			if(sy>=lastsy)
+				usedown=true;
+			self.lastscrolly=sy;
+			
+			var index=usedown?start:start+count-1;
+			if(index>self._items.length-1)index=self._items.length-1;
+			
+			function NextClean()
+			{
+				if(self._jsml_disposed||dt!=self._drawtime)
+					return;
+				
+				var ctrl=self._childs[index];
+				if( ctrl._slotindex>KEEP_HEAD_COUNT && (ctrl._slotindex<start-colcount||ctrl._slotindex>start+count+colcount) )
+				{
+					ctrl.set_parent(null);
+				}
+				index--;
+				if(index<0)
+					return;
+				self.setDelegateTimeout(NextClean,1);
+			}
+			
+			function DoNextStep()
+			{
+				if(self._jsml_disposed||dt!=self._drawtime)
+					return;
+
+				var ctrl=self._slots[index];
+				if(!ctrl)
+				{
+					var item=self._items[index];
+					if(!item)return;
+					ctrl=self.ctrlfunc(item);
+					ctrl.set_dock("none");
+					ctrl._slotindex=index;
+					self._slots[index]=ctrl;
+				}
+				ctrl.set_top(Math.floor(index/colcount)*self._itemheight);
+				ctrl.set_left( (index%colcount)*ww );
+				ctrl.set_width(ww);
+				ctrl.set_visible(true);
+				if(!ctrl._jsml_parent)
+				{
+					//TODO:find a good position for the ctrl.
+					self.append_child(ctrl);
+				}
+				
+				if(usedown)
+					index++;
+				else
+					index--;
+				
+				if(index<start||index>=start+count)
+				{
+					index=self._childs.length-1;
+					NextClean();				
+				}
+				else
+				{
+					self.setDelegateTimeout(DoNextStep,1);
+				}
+			}
+			
+			new function()
+			{
+				for(var i=0;i<self._slots.length;i++)
+				{
+					var s=self._slots[i];
+					if(!s)continue;
+					if(s._slotindex<start||s._slotindex>=start+count)
+						s.set_visible(false);
+				}
+			}
+			
+			self.setDelegateTimeout(DoNextStep,100);//DoNextStep();
+			
+			]]>
+		</method>
+		<method name="disposeslots">
+			<![CDATA[
+			if(!self._slots)return;
+			for(var i=0;i<self._slots.length;i++)
+			{
+				var s=self._slots[i];
+				if(!s||s._jsml_disposed)continue;
+				s.dispose();
+			}
+			self._slots=null;
+			]]>
+		</method>
+		<attach name="disposing">
+			self.disposeslots();
+		</attach>
+		<attach name="scroll">
+			self._draw_visible_items();
+		</attach>
+		<attach name="resize">
+			self._draw_visible_items();
+		</attach>
+	</panel>
+
+
+	<panel jsml-class="rtepropctrl">
+		<method name="find_editor">
+			<![CDATA[
+			if(self._rteinstance)return self._rteinstance;
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+			{
+				if(!ctrl._rteinstance)continue;
+				self._rteinstance=ctrl._rteinstance;
+				return ctrl._rteinstance;
+			}
+			]]>
+		</method>
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+		<property name="propname">
+			<get>
+				return self._propname;
+			</get>
+			<set>
+				self._propname=value;
+			</set>
+		</property>
+		<property name="propsuffix">
+			<get>
+				return self._propsuffix;
+			</get>
+			<set>
+				self._propsuffix=value;
+			</set>
+		</property>
+		<property name="ctrl_value">
+			<get>
+			</get>
+			<set>
+			</set>
+		</property>
+		<property name="node_value">
+			<get>
+				<![CDATA[
+				if(self._propname=='#')return;
+				var node=self.find_node();
+				if(node&&self._propname)
+				{
+					var mode="attribute";
+					var name=self._propname+(self._propsuffix||"");
+					var pair=name.split(':');
+					if(pair.length==2)
+					{
+						mode=pair[0];
+						name=pair[1];
+					}
+					if(mode=="style")
+						return node.GetStyle(name);
+					if(mode=="attribute")
+						return node.GetAttribute(name);
+				}
+				self.set_opacity(50);
+				]]>
+			</get>
+			<set>
+				<![CDATA[
+				if(self._propname=='#')return;
+				var node=self.find_node();
+				if(node&&self._propname)
+				{
+					if(value!=null)
+						value=String(value).replace(/(^\s+|\s+$)/g,"")
+					if(value==""&&!self._nonull)
+						value=null;
+					
+					var mode="attribute";
+					var name=self._propname+(self._propsuffix||"");
+					var pair=name.split(':');
+					if(pair.length==2)
+					{
+						mode=pair[0];
+						name=pair[1];
+					}
+					if(mode=="style")
+						return node.SetStyle(name,value);
+					if(mode=="attribute")
+						return node.SetAttribute(name,value);
+				}
+				self.set_opacity(50);
+				]]>
+			</set>
+		</property>
+		<property name="nonull">
+			<get>
+				return self._nonull;
+			</get>
+			<set>
+				self._nonull=value;
+			</set>
+		</property>
+		<property name="suffix">
+			<get>
+				return self._suffix;
+			</get>
+			<set>
+				self._suffix=value;
+			</set>
+		</property>
+		<attach name="attach_dom,loadvalue">
+			<![CDATA[
+			var val=self.get_node_value();
+			if(val&&self._suffix)
+			{
+				var str=String(val);
+				var slen=self._suffix.length;
+				if(str.length>=slen&&str.substr(str.length-slen,slen)==self._suffix)
+				{
+					val=str.substr(0,str.length-slen);
+				}
+			}
+			self.set_ctrl_value(val);
+			if(self.get_opacity()!=100)
+			{
+				var node=self.find_node();
+				if(node)self.set_opacity(100);
+			}
+			]]>
+		</attach>
+		<attach name="change,savevalue" arguments="je">
+			<![CDATA[
+			if(je.jsml_name=="change"&&self._stopupdate)
+				return;
+			var val=self.get_ctrl_value();
+			if(val&&self._suffix)
+			{
+				var str=String("");
+				var slen=self._suffix.length;
+				if( ! (str.length>=slen&&str.substr(str.length-slen,slen)==self._suffix) )
+				{
+					val=val+self._suffix
+				}
+			}
+			self.set_node_value(val);
+			self.bubble_event("rtepropsaved");
+			]]>
+		</attach>
+		<property name="autoupdate">
+			<get>
+				return !self._stopupdate;
+			</get>
+			<set>
+				self._stopupdate=value;
+			</set>
+		</property>
+		<property name="text">
+			<get>
+				return self.get_ctrl_value()
+			</get>
+			<set>
+				self.set_ctrl_value(value);
+				self.invoke_event("savevalue");
+			</set>
+		</property>
+
+	</panel>
+
+	<panel jsml-class="rteproptextbox" jsml-base="rtepropctrl" border_width="1" border_color="#cccccc">
+		<textbox dock="fill" jsml-local="textbox" jsml-member="textbox" border_width="0">
+			<initialize>
+				self._input.style.textIndent="2px";
+			</initialize>
+			<attach name="change,keyup">
+				instance.invoke_event("change");
+			</attach>
+		</textbox>
+		<attach name="set_disabled">
+			textbox.set_disabled(self.get_disabled());
+		</attach>
+		<property name="ctrl_value">
+			<get>
+				return textbox.get_text();
+			</get>
+			<set>
+				textbox.set_text(String(value||""));
+			</set>
+		</property>
+	</panel>
+
+	<label jsml-class="rtepropunitbox_item" dock="top" width="45" vertical_align="middle" padding="0,0,0,5" cursor="pointer">
+		<attach name="mousehover">
+			self.set_back_color("darkblue");
+			self.set_text_color("white");
+		</attach>
+		<attach name="mouseleave">
+			self.set_back_color("");
+			self.set_text_color("");
+		</attach>
+		<attach name="click">
+			jsml.rtepropunitbox_panel.close();
+			var box=jsml.rtepropunitbox_panel.currentbox;
+			jsml.rtepropunitbox_panel.currentbox=null;
+			if(box)box.invoke_event("clickitem",self.get_text());
+		</attach>
+	</label>
+
+	<panel jsml-base="floatbox" id="rtepropunitbox_panel_id">
+		<initialize>
+			jsml.rtepropunitbox_panel=self;
+			self._element.style.zIndex=88888888;
+		</initialize>
+		<label jsml-base="rtepropunitbox_item" text="px" />
+		<label jsml-base="rtepropunitbox_item" text="%" />
+		<label jsml-base="rtepropunitbox_item" text="pt" />
+		<label jsml-base="rtepropunitbox_item" text="em" />
+		<label jsml-base="rtepropunitbox_item" text="pc" />
+		<label jsml-base="rtepropunitbox_item" text="cm" />
+		<label jsml-base="rtepropunitbox_item" text="mm" />
+		<label jsml-base="rtepropunitbox_item" text="in" />
+	</panel>
+
+	<panel jsml-class="rtepropunitbox" jsml-base="rtepropctrl" back_color="white" border_width="1" border_color="#cccccc" width="60">
+		<panel dock="right" jsml-local="image" width="9" vertical_align="middle" cursor="pointer">
+			<image width="7" height="10" vertical_align="middle" horizontal_align="center" overflow="none" src="{folder}images/tbdown.gif" />
+			<attach name="click" arguments="jevent,devent">
+				if(instance.get_disabled())return;
+				jsml.rtepropunitbox_panel.currentbox=instance;
+				jsml.rtepropunitbox_panel.show({control:label,stopDispose:true,stopOverlay:true});
+			</attach>
+		</panel>
+		<label dock="right" jsml-local="label" text="px" border_width="0" vertical_align="middle" text_align="right" width="17" cursor="pointer">
+			<attach name="click">
+				if(instance.get_disabled())return;
+				jsml.rtepropunitbox_panel.currentbox=instance;
+				jsml.rtepropunitbox_panel.show({control:label,stopDispose:true,stopOverlay:true});
+			</attach>
+		</label>
+		<textbox jsml-local="textbox" dock="fill" border_width="0" width="45">
+			<initialize>
+				self._input.style.textIndent="2px";
+			</initialize>
+			<attach name="change,keyup">
+				instance.onchange();
+				instance.invoke_event("change");
+			</attach>
+		</textbox>
+
+		<attach name="set_disabled">
+			textbox.set_disabled(self.get_disabled());
+			textbox.set_back_color(self.get_disabled()?"#dddddd":"");
+			label.set_back_color(self.get_disabled()?"#dddddd":"");
+			image.set_back_color(self.get_disabled()?"#dddddd":"");
+		</attach>
+		<property name="ctrl_value">
+			<get>
+				var value=textbox.get_text().replace(/(^\s+|\s+$)/g,"");
+				if(!value)return null;
+				value=parseInt(value);
+				if(isNaN(value))return null;
+				return value+label.get_text();
+			</get>
+			<set>
+				textbox.set_text(value);
+				self.onchange(true);
+			</set>
+		</property>
+		<method name="onchange" arguments="translateit">
+			<![CDATA[
+			var value=textbox.get_text().replace(/(^\s+|\s+$)/g,"");
+			var arr=["%","px","pt","em","pc","cm","mm","in"]
+			for(var i=0;i<arr.length;i++)
+			{
+				if(value.indexOf(arr[i])==-1)
+					continue;
+				label.set_text(arr[i]);
+				if(translateit)
+				{
+					textbox.set_text(value.replace(arr[i],""));
+				}
+				else
+				{
+					label.set_visible(false);
+					image.set_visible(false);
+				}
+				return;
+			}
+			label.set_visible(true);
+			image.set_visible(true);
+			]]>
+		</method>
+		<attach name="clickitem" arguments="je,suffix">
+			<![CDATA[
+			label.set_text(suffix);
+			var value=textbox.get_text().replace(/(^\s+|\s+$)/g,"");
+			if(value&&value!=parseInt(value))
+			{
+				textbox.set_txt(parseInt(value)||"");
+			}
+			self.invoke_event("change");
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-class="rtepropnumupdown" jsml-base="rtepropctrl" height="18" border_width="1" border_color="#cccccc">
+		<panel dock="right" width="15" border_width="0,0,0,1" border_color="#eeeeee">
+			<image dock="top" jsml-local="image" height="8" overflow="none" jsml-base="imagebutton" cursor="default" padding="0,-3,0,3"  src="{folder}images/numup.gif">
+				<attach name="mousedown" arguments="je,de">
+					<![CDATA[
+					instance.imageadd(1,self);
+					de.cancel();
+					]]>
+				</attach>
+			</image>
+			<image dock="bottom" jsml-local="image" height="8" overflow="none" jsml-base="imagebutton" cursor="default" padding="0,-3,0,3" src="{folder}images/numdown.gif">
+				<attach name="mousedown" arguments="je,de">
+					<![CDATA[
+					instance.imageadd(-1,self);
+					de.cancel();
+					]]>
+				</attach>
+			</image>
+		</panel>
+		<textbox dock="fill" jsml-local="textbox" border_width="0" >
+			<initialize>
+				self._input.style.textIndent="2px";
+			</initialize>
+			<attach name="change,keyup">
+				instance.invoke_event("change");
+			</attach>
+		</textbox>
+		<attach name="set_disabled">
+			textbox.set_disabled(self.get_disabled());
+		</attach>
+		<property name="ctrl_value">
+			<get>
+				return textbox.get_text();
+			</get>
+			<set>
+				textbox.set_text(String(value||""));
+			</set>
+		</property>
+
+		<property name="min_value">
+			<get>
+				return null;
+			</get>
+			<set>
+				self._min_value=parseInt(value);
+			</set>
+		</property>
+		<property name="max_value">
+			<get>
+				return null;
+			</get>
+			<set>
+				self._max_value=parseInt(value);
+			</set>
+		</property>
+		<method name="imageadd" arguments="value,image">
+			<![CDATA[
+			function addfunc()
+			{
+				var val=parseInt(textbox.get_text())||0;
+				val+=value;
+				if(self._max_value!=null&&val>self._max_value)
+					val=self._max_value;
+				if(self._min_value!=null&&val<self._min_value)
+					val=self._min_value;
+				textbox.set_text(String(val));
+				self.invoke_event("change");
+			}
+			
+			addfunc();
+			var captured=true;
+			jsml.startcapture(null,function()
+			{
+				captured=false;
+				image.invoke_event("mouseup");
+			},"default");
+			function ontimeout()
+			{
+				if(!captured)return;
+				addfunc();
+				self.setDelegateTimeout(ontimeout,100);
+			}
+			self.setDelegateTimeout(ontimeout,500);
+			
+			]]>
+		</method>
+	</panel>
+
+	<panel jsml-class="rtepropcolorbox" jsml-base="rtepropctrl">
+		<image dock="right" jsml-local="image" src="{folder}images/colorbox.gif" width="19" horizontal_align="center" cursor="pointer">
+			<attach name="click">
+				instance.showdropdown(self);
+			</attach>
+		</image>
+		<textbox dock="fill" jsml-local="textbox" border_width="1" border_color="#cccccc" margin="0,2,0,0" font_size="11px">
+			<initialize>
+				self._input.style.textIndent="2px";
+			</initialize>
+			<attach name="change,keyup">
+				instance.invoke_event("change");
+			</attach>
+			<attach name="mouseup">
+				instance.showdropdown(image);
+			</attach>
+		</textbox>
+
+		<attach name="change,setvalue,loadvalue,attach_dom">
+			image.set_back_color(textbox.get_text());
+			textbox.set_back_color(textbox.get_text());
+		</attach>
+
+		<method name="showdropdown" arguments="img">
+			<![CDATA[
+			var option={floatMode:"b-l"};
+			option.setcolor=function(val)
+			{
+				textbox.set_text(val);
+				self.invoke_event("change");
+			};
+			self.find_editor().ExecShowXmlFloatbox(img._element,"colorpicker.xml",option);
+			]]>
+		</method>
+		<attach name="set_disabled">
+			textbox.set_disabled(self.get_disabled());
+		</attach>
+		<property name="ctrl_value">
+			<get>
+				return textbox.get_text();
+			</get>
+			<set>
+				textbox.set_text(String(value||""));
+				image.set_back_color(textbox.get_text());
+				textbox.set_back_color(textbox.get_text());
+			</set>
+		</property>
+	</panel>
+
+
+	<panel jsml-class="rtepropdropdown" jsml-base="rtepropctrl" border_width="1" border_color="#cccccc">
+		<dropdown dock="fill" jsml-local="dropdown" border_width="0">
+			<attach name="change,keyup">
+				instance.invoke_event("change");
+			</attach>
+		</dropdown>
+		<method name="jsml_append" overrideas="panel_jsml_append">
+			<![CDATA[
+			if(dropdown==value)
+				self.append_child(value)
+			else
+				dropdown.jsml_append(value);
+			]]>
+		</method>
+		<attach name="set_disabled">
+			dropdown.set_disabled(self.get_disabled());
+		</attach>
+		<property name="editable">
+			<get>
+				return dropdown.get_editable();
+			</get>
+			<set>
+				dropdown.set_editable(value);
+			</set>
+
+		</property>
+		<property name="ctrl_value">
+			<get>
+				return dropdown.get_text();
+			</get>
+			<set>
+				dropdown.set_text(String(value||""));
+			</set>
+		</property>
+	</panel>
+
+	<panel jsml-class="rtepropcheckbox" jsml-base="rtepropctrl" width="20" height="20">
+		<checkbox dock="fill" jsml-local="checkbox">
+			<attach name="change,keyup,click">
+				instance.invoke_event("change");
+			</attach>
+		</checkbox>
+		<attach name="set_disabled">
+			checkbox.set_disabled(self.get_disabled());
+		</attach>
+		<method name="toggle_checked">
+			checkbox.set_checked(!checkbox.get_checked());
+			self.invoke_event("change");
+		</method>
+		<property name="truestring">
+			<get>
+				return self._truestring;
+			</get>
+			<set>
+				self._truestring=value;
+			</set>
+		</property>
+		<property name="falsestring">
+			<get>
+				return self._falsestring;
+			</get>
+			<set>
+				self._falsestring=value;
+			</set>
+		</property>
+		<property name="defaultstring">
+			<get>
+				return self._defaultstring;
+			</get>
+			<set>
+				self._defaultstring=value;
+			</set>
+		</property>
+		<property name="ctrl_value">
+			<get>
+				return (checkbox.get_checked()?self._truestring:self._falsestring)||"";
+			</get>
+			<set>
+				if(!value)value=self._defaultstring;
+				checkbox.set_checked(self._truestring==value)
+			</set>
+		</property>
+	</panel>
+
+	<panel jsml-class="rtebtngroup_float" overflow="visible">
+		<image jsml-base="imagebutton" dock="left" src="{folder}images/floatleft.gif" width="22" tooltip="@FLOATLEFT">
+			<attach name="attach_dom,loadvalue">
+				self.set_checked(instance.get_align()=="left")
+			</attach>
+			<attach name="click">
+				instance.set_align("left");
+			</attach>
+		</image>
+		<image jsml-base="imagebutton" dock="left" src="{folder}images/floatnone.gif" width="22" tooltip="@FLOATNONE">
+			<attach name="attach_dom,loadvalue">
+				self.set_checked(instance.get_align()=="none")
+			</attach>
+			<attach name="click">
+				instance.set_align("none");
+			</attach>
+		</image>
+		<image jsml-base="imagebutton" dock="left" src="{folder}images/floatblock.gif" width="22" tooltip="@FLOATFULL">
+			<attach name="attach_dom,loadvalue">
+				self.set_checked(instance.get_align()=="block")
+			</attach>
+			<attach name="click">
+				instance.set_align("block");
+			</attach>
+		</image>
+		<image jsml-base="imagebutton" dock="left" src="{folder}images/floatright.gif" width="22" tooltip="@FLOATRIGHT">
+			<attach name="attach_dom,loadvalue">
+				self.set_checked(instance.get_align()=="right")
+			</attach>
+			<attach name="click">
+				instance.set_align("right");
+			</attach>
+		</image>
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+		<method name="get_align">
+			<![CDATA[
+			var node=self.find_node();
+			if(!node)return;
+			return node.GetAlignMode();
+			]]>
+		</method>
+		<method name="set_align" arguments="mode">
+			<![CDATA[
+			var node=self.find_node();
+			if(!node)return;
+			node.SetAlignMode(mode);
+			instance.invoke_recursive("loadvalue");
+			]]>
+		</method>
+	</panel>
+
+
+	<jsml-def name="linktree">
+		<method name="loadgroupcontent" arguments="group,element">
+			<![CDATA[
+			
+			if(group.groups.length+group.links.length==0)
+			{
+				element.style.textIndent="6px";
+				element.innerHTML="(Empty)";
+				return;
+			}
+			
+			var table=document.createElement("TABLE");
+			table.cellSpacing=0;
+			table.cellPadding=0;
+			
+			var cg1=document.createElement("COLGROUP");
+			cg1.style.width="16px";
+			table.appendChild(cg1);
+			
+			for(var i=0;i<group.groups.length;i++)
+			{
+				self.linktree_addgroup(group.groups[i],table);
+			}
+			for(var i=0;i<group.links.length;i++)
+			{
+				self.linktree_addlink(group.links[i],table);
+			}
+			
+			element.appendChild(table);
+			
+			container.invoke_notify_content();
+			
+			]]>
+		</method>
+		<method name="linktree_addgroup" arguments="group,table">
+			<![CDATA[
+			var closedimg="<img src='{folder}dialogs/images/tree_closed.gif' style='width:13px;height:13px;'/>";
+			var openedimg="<img src='{folder}dialogs/images/tree_opened.gif' style='width:13px;height:13px;'/>";
+			
+			var loaded=false;
+			var opened=false;
+			
+			var row1=table.insertRow(-1);
+			var row2=table.insertRow(-1);
+			var td11=row1.insertCell(-1);
+			var td12=row1.insertCell(-1);
+			var td21=row2.insertCell(-1);
+			var td22=row2.insertCell(-1);
+			
+			td11.style.cursor="pointer";
+			td11.style.verticalAlign="middle";
+			td11.style.fontSize="1px";
+			td11.style.lineHeight="1px";
+			td11.style.padding="0px";
+			td11.innerHTML=closedimg;
+			
+			td12.className="rtelinktreegroup";
+			td12.innerHTML=jsml.html_encode(group.text);
+			
+			row2.style.display='none';
+			
+			function toggleit()
+			{
+				if(!loaded)
+				{
+					loaded=true;
+					self.loadgroupcontent(group,td22);
+				}
+				if(!opened)
+				{
+					row2.style.display='';
+					td11.innerHTML=openedimg;
+					opened=true;
+				}
+				else
+				{
+					row2.style.display='none';
+					td11.innerHTML=closedimg;
+					opened=false;
+				}
+				container.invoke_notify_content();
+			}
+			
+			td11.onclick=toggleit;
+			td12.onclick=toggleit;
+			]]>
+		</method>
+		<method name="linktree_addlink" arguments="link,table">
+			<![CDATA[
+			var row1=table.insertRow(-1);
+			var td11=row1.insertCell(-1);
+			var td12=row1.insertCell(-1);
+			
+			td11.innerHTML="<img src='{folder}dialogs/images/url_icon.gif' style='width:13px;height:13px;'/>"
+			td11.style.verticalAlign="middle";
+			
+			td12.className="rtelinktreeitem";
+			td12.innerHTML=jsml.html_encode(link.text);
+			if(link.href)td12.setAttribute("title",link.href);
+			
+			td12.onmouseover=new Function("","this.style.color='#0000FF'");
+			td12.onmouseout=new Function("","this.style.color=''");
+			
+			td12.onclick=function()
+			{
+				self.invoke_event("clicklink",link);
+			}
+			
+			]]>
+		</method>
+	</jsml-def>
+
+
+	<execute>
+		<![CDATA[
+		jsml.rtecommonlibraryloaded=true;
+		function tryclosefloatbox(e)
+		{
+			if(!jsml._currentfloatbox)return;
+			var e=e||window.event;
+			var pare=e.srcElement||e.target;
+			while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+			if(pare)return;
+			jsml._currentfloatbox._onouterclick();
+		}
+		jsml.dom_attach_event(document,'mousedown',tryclosefloatbox);
+		jsml.dom_attach_event(document,'keydown',function(e)
+		{
+			var e=e||window.event;
+			if(e.keyCode!=27)return;
+			tryclosefloatbox(e)
+		});
+		jsml.floatbox_allowautofloatbox=function(element)
+		{
+			var fb=jsml._currentfloatbox;
+			if(!fb)return true;
+			if(fb._closed)return true;
+			for(;fb&&!fb._closed;fb=fb._childfloatbox)
+			{
+				for(var p=element;p!=null;p=p.parentNode)
+					if(p==fb._element)
+						return true;
+			}
+			return false;
+		}
+		]]>
+	</execute>
+
+
+
+
+</jsml>

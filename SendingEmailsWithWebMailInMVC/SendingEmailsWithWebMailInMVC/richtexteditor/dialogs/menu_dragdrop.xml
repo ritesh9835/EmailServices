@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-base="rtemenuitem" htmlcode="@MOVE" imagename="move">
+		<attach name="click">
+			<![CDATA[
+			var node=option.dragcontrol;
+			var div=new $rte.ContainerElement("div");
+			editor.InsertNode(div);
+			node.RemoveNode(true);
+			div.GetParent().InsertBefore(node,div);
+			div.RemoveNode(false);
+			editor.SelectControl(node);
+			editor.RangeSyncToDom(true);
+			]]>
+		</attach>
+	</panel>
+	<panel jsml-base="rtemenuitem" htmlcode="@COPY" imagename="copy">
+		<attach name="click">
+			<![CDATA[
+			var node=option.dragcontrol;
+			var div=new $rte.ContainerElement("div");
+			editor.InsertNode(div);
+			node=node._cloneNode(true);
+			div.GetParent().InsertBefore(node,div);
+			div.RemoveNode(false);
+			editor.SelectControl(node);
+			editor.RangeSyncToDom(true);
+			]]>
+		</attach>
+	</panel>
+	<panel jsml-base="rtemenuitem" htmlcode="@CANCEL">
+		<attach name="click">
+			var node=option.dragcontrol;
+			editor.SelectControl(node);
+			editor.RangeSyncToDom(true);
+		</attach>
+	</panel>
+
+
+</jsml>

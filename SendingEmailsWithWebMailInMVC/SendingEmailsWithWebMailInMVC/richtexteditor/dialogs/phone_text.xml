@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phonetextdialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel dock="top" height="30">
+			<button dock="left" width="60" text="@ok">
+				<attach name="click">
+					editor.AppendHTML(pastearea.get_text());
+					dialog.close();
+				</attach>
+			</button>
+			<button dock="left" width="60" text="@close" margin="0,0,0,5">
+				<attach name="click">
+					dialog.close();
+				</attach>
+			</button>
+		</panel>
+		<textbox jsml-local="pastearea" dock="fill" text_mode="multipleline" margin="5,0,0,0"></textbox>
+	</panel>
+
+	<panel jsml-base="phonetextdialog">
+	</panel>
+
+</jsml>

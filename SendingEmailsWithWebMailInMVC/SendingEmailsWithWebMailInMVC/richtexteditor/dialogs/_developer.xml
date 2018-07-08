@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title("RichTextEditor Developer Center Beta");
+	</execute>
+
+	<panel jsml-class="developerdialog" dock="fill" margin="0" padding="0" back_color="black" text_color="white">
+		<xmldata>
+			<h1>Help</h1>
+			<ul>
+				<li>help - print this line</li>
+				<li>buildihtml5</li>
+				<li>joinallimages</li>
+			</ul>
+		</xmldata>
+		<panel jsml-local="sp" dock="fill" overflow_y="scroll">
+			<panel dock="bottom">
+				<label dock="left" text="&gt;" width="5" vertical_align="middle" text_align="right" margin="0,1,0,0"/>
+				<textbox dock="fill" back_color="black" text_color="white" border_width="0">
+					<initialize>
+						self.setDelegateTimeout(self.focus,100);
+					</initialize>
+					<attach name="enterkey">
+						var text=self.get_text()
+						self.set_text();
+						self.focus();
+						text=text.replace(/(^\s+)|(\s+$)/g,'');
+						if(text)instance.executeline(text);
+						else instance.printtext("");
+					</attach>
+					<attach name="keydown">
+
+					</attach>
+				</textbox>
+			</panel>
+			<htmlcontrol dock="fill" jsml-local="hc" overflow="visible">
+			</htmlcontrol>
+		</panel>
+		<method name="jsml_append_xmldata" arguments="xmldata">
+			self._xmldata=jsml.get_node_innerxml(xmldata);
+		</method>
+		<method name="insertdiv" arguments="div">
+			<![CDATA[
+			hc._content.appendChild(div);
+			hc.invoke_notify_content();
+			jsml.queue_resumehandler(function()
+			{
+				sp.set_scrolly(hc.get_demand_height());
+			});
+			]]>
+		</method>
+		<method name="printhelp">
+			var div=document.createElement("DIV");
+			div.innerHTML=this._xmldata;
+			self.insertdiv(div);
+		</method>
+		<initialize>
+			var div=document.createElement("DIV");
+			div.innerHTML="RichTextEditor : "+editor._config.version+" ? "+editor._config._urlsuffix
+			self.insertdiv(div);
+			self.printhelp();
+		</initialize>
+		<method name="printtext" arguments="text,color,bold">
+			<![CDATA[
+			var div=document.createElement("DIV");
+			div.innerHTML=jsml.html_encode(text)||"&nbsp;";
+			if(color)div.style.color=color;
+			if(bold)div.style.fontWeight='bold';
+			self.insertdiv(div);
+			]]>
+		</method>
+		<method name="executeline" arguments="text">
+			<![CDATA[
+			self.printtext("> "+text,'lightgreen',true);
+			
+			var argline="";
+			var pos=text.indexOf(' ');
+			if(pos!=-1)
+			{
+				argline=text.substring(pos+1);
+				text=text.substring(0,pos);
+			}
+			try
+			{
+				switch(text.toLowerCase())
+				{
+					case "help":
+						self.printhelp();
+						return;
+					case "joinallimages":
+					case "buildihtml5":
+						self[text.toLowerCase()](argline);
+						return;
+				}
+			}
+			catch(x)
+			{
+				self.printtext('error : '+x.message,'red',true);
+				return;
+			}
+			self.printtext('Unknown command : '+text,'red',true);
+			]]>
+		</method>
+		
+		<method name="joinallimages" arguments="cmdargs">
+			<![CDATA[
+			if(!jsml.html5)
+			{
+				self.printtext('Require HTML5','red',true);
+				return;
+			}
+
+			var folder=editor._config.folder;
+			var skin=editor._config.skin;
+
+			if(!editor._config.allimageindexdata)
+			{
+				self.printtext('no config.allimageindexdata','red',true);
+				return;
+			}
+			
+			var imagenames=editor._config.allimageindexdata.split(',');
+			
+			var allcanvas=document.createElement("canvas");
+			allcanvas.width=20;
+			allcanvas.height=20*imagenames.length;
+			var allctx=allcanvas.getContext("2d");
+			
+			var index=-1;
+			
+			function DoReport()
+			{
+				var str=allcanvas.toDataURL("image/png");
+				str=str.substring("data:image/png;base64,".length);
+				
+				var form=document.createElement("form");
+				var textarea=document.createElement("TEXTAREA");
+				textarea.value=str;
+				textarea.style.width="480px";
+				textarea.style.height="320px";
+				var div=document.createElement("DIV");
+				div.appendChild(form);
+				form.appendChild(textarea);
+				self.insertdiv(div);
+				
+				self.printtext('completed. count:'+imagenames.length+', size:'+textarea.value.length);
+				
+				if(!cmdargs)return;
+				
+				textarea.name="base64";
+				form.method="post";
+				form.target="_blank";
+				form.action=cmdargs+"?name=all.png&type=image/png";
+				form.submit();
+			}
+			
+			function DoNext()
+			{
+				index++;
+				var imagename=imagenames[index];
+				if(!imagename) return DoReport();
+				
+				var url=folder+"images/"+imagename+".png";
+
+				var img=document.createElement("IMG");
+				img.onload=function()
+				{
+					allctx.drawImage(img,0,20*index);
+					self.setDelegateTimeout(DoNext,1);
+				}
+				img.onerror=function()
+				{
+					self.printtext("error:"+url,"red");
+					return;
+				}
+				img.setAttribute("src",url);
+			}
+			DoNext();
+			
+			]]>
+		</method>
+		
+		<method name="buildihtml5">
+			<![CDATA[
+			
+			if(!jsml.html5)
+			{
+				self.printtext('Require HTML5','red',true);
+				return;
+			}
+			
+			var folder=editor._config.folder;
+			var skin=editor._config.skin;
+			
+			var images=[];
+			function fillimages(ctrl)
+			{
+				if(ctrl.is_jsml_type("image"))
+				{
+					images.push(ctrl.get_src());
+				}
+				var arr=ctrl.get_children();
+				for(var i=0;i<arr.length;i++)
+					fillimages(arr[i]);
+			}
+			fillimages(editor._config.skin_control)
+			
+			var oldcount=0;
+			var newcount=0;
+			var datamap={};
+			var index=-1;
+			
+			var rteic=editor._config._rte_image_cache;
+			if(rteic)
+			{
+				for(var p in rteic)
+				{
+					var v=rteic[p];
+					if(typeof(v)=="string"&&v.substring(0,5)=="data:")
+					{
+						datamap[p]=v;
+						oldcount++;
+					}
+				}
+			}
+			
+			if(editor._config.allimageindexdata)
+			{
+				var imagenames=editor._config.allimageindexdata.split(',');
+				for(var i=0;i<imagenames.length;i++)
+					images.push(folder+"images/"+imagenames[i]+".png");
+				var newimages=[];
+				var mapimages={};
+				for(var i=0;i<images.length;i++)
+				{
+					if(mapimages[images[i]])
+						continue;
+					mapimages[images[i]]=true;
+					newimages.push(images[i]);
+				}
+			}
+			
+			self.printtext('loading images...');
+			
+			function DoReport()
+			{
+				var code=[];
+				code.push("window._rte_image_cache=new function(){");
+				code.push("\r\n\r\n");
+				for(var p in datamap)
+				{
+					code.push("this['");
+					code.push(p);
+					code.push("']='");
+					code.push(datamap[p]);
+					code.push("';\r\n");
+				}
+				code.push("\r\n\r\n}\r\n");
+				
+				var textarea=document.createElement("TEXTAREA");
+				textarea.value=code.join("");
+				textarea.style.width="480px";
+				textarea.style.height="320px";
+				var div=document.createElement("DIV");
+				div.appendChild(textarea);
+				self.insertdiv(div);
+				
+				self.printtext('completed. exists:'+oldcount+', new:'+newcount+', size:'+textarea.value.length);
+			}
+			function DoNext()
+			{
+				index++;
+				var image=images[index];
+				if(!image) return DoReport();
+				
+				var url=image;
+				
+				if(url.substring(0,5)=="data:")
+				{
+					self.setDelegateTimeout(DoNext,1);
+					return;
+				}
+				if(url.substring(0,folder.length)!=folder)
+				{
+					self.printtext("skip:"+url,"red");
+					self.setDelegateTimeout(DoNext,1);
+					return;
+				}
+				
+				var img=document.createElement("IMG");
+				img.onload=function()
+				{
+					var canvas=document.createElement("canvas");
+					canvas.width=img.width;
+					canvas.height=img.height;
+					var ctx=canvas.getContext("2d");
+					ctx.drawImage(img,0,0);
+					
+					var p=url.substring(folder.length);
+					if(!datamap[p])
+						newcount++;
+					datamap[p]=canvas.toDataURL("image/png");
+					self.setDelegateTimeout(DoNext,1);
+				}
+				img.onerror=function()
+				{
+					self.printtext("error:"+url,"red");
+					self.setDelegateTimeout(DoNext,1);
+				}
+				img.setAttribute("src",url);
+			}
+			DoNext();
+			
+			]]>
+		</method>
+		
+	</panel>
+
+	<panel jsml-base="developerdialog" />
+
+</jsml>

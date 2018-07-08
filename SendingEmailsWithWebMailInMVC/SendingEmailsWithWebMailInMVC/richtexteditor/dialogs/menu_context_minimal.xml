@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-base="rtemenuitem" command="mergecells" imagename="mrgcell" htmlcode="@MERGECELLS">
+		<initialize>
+			if(!editor.CanExecCommand("mergecells"))self.set_visible(false);
+		</initialize>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" command="selectall" imagename="selectall" htmlcode="@SELECTALL" />
+
+	<panel jsml-base="rtemenuitem" command="undo" imagename="undo" htmlcode="@UNDO" />
+
+	<panel jsml-base="rtemenuspliter" />
+
+	<panel jsml-base="rtemenuitem" command="cut" imagename="cut" htmlcode="@CUT">
+		<attach name="mousehover">self._ResetFCButton();</attach>
+	</panel>
+	<panel jsml-base="rtemenuitem" command="copy" imagename="copy" htmlcode="@COPY">
+		<attach name="mousehover">self._ResetFCButton();</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" command="delete" imagename="delete" htmlcode="@DELETE" />
+
+	<panel jsml-base="rtemenuitem" htmlcode="@IMAGEEDITOR" imagename="imageeditor">
+		<initialize>
+			<![CDATA[
+			var node=editor.GetSelectionRoot();
+			if(!node||node.GetNameLower()!="img")self.set_visible(false);
+			self.set_disabled(true);
+			editor.FindStorage(["Gallery","Image"],node.GetAttribute("src"),function(storage,fileitem)
+			{
+				if(!storage)return;
+				self.imgnode=node;
+				self.storage=storage;
+				self.fileitem=fileitem;
+				self.set_disabled(false);
+			});
+			]]>
+		</initialize>
+		<attach name="click">
+			if(!self.storage)return;
+			editor.ShowImageEditor(self.imgnode,self.storage,self.fileitem);
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" imagename="link" htmlcode="@EDIT| |@LINK">
+		<initialize>
+			var link=editor.IsIncludedByTag("a");
+			if(link==null)return self.set_visible(false);
+		</initialize>
+		<attach name="click">
+			var link=editor.IsIncludedByTag("a");
+			if(link)editor.ShowPropertiesDialog(link);
+		</attach>
+	</panel>
+	<panel jsml-base="rtemenuitem" imagename="unlink" htmlcode="@REMOVE| |@LINK">
+		<initialize>
+			var link=editor.IsIncludedByTag("a");
+			if(link==null)return self.set_visible(false);
+		</initialize>
+		<attach name="click">
+			var link=editor.IsIncludedByTag("a");
+			if(link)link.RemoveNode(false);
+		</attach>
+	</panel>
+	
+	<panel jsml-base="rtemenuitem" htmlcode="@PROPERTIES" imagename="properties">
+		<initialize>
+			var node=editor.GetSelectionRoot();
+			if(!node||!node.IsControl())self.set_visible(false);
+		</initialize>
+		<attach name="click">
+			editor.ShowPropertiesDialog(editor.GetSelectionRoot())
+		</attach>
+	</panel>
+
+
+</jsml>

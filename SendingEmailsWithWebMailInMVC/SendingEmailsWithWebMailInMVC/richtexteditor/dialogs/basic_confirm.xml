@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="promptdialogpanel" dock="fill" margin="0" padding="18" overflow="visible">
+		<panel dock="top" overflow="visible">
+			<checkbox jsml-local="checkbox" dock="left" width="20" margin="3,1,0,4"/>
+			<label jsml-local="label" dock="fill" margin="4,4,0,4" max_width="640" />
+		</panel>
+		<panel dock="bottom">
+			<panel dock="right" overflow="visible">
+				<button dock="left"  width="82" margin="0,12,0,0" text="@OK" jsml-local="btnok">
+					<attach name="click">
+						instance.commitinput();
+					</attach>
+				</button>
+				<button dock="left"  width="82" margin="0,12,0,0" text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<method name="commitinput">
+			<![CDATA[
+			if(!checkbox.get_checked())
+				return;
+			dialog.result=true;
+			dialog.close();
+			]]>
+		</method>
+		<initialize>
+			<![CDATA[
+			label.set_text(option.message);
+			function checkvalue()
+			{
+				if(self._jsml_disposed)return;
+				self.setDelegateTimeout(checkvalue,10);
+				btnok.set_disabled(!checkbox.get_checked());
+				btnok.set_tooltip(checkbox.get_checked()?"":"Please click the checkbox at first");
+			}
+			self.setDelegateTimeout(checkvalue,10);
+			]]>
+		</initialize>
+	</panel>
+
+	<object jsml-base="promptdialogpanel">
+
+	</object>
+
+</jsml>

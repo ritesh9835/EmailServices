@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="foldertreenode" dock="top" height="10" overflow="visible">
+		<panel dock="top" height="10" overflow="visible" cursor="pointer">
+			<image dock="left" jsml-local="image" width="18" height="18" overflow="none" vertical_align="middle" padding="-1,-2,1,2"/>
+			<label dock="fill" jsml-local="label" text="Loading.." cursor="pointer" vertical_align="middle" margin="0,0,0,2" />
+			<attach name="mousehover">
+				<![CDATA[
+				if(instance.invalidnode)return;
+				if(self.isselected)
+					self.set_back_color('#cccccc');
+				else
+					self.set_back_color('#eeeeee');
+				]]>
+			</attach>
+			<attach name="mouseleave">
+				<![CDATA[
+				if(instance.invalidnode)return;
+				if(self.isselected)
+					self.set_back_color('#eeeeee');
+				else
+					self.set_back_color('');
+				]]>
+			</attach>
+			<attach name="mousedown">
+				<![CDATA[
+				if(instance.invalidnode)return;
+				if(option.quickselect)
+				{
+					option.quickselect(instance._item.UrlPath);
+					dialog.close();
+					return;
+				}
+				if(dialog.selectedtreenode)dialog.selectedtreenode.set_selected(false);
+				dialog.selectedtreenode=self;
+				dialog.selectedpath=instance._item.UrlPath;
+				self.set_selected(true);
+				self.set_back_color('#cccccc');
+				dialog.okbutton.set_disabled(false);
+				
+				]]>
+			</attach>
+			<property name="selected">
+				<get>
+					return self.isselected;
+				</get>
+				<set>
+					<![CDATA[
+					self.isselected=value;
+					if(self.isselected)
+						self.set_back_color('#eeeeee');
+					else
+						self.set_back_color('');
+					]]>
+				</set>
+			</property>
+		</panel>
+		<panel dock="fill" jsml-local="panel" height="10" overflow="visible" visible="false" margin="0,0,0,21">
+		</panel>
+		<method name="bind_item" arguments="item">
+			<![CDATA[
+			self._item=item;
+			label.set_text(item.Name);
+		
+			if(!option.quickselect && item.UrlPath==option.folder)
+			{
+				self.invalidnode="same";
+			}
+			if(item.Parent&&item.Parent.UrlPath==option.folder)
+			{
+				var arr=option.items;
+				for(var i=0;i<arr.length;i++)
+					if(arr[i]==item.Name)
+						self.invalidnode="invalid";
+			}
+			
+			if(self.invalidnode)
+			{
+				label.set_text_color("#999999");
+			}
+			
+			if(self.invalidnode=="invalid"||!item.SubNodes||!item.SubNodes.length)
+			{
+				image.set_src("{folder}images/closedfolder.gif");
+				return;
+			}
+			image.set_src("{folder}images/openfolder.png");
+			
+			for(var i=0;i<item.SubNodes.length;i++)
+			{
+				var subctrl=jsml.new_foldertreenode();
+				var subitem=item.SubNodes[i];
+				subitem.Parent=item;
+				subitem.UrlPath=item.UrlPath+subitem.Name+"/";
+				subctrl.bind_item(subitem);
+				panel.append_child(subctrl);
+			}
+			panel.set_visible(true);
+			]]>
+		</method>
+	</panel>
+
+	<panel jsml-class="foldertreedialog" dock="fill" back_color="white" overflow="visible" max_width="480" max_height="420">
+		<panel dock="bottom" jsml-local="bottompanel" margin="3" padding="6" overflow="visible">
+			<panel dock="right" margin="3" overflow="visible">
+				<button dock="left" width="82" height="24"  text="OK" margin="0,12,0,0" disabled="true">
+					<initialize>
+						dialog.okbutton=self;
+					</initialize>
+					<attach name="click">
+						dialog.result=dialog.selectedpath;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="Cancel">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+		</panel>
+		<panel jsml-local="rootpanel" jsml-base="foldertreenode" dock="fill" overflow_y="scroll" margin="9" padding="0,12,0,0" />
+		<initialize>
+			<![CDATA[
+			editor.CallAjax("AjaxGetFolderNodes",self.delegate(self.handlegetfolders),option.storage);
+			if(option.quickselect)
+			{
+				bottompanel.set_visible(false);
+				self.set_width(210);
+				self.set_height(150);
+			}
+			else
+			{
+				self.set_width(360);
+				self.set_height(240);
+			}
+			]]>
+		</initialize>
+		<method name="handlegetfolders" arguments="res">
+			jsml.suppend_layout();
+			rootpanel.bind_item({Name:"/",UrlPath:"/",SubNodes:res.ReturnValue});
+			jsml.resume_layout();
+	</method>
+
+	</panel>
+
+	<panel jsml-base="foldertreedialog">
+		<initialize>
+			dialog.set_title("select folder..");
+		</initialize>
+	</panel>
+
+</jsml>

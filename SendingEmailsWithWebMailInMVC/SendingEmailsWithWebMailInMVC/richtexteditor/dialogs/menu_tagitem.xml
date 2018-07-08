@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="menu_tagitem_highlight_menuitem" jsml-base="rtemenuitem">
+		<attach name="mousehover">
+			option.node.SetRuntimeAttribute("style","background-color:#3399CC;color:white;","tagmenuitem");
+		</attach>
+		<attach name="mouseleave">
+			option.node.SetRuntimeAttribute("style",null,"tagmenuitem");
+		</attach>
+		<attach name="disposing">
+			option.node.SetRuntimeAttribute("style",null,"tagmenuitem");
+		</attach>
+	</panel>
+
+	<panel jsml-base="menu_tagitem_highlight_menuitem" imagename="selectall" htmlcode="@SELECT">
+		<attach name="click">
+			<![CDATA[
+			editor.Focus();
+			if(option.node.IsControl())
+				editor.SelectControl(option.node);
+			else 
+				editor.SelectContent(option.node);
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuspliter" />
+
+	<panel jsml-base="menu_tagitem_highlight_menuitem" imagename="cut" htmlcode="@CUT">
+		<initialize>
+			if(!option.node.SupportPaste())self.set_visible(false);
+		</initialize>
+		<attach name="mousehover">self._ResetFCButton("cut",option.node);</attach>
+	</panel>
+
+	<panel jsml-base="menu_tagitem_highlight_menuitem" imagename="copy" htmlcode="@COPY">
+		<initialize>
+			if(!option.node.SupportPaste())self.set_visible(false);
+		</initialize>
+		<attach name="mousehover">self._ResetFCButton("copy",option.node);</attach>
+	</panel>
+
+	<panel jsml-base="menu_tagitem_highlight_menuitem" imagename="delete" htmlcode="@DELETE">
+		<initialize>
+			if(!option.node.SupportPaste())self.set_visible(false);
+		</initialize>
+		<attach name="click">
+			editor.RemoveNode(option.node,true);
+		</attach>
+	</panel>
+
+	<panel jsml-base="menu_tagitem_highlight_menuitem" imagename="removetag" htmlcode="@REMOVETAG">
+		<initialize>
+			if(!option.node.CanRemoveTag())self.set_visible(false);
+			if(option.node.IsControl())self.set_visible(false);
+		</initialize>
+		<attach name="click">
+			editor.RemoveNode(option.node,false);
+		</attach>
+	</panel>
+
+
+	<panel jsml-base="rtemenuspliter">
+		<initialize>
+			if(!option.node.SupportPaste())self.set_visible(false);
+		</initialize>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@IMAGEEDITOR" imagename="imageeditor">
+		<initialize>
+			<![CDATA[
+			var node=option.node;
+			if(!node||node.GetNameLower()!="img")self.set_visible(false);
+			self.set_disabled(true);
+			editor.FindStorage(["Gallery","Image"],node.GetAttribute("src"),function(storage,fileitem)
+			{
+				if(!storage)return;
+				self.imgnode=node;
+				self.storage=storage;
+				self.fileitem=fileitem;
+				self.set_disabled(false);
+			});
+			]]>
+		</initialize>
+		<attach name="click">
+			if(!self.storage)return;
+			editor.ShowImageEditor(self.imgnode,self.storage,self.fileitem);
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@INSERTIMAGEMAP" imagename="imagemap">
+		<initialize>
+			<![CDATA[
+			var node=option.node;
+			if(!node||node.GetNameLower()!="img")self.set_visible(false);
+			self.imgnode=node;
+			]]>
+		</initialize>
+		<attach name="click">
+			editor.ExecInsertImageMap(null,self.imgnode);
+		</attach>
+	</panel>
+
+	<panel jsml-base="rtemenuitem" htmlcode="@STYLES" imagename="properties">
+		<initialize>
+			<![CDATA[
+			var node=option.node;
+			self.set_arrow(true);
+			self.set_xmlfile("menu_styles.xml");
+			self._floatboxClass="floatmenu";
+			self.initoption=function(newoption)
+			{
+				newoption.node=node;
+				newoption.buttonClick=function()
+				{
+					self.invoke_event("click");
+				}
+			}
+			]]>
+		</initialize>
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node,{styletab:"text"})
+		</attach>
+	</panel>
+	<panel jsml-base="rtemenuitem" htmlcode="@PROPERTIES" imagename="properties">
+		<attach name="click">
+			editor.ShowPropertiesDialog(option.node);
+		</attach>
+	</panel>
+	
+	
+</jsml>

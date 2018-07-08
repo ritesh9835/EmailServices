@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="findandreplace_dialog" dock="fill" margin="0" padding="15" overflow="visible" back_color="#F9F9F9">
+
+		<panel dock="left"  overflow="visible">
+			<panel dock="top" margin="3,0,5,0">
+				<label dock="left" text="@FINDWHAT" vertical_align="middle" />
+				<textbox jsml-local="tbfind" dock="fill" width="150" border_color="#ABADB3">
+					<initialize>
+						self._input.style.textIndent="2px";
+					</initialize>
+					<attach name="enterkey">
+						instance.DoFind();
+					</attach>
+				</textbox>
+			</panel>
+			<panel dock="top" margin="3,0,5,0">
+				<label dock="left" text="@REPLACEWITH" vertical_align="middle" />
+				<textbox jsml-local="tbreplace" dock="fill" width="150" border_color="#ABADB3">
+					<initialize>
+						self._input.style.textIndent="2px";
+					</initialize>
+				</textbox>
+			</panel>
+			<panel dock="top" margin="5,0,0,80">
+				<checkbox jsml-local="cbcase" top="1" />
+				<label left="24" vertical_align="middle" text="@MATCHCASE" />
+			</panel>
+			<panel dock="top" margin="5,0,0,80">
+				<checkbox jsml-local="cbword" top="1" />
+				<label left="24" vertical_align="middle" text="@MATCHWORD" />
+			</panel>
+		</panel>
+		<panel dock="right" overflow="visible">
+			<panel overflow="visible">
+				<button dock="top" height="24" width="90" margin="3" text="@FIND">
+					<attach name="click">
+						instance.DoFind();
+					</attach>
+				</button>
+				<button dock="top" height="24" width="90" margin="3" text="@REPLACE">
+					<attach name="click">
+						instance.DoReplace();
+					</attach>
+				</button>
+				<button dock="top" height="24" width="90" margin="3" text="@REPLACEALL">
+					<attach name="click">
+						instance.DoReplaceAll();
+					</attach>
+				</button>
+				<button dock="top" height="24" width="90" margin="3" text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+		</panel>
+		<initialize>
+			<![CDATA[
+			self.setDelegateTimeout(function()
+			{
+				tbfind.focus();
+			},100);
+			]]>
+		</initialize>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<method name="GetSelectedText">
+			return jsml.html_decode(editor.GetRangePreviewHTML());
+		</method>
+		<initialize>
+			<![CDATA[
+			var seltext=self.GetSelectedText();
+			if(seltext)
+			{
+				tbfind.set_text(seltext);
+			}
+			]]>
+		</initialize>
+		<method name="DoFind">
+			<![CDATA[
+			var text=tbfind.get_text();
+			if(!text)
+				return false;
+			if(!self.FindNext())
+			{
+				alert(editor.GetLangText("msg_nofindmatch"));
+			}
+			editor.Focus();
+			]]>
+		</method>
+		<method name="FindNext" arguments="dontmovetostart">
+			<![CDATA[
+			var text=tbfind.get_text();
+			if(!text)
+				return false;
+			if(editor.GetSelectionType()=="Point"||editor.GetSelectionType()=="Range")
+			{
+				if(editor.FindNextText(text,cbcase.get_checked(),cbword.get_checked()))
+					return true;
+			}
+			if(dontmovetostart)
+				return false;
+			editor.MoveToDocumentBegin();
+			return editor.FindNextText(text,cbcase.get_checked(),cbword.get_checked());
+			]]>
+		</method>
+		<method name="DoReplace">
+			<![CDATA[
+			var text=tbfind.get_text();
+			if(!text)
+				return;
+			var txtreplace=tbreplace.get_text();
+			if(!txtreplace)
+				return;
+
+			var seltext=self.GetSelectedText();
+
+			if(!seltext||text.toLowerCase()!=seltext.toLowerCase())
+			{
+				if(!self.FindNext())
+				{
+					alert(editor.GetLangText("msg_nofindmatch"));
+				}
+				editor.Focus();
+				return;
+			}
+			
+			self.replacedcount=1+(self.replacedcount||0)
+			editor.InsertHTML(jsml.html_encode(txtreplace));
+			if(!self.FindNext())
+			{
+				alert(editor.GetLangText("msg_finishreplace"));
+			}
+			]]>
+		</method>
+		<method name="DoReplaceAll">
+			<![CDATA[
+			var text=tbfind.get_text();
+			if(!text)
+				return;
+			var txtreplace=tbreplace.get_text();
+			if(!txtreplace)
+				return;
+			
+			editor.MoveToDocumentBegin();
+			var count=0;
+			while(self.FindNext(true))
+			{
+				editor.InsertHTML(jsml.html_encode(txtreplace))
+				editor.RangeSyncToDom(true);
+				count++;
+			}
+			alert(editor.GetLangText("msg_replaceall",count));
+			editor.Focus();
+			]]>
+		</method>
+	</panel>
+
+	<panel jsml-base="findandreplace_dialog" />
+
+	<execute>
+		dialog.set_title(editor.GetLangText("FINDANDREPLACE"));
+	</execute>
+
+
+</jsml>

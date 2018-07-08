@@ -1,0 +1,114 @@
+﻿@model SendingEmailsWithWebMailInMVC.Models.User
+
+@{
+    ViewBag.Title = "Login";
+    Layout = "~/Views/Shared/_Login.cshtml";
+}
+
+@using (Html.BeginForm("Login", "Account", FormMethod.Post, new { role = "form", enctype = "multipart/form-data", @id = "LoginForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    ////////////////////////////////
+
+
+    <div class="container">
+        <div class="row text-center " style="padding-top:100px;">
+            <div class="col-md-12">
+              @*  <img src="~/Content/Dashboard/img/logo-invoice.png" /> *@
+                <h1> Christ Webmail </h1>
+            </div>
+        </div>
+        <div class="row ">
+
+            <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+
+                <div class="panel-body">
+                    <form role="form">
+                        <hr />
+                        <h5>Enter Details to Login</h5>
+                        <br />
+                       @* <div class="form-group input-group">
+                            <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                            <input type="text" class="form-control" placeholder="Your Username " />
+                        </div> *@
+
+                        <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-tag"></i></span>
+                                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @placeholder = "Email Address" } })
+                                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group input-group">
+                                <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @placeholder="Password" } })
+                                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                        </div>
+
+
+                        @*
+                        <div class="form-group input-group">
+                            <span class="input-group-addon"><i class="fa fa-lock"></i></span>
+                            <input type="password" class="form-control" placeholder="Your Password" />
+                        </div> *@
+
+                        <div class="form-group">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" /> Remember me
+                            </label>
+                            <span class="pull-right">
+                                <a href="@Url.Action("ForgotPassword", "Account", new { id = UrlParameter.Optional })">Forget password ? </a>
+                            </span>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <input type="submit" value="Login" class="btn btn-default" />
+                            </div>
+                        </div>
+                       @* <a href="index.html" class="btn btn-primary ">Login Now</a> *@
+                        <hr />
+                        Not register ? <a href="@Url.Action("SignUp", "Account", new { id = UrlParameter.Optional })">click here </a> or go to <a href="@Url.Action("Index", "Home", new { id = UrlParameter.Optional })">Home</a>
+                    </form>
+                </div>
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    ////////////////////////////////
+    @*
+
+    <div class="form-horizontal">
+        <h4>User</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Login" class="btn btn-default" />
+            </div>
+        </div>
+    </div> *@
+}

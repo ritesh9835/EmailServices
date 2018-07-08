@@ -1,0 +1,180 @@
+﻿.menuitem_checked
+{
+	background-color:#eeddcc;
+}
+
+
+
+
+
+
+
+
+
+/*phone*/
+.tbgroup_phone
+{
+    border-width:0px;
+    background:transparent;
+}
+.dropdown_phone_lightsilver,.tbcontrol_phone_lightsilver,.splitbtn_phone_lightsilver
+{
+   /*
+	border:1px solid #bbbbbb;
+	background-color:white;
+	background-image:url(../../styles/images/tbgroup_silver2007.png);
+	background-repeat:repeat-x;
+	border-radius:3px;
+	*/
+}
+.splittxt_phone_lightsilver
+{
+    border:1px solid #bbbbbb;
+	background-color:white;
+    border-radius:3px;
+}
+.splittxt_phone_lightsilver .splitbtnimage
+{
+    border-right:1px solid #bbbbbb;
+	background-image:url(../../styles/images/tbgroup_silver2007.png);
+	background-repeat:repeat-x;
+}
+.dropdown_phone_hovered
+{
+    background:White;
+}
+.tbcontrol_phone_hovered,.splitbtn_phone_hovered
+{
+}
+.tbcontrol_phone_clicked,.splitbtn_phone_clicked
+{
+}
+
+/*light silver*/
+.rteskin_lightsilver
+{
+	border-width:1px;
+	border-style:solid;
+	border-color:#d9d9d9;
+	background-color:#efefef;
+}
+.tbtoolbar_lightsilver{}
+.ribbon_lightsilver
+{
+	background-image:url(../../styles/images/rbribbon_lightsilver.png);
+	background-position:left bottom;
+	background-repeat:no-repeat;
+}
+.ribbon_lightsilver:first-child
+{
+	background-image:none;
+}
+.ribbon_lightsilver .ribbonlabel
+{
+	color:#666d7c;
+	background-color:transparent;
+	font-family:arial!important;
+	font-size:11px!important;
+}
+.tbgroup_lightsilverxx
+{
+	border-left:1px solid #bbbbbb;
+	background-repeat:repeat-x;
+}
+.dropdown_lightsilver
+{
+	border:1px solid #d3d5dc;
+	background-color:white;
+}
+.dropdown_lightsilver .dropdownsplit
+{
+	border-left-style:solid;
+	border-left-width:1px;
+}
+.slitbtn_lightsilver .splitbtnsplit
+{
+	border-left-style:solid;
+	border-left-width:1px;
+}
+.tbcontrol_lightsilver, .splitbtn_lightsilver
+{
+    border:1px solid transparent;
+}
+.splitbtn_lightsilver
+{
+    border:1px solid transparent;
+	background-color:transparent;
+}
+.rbimage_lightsilver{}
+.dropdown_lightsilver_hovered
+{
+	border-color:#ABC1DE;
+	background-color:white;
+}
+.dropdown_lightsilver_hovered .dropdownsplit
+{
+	border-color:#cccccc;
+	background-color:#eeeeee;
+}
+.splitbtn_lightsilver_hovered .splitbtnsplit
+{
+	border-color:#D6D9E2;
+}
+.tbcontrol_lightsilver_hovered,.splitbtn_lightsilver_hovered
+{
+    border-color:Gray;
+	background-color:transparent;
+	background-image:url(../../styles/images/tbcontrol_hovered.png);
+	background-repeat:repeat-x;
+}
+.rbimage_lightsilver_hovered
+{
+	background-image:url(../../styles/images/rbimage_hovered.png);
+}
+.dropdown_lightsilver_clicked
+{
+	border-color:#ABC1DE;
+	background-color:gold;
+}
+.dropdown_lightsilver_clicked .dropdownsplit
+{
+	border-color:#ABC1DE;
+}
+.tbcontrol_lightsilver_clicked,.splitbtn_lightsilver_clicked
+{
+    border-color:Gray;
+	background-color:transparent;
+	background-image:url(../../styles/images/tbcontrol_clicked.png);
+	background-repeat:repeat-x;
+}
+.rbimage_lightsilver_clicked
+{
+	background-image:url(../../styles/images/rbimage_clicked.png);
+}
+
+/*checked*/
+.tbcontrol_lightsilver_checked,.splitbtn_lightsilver_checked
+{
+    border-color:Gray;
+    border-width:1px;
+	background-color:transparent;
+	background-image:url(../../styles/images/tbcontrol_clicked.png);
+	background-repeat:repeat-x;
+}
+.tbcontrol_lightblue_checked,.splitbtn_lightblue_checked
+{
+    border-color:Gray;
+    border-width:1px;
+	background-color:transparent;
+	background-image:url(../../styles/images/tbcontrol_clicked.png);
+	background-repeat:repeat-x;
+}
+
+.tbcontrol_phone_lightsilver_checked,.splitbtn_phone_lightsilver_checked
+{
+	background:gold;
+}
+.splittxt_phone_lightsilver_checked .splitbtnimage
+{
+	background:gold;
+}

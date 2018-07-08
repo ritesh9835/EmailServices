@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="storagelistitem" jsml-base="panelbutton" dock="top" height="20" overflow="visible">
+		<image dock="left" width="20" src="{folder}images/closedfolder.gif" padding="3"/>
+		<image dock="right" src="{folder}images/arrow.gif" width="12" vertical_align="middle" />
+		<label dock="fill" jsml-local="label" vertical_align="middle" margin="0,3,0,3" cursor="pointer"/>
+		<method name="bind_storage">
+			self._storage=value;
+			label.set_text(value.Text||value.Name);
+		</method>
+		<attach name="click">
+			option.setstorage(self._storage);
+			dialog.close();
+		</attach>
+		<attach name="mousehover">
+			<![CDATA[
+			self._hovered=true;
+				
+			self.setDelegateTimeout(function()
+			{
+				if(!self._hovered||!self.get_visible())
+					return;
+				if(self.currentdialog&&self.currentdialog.get_visible())
+					return;
+				
+				var storage={ID:self._storage.ID,UrlPath:"/",Category:option.storage.Category};
+				var newoption={storage:storage,storages:option.storages,folder:"/",items:[]}
+				newoption.quickselect=function(res)
+				{
+					option.setstorage(self._storage,res);
+				}
+				newoption.control=self
+				newoption.floatMode="r-b";
+				newoption.buttonClick=function()
+				{
+					option.setstorage(self._storage);
+				}
+				newoption.loadDelay=500;
+				self.currentdialog=editor.ShowXmlFloatBox(editor.BuildDialogUrl("foldertree.xml"),newoption);
+			},555);
+			]]>
+		</attach>
+		<attach name="mouseleave">
+			self._hovered=false;
+		</attach>
+	</panel>
+	<panel jsml-class="storagelistdialog" dock="fill" back_color="white"  overflow="visible" padding="6">
+		<panel jsml-local="itemspanel" dock="fill" overflow="visible">
+		</panel>
+		<initialize>
+			<![CDATA[
+			for(var i=0;i<option.storages.length;i++)
+			{
+				var s=option.storages[i];
+				var item=jsml.class_create_instance("storagelistitem");
+				item.bind_storage(s);
+				itemspanel.append_child(item);
+			}
+			]]>
+		</initialize>
+	</panel>
+
+	<panel jsml-base="storagelistdialog">
+		<initialize>
+			dialog.set_title("select storage..");
+		</initialize>
+	</panel>
+
+</jsml>

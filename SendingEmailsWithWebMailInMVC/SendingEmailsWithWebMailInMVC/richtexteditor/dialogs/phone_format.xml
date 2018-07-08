@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phoneformatdialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel jsml-local="subbuttonpanel" dock="top" overflow="visible">
+			<panel jsml-base="phone_{skin}_{color}" command="Bold" text="@BOLD" imagename="m_bold" />
+			<panel jsml-base="phone_{skin}_{color}" command="Italic" text="@ITALIC"  imagename="m_italic"/>
+			<panel jsml-base="phone_{skin}_{color}" command="Underline" text="@UNDERLINE" imagename="m_under" />
+			<panel jsml-base="phone_{skin}_{color}" command="Linethrough" text="@LINETHROUGH" imagename="m_strike" />
+			<panel jsml-base="phone_{skin}_{color}" command="Overline" text="@OVERLINE" imagename="m_overline" />
+
+			<panel jsml-base="phone_{skin}_{color}" command="Superscript" text="@SUPERSCRIPT" imagename="m_superscript" />
+			<panel jsml-base="phone_{skin}_{color}" command="Subscript" text="@SUBSCRIPT" imagename="m_subscript" />
+			<panel jsml-base="phone_{skin}_{color}" command="Ucase" text="@UPPERCASE" imagename="m_ucase" />
+			<panel jsml-base="phone_{skin}_{color}" command="Lcase" text="@LOWERCASE" imagename="m_lcase" />
+
+
+			<panel jsml-base="phone_{skin}_{color}" command="ForeColor" text="@TEXTCOLOR" imagename="m_forecolor">
+				<attach name="click">
+					<![CDATA[
+						//var editor = self.find_editor();
+						var cmd = "ForeColor";
+						var option = { command: cmd, preview: true }
+						option.setcolor = this.delegate(function (val) {
+							editor.ExecCommand(cmd, val);
+						});
+						editor.ExecShowXmlDialog(self.get_element(), "colorpicker.xml", option);
+						dialog.close();
+						]]>
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" command="BackColor" text="@BACKCOLOR" imagename="m_backcolor">
+				<attach name="click">
+					<![CDATA[
+						//var editor = self.find_editor();
+						var cmd = "BackColor";
+						var option = { command: cmd, preview: true }
+						option.setcolor = this.delegate(function (val) {
+							editor.ExecCommand(cmd, val);
+						});
+						editor.ExecShowXmlDialog(self.get_element(), "colorpicker.xml", option);
+						dialog.close();
+						]]>
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" command="RemoveFormat" text="@REMOVEFORMAT" imagename="m_unformat" />
+
+			<panel jsml-base="phone_{skin}_{color}" command="ShowXmlDialog" arguments="setfontname.xml" text="@FontName" imagename="m_font"/>
+			<panel jsml-base="phone_{skin}_{color}" command="ShowXmlDialog" arguments="setfontsize.xml" text="@FontSize" imagename="m_fontsize"/>
+
+		</panel>
+	</panel>
+
+	<panel jsml-base="phoneformatdialog">
+	</panel>
+
+</jsml>

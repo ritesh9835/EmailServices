@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<htmlcontrol jsml-class="setstylesdialogitem" dock="top" overflow="visible" font_size="11px" vertical_align="middle" margin="2" padding="2,2,2,4" border_width="1" border_color="transparent" cursor="pointer" unselectable="true">
+		<initialize>
+			self._estyle.fontFamily='arial';
+		</initialize>
+		<attach name="mousehover" arguments="je,e">
+			self.set_border_color('#DCAC6C');
+			self.set_back_color('#FFF5D4');
+			self.set_text_color('blue');
+		</attach>
+		<attach name="mouseleave">
+			self.set_border_color('white');
+			self.set_back_color('');
+			self.set_text_color('');
+		</attach>
+		<attach name="click">
+			editor.FormatApplyData(self._painterdata);
+			dialog.close();
+		</attach>
+	</htmlcontrol>
+
+	<panel jsml-class="setstyles_dialog" dock="fill" width="240" overflow="visible">
+
+		<panel jsml-local="mainpanel" dock="fill" overflow="scroll" max_height="360">
+
+			<panel dock="fill" overflow="visible" padding="8">
+				<panel dock="top" overflow="visible" jsml-local="panelstatic">
+				</panel>
+				<panel jsml-base="rtemenuspliter" overflow_y="visible" margin="3" />
+				<panel dock="top" overflow="visible">
+					<label dock="left" vertical_align="middle" horizontal_align="left" padding="0,0,0,3" text="@RECENTSTYLE|:" width="120" />
+					<image jsml-base="imagebutton" left="180"  width="20" height="20" tooltip="@quickstyle" src="{folder}images/icon_add.png" padding="1,-1,-1,1">
+						<attach name="click">
+							editor.ExecCommand("formatpainterfetch");
+							instance._reloadtab=true;
+							instance.loadstyles("history",panelhistory);
+						</attach>
+					</image>
+				</panel>
+				<panel dock="top" overflow="visible" jsml-local="panelhistory">
+				</panel>
+			</panel>
+
+		</panel>
+
+		<initialize>
+			<![CDATA[
+			
+			self.stylearray=[];
+			self.readmap={};
+			var totallen=0;
+			
+			jsml.suppend_layout();
+			
+			self.loadstyles("static",panelstatic);
+			totallen+=self.stylearray.length;
+			self.loadstyles("history",panelhistory);
+			totallen+=self.stylearray.length;
+			
+			var height=120+28*Math.ceil(totallen/1);
+			if(height<200)height=200;
+			if(height>366)height=366;
+			mainpanel.set_height(height);
+			jsml.resume_layout();
+			]]>
+		</initialize>
+
+		<method name="loadstyles" arguments="styletab,itemspanel">
+			<![CDATA[
+			
+			var reload=self._reloadtab;
+			self._reloadtab=null;
+			
+			editor.SetLocalData("Styles","ActiveTab",styletab)
+			
+			itemspanel.dispose_children();
+			self.stylearray=self.readmap[styletab];
+			if(reload||!self.stylearray)
+			{
+				self.stylearray=[];
+				switch(styletab)
+				{
+					case "static":
+						self.loadstylefromstaticfile();
+						self.loadstylefromcontentcss();
+						break;
+					case "document":
+						self.loadstylefromdocument();
+						break;
+					case "history":
+						self.loadstylefromhistory();
+						//if(self.stylearray.length<=20)
+						//	self.loadstylefromstaticfile();
+						//if(self.stylearray.length<=20)
+						//	self.loadstylefromcontentcss();
+						if(self.stylearray.length>12)
+							self.stylearray.length=12;
+						break;
+				}
+				self.readmap[styletab]=self.stylearray;
+			}
+			
+			self.appendstyles(itemspanel);
+
+			]]>
+		</method>
+
+		<method name="loadstylefromstaticfile">
+			<![CDATA[
+			var arr=[editor._config.folder+"config/staticstyles.xml?"+editor._config._urlsuffix];
+			arr=arr.concat(editor._config.stylexmlurlarray||[]);
+			for(var i=0;i<arr.length;i++)
+			{
+				var xh=jsml.xmlhttp();
+				xh.open("GET",arr[i],false);
+				xh.send("");
+				var xd=xh.responseXML;
+				xh=null;//RELEASE_XMLHTTP_FOR_BROWSER_BUG
+				if(!xd)continue;
+				var cns=xd.documentElement.childNodes;
+				for(var ci=0;ci<cns.length;ci++)
+				{
+					var node=cns.item(ci);
+					if(node.nodeName!="style")continue;
+					var data={};
+					var attrs=node.attributes;
+					for(var ai=0;ai<attrs.length;ai++)
+					{
+						var attr=attrs.item(ai);
+						data[attr.nodeName]=attr.nodeValue;
+					}
+					self.stylearray.push(data);
+				}
+			}
+			]]>
+		</method>
+
+		<method name="loadstylefromcontentcss">
+			<![CDATA[
+			if(!editor._config.autoparseclasses)
+				return;
+
+			var contentcss=editor._config.contentcss;
+			if(!contentcss&&!editor._config.contentcsstext)
+				return;
+			var disableclasslist=editor._config.disableclasslist;
+			var disableclassmap;
+			if(disableclasslist)
+			{
+				disableclassmap={}
+				disableclasslist=disableclasslist.toLowerCase().split(',');
+				for(var i=0;i<disableclasslist.length;i++)
+				{
+					disableclassmap[disableclasslist[i]]=true;
+				}
+			}
+
+			contentcss=contentcss?contentcss.split(','):[];
+			for(var i=0;i<contentcss.length;i++)
+			{
+				if(!contentcss[i])
+					continue;
+				contentcss[i]=editor.MakeAbsoluteUrl(contentcss[i])
+			}
+			
+			function ParseCssText(text)
+			{
+				if(!text)return "";
+				var sb=[];
+				var pairs=text.split(';');
+				for(var pi=0;pi<pairs.length;pi++)
+				{
+					var pair=pairs[pi].split(':');
+					if(pair.length!=2)
+						continue;
+					var n=pair[0].replace(/(^\s+|\s+$)/g,"").toLowerCase();
+					switch(n)
+					{
+						case "vertical-align":
+						case "font-weight":
+						case "font-style":
+						case "text-decoration":
+						case "color":
+						case "background-color":
+						case "font-size":
+						case "font-family":
+							sb.push(n+":"+pair[1]);
+							break;
+					}
+				}
+				return sb.join(";");
+			}
+			function ParseStyleSheet(ss)
+			{
+				var rs=ss.rules||ss.cssRules;
+				for(var ri=0;ri<rs.length;ri++)
+				{
+					var r=rs.item(ri);
+						
+					if(r.selectorText==null) 
+					{
+						if(r.cssRules)
+							ParseStyleSheet(r);
+						return;
+					}
+					var rts=r.selectorText.split(',');
+					var cst=null;
+					for(var rti=0;rti<rts.length;rti++)
+					{
+						var rt = rts[rti].replace(/(^\s+|\s+$)/g,"").split('.');
+						if(rt.length<2)
+							continue;
+						if(rt[0]!=""&&rt[0].toLowerCase()!="span")
+							continue;
+						rt[1] = rt[rt.length-1];
+						if(!rt[1].match(/^[a-z0-9]+$/i))
+							continue;
+						if(disableclassmap&&disableclassmap[rt[1]])
+							continue;
+						if(cst==null)
+							cst=ParseCssText(r.style.cssText);
+						if(!cst)
+							break;
+						self.stylearray.push({cssclass:rt[1],stylevalue:cst});
+					}
+				}
+			}
+			
+			var sss=editor.GetWindow().document.styleSheets;
+			for(var ssi=0;ssi<sss.length;ssi++)
+			{
+				var ss=sss.item(ssi);
+				var url=ss.href;
+				if(!url)
+				{
+					var ownerNode = ss.ownerNode || ss.owningElement;
+					if(!ownerNode)
+						continue;
+
+					if(ownerNode.getAttribute("_from")=="contentcsstext")
+					{
+						ParseStyleSheet(ss);
+						continue;
+					}
+					url=ownerNode.getAttribute("originalurl");
+					if(!url)
+						continue;
+				}
+				for(var i=0;i<contentcss.length;i++)
+				{
+					if(!contentcss[i])
+						continue;
+					if(url.indexOf(contentcss[i])==-1)
+						continue;
+					ParseStyleSheet(ss);
+					break;
+				}
+			}
+
+			]]>
+		</method>
+
+		<method name="loadstylefromhistory">
+			self.stylearray=self.stylearray.concat(editor.LoadHistoryStyles());
+		</method>
+
+		<method name="loadstylefromdocument">
+			<![CDATA[
+
+			function ScanNode(node)
+			{
+				var c=0;
+				if(node.GetChildCount)
+					c=node.GetChildCount();
+				if(c==0)
+				{
+					var d=editor.FormatFindData(node,self.stylearray);
+					if(d)
+					{
+						self.stylearray.push(d);
+					}
+					return;
+				}
+				for(var i=0;i<c;i++)
+				{
+					var subnode=node.GetChildAt(i);
+					ScanNode(subnode);
+				}
+			}
+			var sel=editor.SaveBookmark();
+			ScanNode(editor.GetBodyNode());
+			editor.RestoreBookmark(sel);
+		
+			]]>
+		</method>
+
+		<method name="appendstyles" arguments="itemspanel">
+			<![CDATA[
+
+			for(var i=0;i<self.stylearray.length;i++)
+			{
+				var data=self.stylearray[i];
+				
+				var item=jsml.class_create_instance("setstylesdialogitem");
+				var div=document.createElement("DIV");
+				div.innerHTML="AaBbCc";
+				
+				for(var n in data)
+				{
+					var v=data[n];
+					if(!v)continue;
+					
+					switch(n)
+					{
+						case "name":
+						case "value":
+							break;
+						default:
+							item.set_tooltip( (item.get_tooltip()||"") +" "+n+"="+v);
+							break;
+					}
+
+					switch(n)
+					{
+						case "subscript":
+							if(!data.name)div.innerHTML="AaB<sub>bCc</sub>";
+							break;
+						case "superscript":
+							if(!data.name)div.innerHTML="AaB<sup>bCc</sup>";
+							break;
+						case "name":
+							if(v.charAt(0)=='@')
+								v=editor.GetLangText(v.substring(1));
+							div.innerHTML="<table style='width:192px'><tr><td>'"+v+"'</td><td style='text-align:right;font-size:10px;font-weight:normal;font-style:normal;color:#999999'>style</td></tr></table>";
+							break;
+						case "bold":
+							div.style.fontWeight="bold";
+							break;
+						case "italic":
+							div.style.fontStyle="italic";
+							break;
+						case "underline":
+							div.style.textDecoration=(div.style.textDecoration||"")+" underline";
+							break;
+						case "linethrough":
+							div.style.textDecoration=(div.style.textDecoration||"")+" line-through";
+							break;
+						case "overline":
+							div.style.textDecoration=(div.style.textDecoration||"")+" overline";
+							break;
+						case "mark":
+							div.style.backgroundColor='yellow';
+							break;
+						case "forecolor":
+							div.style.color=v;
+							break;
+						case "backcolor":
+							div.style.backgroundColor=v;
+							break;
+						case "fontsize":
+							div.style.fontSize=v;
+							break;
+						case "fontname":
+							div.style.fontFamily=v;
+							break;
+						case "cssclass":
+							div.className=v;
+							div.innerHTML="<table style='width:192px'><tr><td>'"+v+"'</td><td style='text-align:right;font-size:10px;font-weight:normal;font-style:normal;color:#999999'>class</td></tr></table>";
+							break;
+						case "cssstyle":
+						case "stylevalue":
+							div.style.cssText+=";"+v;
+							break;
+					}
+				}
+				
+				div.style.textAlign="left";
+				div.style.width="190px";
+				
+				item._painterdata=data;
+				item._content.appendChild(div);
+				itemspanel.append_child(item);
+			}
+			
+			]]>
+		</method>
+
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+	<panel jsml-base="setstyles_dialog"/>
+
+
+</jsml>

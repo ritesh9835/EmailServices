@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagtable" dock="fill">
+
+		<groupbox text="@LAYOUT" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="90" text="@ROWS|:" vertical_align="middle" text_align="right" />
+				<panel dock="left" width="4" />
+				<panel dock="left" width="70" jsml-base="rtepropnumupdown" propname="rows" min_value="1">
+					<method name="get_node_value">
+						var node=self.find_node();
+						return editor.ExecTableLogic(node,"getrowcount");
+					</method>
+					<method name="set_node_value">
+						var node=self.find_node();
+						editor.ExecTableLogic(node,"setrowcount",parseInt(value));
+					</method>
+				</panel>
+				<panel dock="left" width="30" />
+				<label dock="left" width="70" text="@COLS|:" vertical_align="middle"/>
+				<panel dock="left" width="70" jsml-base="rtepropnumupdown" propname="cols" min_value="1">
+					<method name="get_node_value">
+						var node=self.find_node();
+						return editor.ExecTableLogic(node,"getcolcount");
+					</method>
+					<method name="set_node_value">
+						var node=self.find_node();
+						editor.ExecTableLogic(node,"setcolcount",parseInt(value));
+					</method>
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="90" text="@CELLSPACING|:" vertical_align="middle" text_align="right" />
+				<panel dock="left" width="4" />
+				<panel dock="left" width="70" jsml-base="rtepropnumupdown" propname="cellspacing" min_value="0" />
+				<panel dock="left" width="25" />
+				<checkbox dock="left" jsml-local="cbusewidth" checked="1">
+					<attach name="change">
+						<![CDATA[
+						tbwidth.set_node_value(self.get_checked()?tbwidth.get_text():"");
+						tbwidth.set_disabled(!self.get_checked());
+						]]>
+					</attach>
+				</checkbox>
+				<label dock="left" vertical_align="middle" width="55" text="@WIDTH|:" unselectable="true">
+					<attach name="click,dblclick">
+						cbusewidth.set_checked(!cbusewidth.get_checked());
+					</attach>
+				</label>
+				<panel jsml-base="rtepropunitbox" jsml-local="tbwidth" width="65" dock="left" propname="style:width" />
+				<initialize>
+					if(option.targetnode.GetStyle("width"))return;
+					cbusewidth.set_checked(false);
+					tbwidth.set_disabled(true);
+				</initialize>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" width="90" text="@CELLPADDING|:" vertical_align="middle" text_align="right" />
+				<panel dock="left" width="4" />
+				<panel dock="left" width="70" jsml-base="rtepropnumupdown" propname="cellpadding" min_value="0" />
+				<panel dock="left" width="25" />
+				<checkbox dock="left" jsml-local="cbuseheight" checked="1">
+					<attach name="change">
+						<![CDATA[
+						tbheight.set_node_value(self.get_checked()?tbheight.get_text():"");
+						tbheight.set_disabled(!self.get_checked());
+						]]>
+					</attach>
+				</checkbox>
+				<label dock="left" vertical_align="middle" width="55" text="@HEIGHT|:" unselectable="true">
+					<attach name="click,dblclick">
+						cbuseheight.set_checked(!cbuseheight.get_checked());
+					</attach>
+				</label>
+				<panel jsml-base="rtepropunitbox" width="65" jsml-local="tbheight" dock="left" propname="style:height" />
+				<initialize>
+					if(option.targetnode.GetStyle("height"))return;
+					cbuseheight.set_checked(false);
+					tbheight.set_disabled(true);
+				</initialize>
+			</panel>
+			<panel margin="7,3,8,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@FLOAT|:"  width="90" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="70" propname="style:float">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="right" text="@RIGHT" />
+					<listitem value="right" text="@NONE" />
+				</panel>
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="@ALIGN|:" width="70"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="align" width="67">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+				</panel>
+				<panel dock="left" width="25" />
+				<label dock="left" vertical_align="middle" text="@RULES|:" width="55"/>
+				<panel dock="left" jsml-base="rtepropdropdown" propname="rules">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="all" text="all" />
+					<listitem value="rows" text="rows" />
+					<listitem value="cols" text="cols" />
+					<listitem value="none" text="none" />
+				</panel>
+			</panel>
+		</groupbox>
+		<groupbox text="@BORDER" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,8,3" height="18" dock="top">
+				<label dock="left" width="70" text="@SIZE|:" vertical_align="middle"  text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" width="65" jsml-base="rtepropnumupdown" propname="border" min_value="0" />
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="@COLOR|:" width="45"/>
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="bordercolor" width="75" />
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="style:border-collapse" truestring="collapse" falsestring="" jsml-local="cbcollapse" />
+				<label dock="left" vertical_align="middle" width="32" text="@BORDERCOLLAPSE" unselectable="true">
+					<attach name="click,dblclick">
+						cbcollapse.toggle_checked();
+					</attach>
+				</label>
+			</panel>
+		</groupbox>
+		<groupbox text="@ATTRIBUTES" dock="top" overflow="visible" margin="3">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@CSSCLASS|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="class"  width="65" />
+				<panel dock="left" width="30" />
+				<label dock="left" vertical_align="middle" text="ID:" width="45"/>
+				<panel jsml-base="rteproptextbox" dock="left" propname="id" width="75" />
+				<panel dock="left" width="15" />
+				<label dock="left" vertical_align="middle" text="@BACKGROUNDCOLOR|:" width="85"/>
+				<panel dock="left" jsml-base="rtepropcolorbox" width="75" propname="style:background-color" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@CAPTION|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="title" width="340">
+					<method name="get_node_value">
+						<![CDATA[
+						var node=self.find_node();
+						for(var index=0;true;index++)
+						{
+							var child=node.GetChildAt(index);
+							if(!child)
+								break;
+							if(child.GetNameLower()!="caption")
+								continue;
+							return child.GetInnerText();
+						}
+						return "";
+						]]>
+					</method>
+					<method name="set_node_value">
+						<![CDATA[
+						var node=self.find_node();
+						for(var index=0;true;index++)
+						{
+							var child=node.GetChildAt(index);
+							if(!child)
+								break;
+							if(child.GetNameLower()!="caption")
+								continue;
+							if(value)
+								child.SetInnerText(value);
+							else
+								child.RemoveNode(true);
+							return;
+						}
+						var child=new $rte.ContainerElement("caption");
+						node.AppendChild(child);
+						child.SetInnerText(value);
+						]]>
+					</method>
+				</panel>
+				<image dock="left" src="{folder}images/accessibility.gif" vertical_align="middle" margin="1,1,1,5" />
+			</panel>
+			<panel margin="7,3,10,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@SUMMARY|:" width="70" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel jsml-base="rteproptextbox" dock="left" propname="summary" width="340" />
+				<image dock="left" src="{folder}images/accessibility.gif" vertical_align="middle" margin="1,1,1,5" />
+			</panel>
+		</groupbox>
+
+	</panel>
+
+	<panel jsml-base="properties_tagtable" />
+
+
+</jsml>

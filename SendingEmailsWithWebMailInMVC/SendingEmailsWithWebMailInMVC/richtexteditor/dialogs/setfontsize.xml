@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<htmlcontrol jsml-class="setfontsizedialogitem" dock="top" overflow="visible" vertical_align="middle" margin="0" padding="0" border_width="1" border_color="transparent" cursor="pointer" unselectable="true">
+		<initialize>
+			self._estyle.fontFamily='arial';
+
+			<![CDATA[
+			if(!editor._config.preview_disabletooltip&&!editor._config.preview_disablefontsize)
+			{
+				self._previewhtml=editor.GetRangePreviewHTML("fontsize");
+			}
+			]]>
+		</initialize>
+
+		<attach name="mousehover" arguments="je,e">
+			self.set_border_color('#DCAC6C');
+			self.set_back_color('#FFF5D4');
+			self.set_text_color('blue');
+		</attach>
+		<attach name="mouseleave">
+			self.set_border_color('white');
+			self.set_back_color('');
+			self.set_text_color('');
+		</attach>
+		<attach name="click">
+			editor.ExecCommand("fontsize",self.get_text());
+			dialog.close();
+		</attach>
+		<method name="set_html" arguments="value" overrideas="basesethtml">
+			value=value.replace('(Default)',editor.GetLangText("default"))
+			self.basesethtml(value);
+		</method>
+	</htmlcontrol>
+
+	<panel dock="fill" margin="0" padding="0" overflow="visible" width="50">
+		<panel dock="fill" overflow="visible" padding="3">
+			<htmlcontrol jsml-base="setfontsizedialogitem" text="!">
+				<xmldata>
+					<div style="padding:0 10px;font-size:13px;">(Default)</div>
+				</xmldata>
+			</htmlcontrol>
+			
+			<initialize>
+				<![CDATA[
+				var sizelist=editor._config.fontsizelist||'8px,9px,10px,11px,12px,13px,14px,16px,18px,20px,24px,36px';
+				sizelist=sizelist.split(',');
+				for(var i=0;i<sizelist.length;i++)
+				{
+					var item=jsml.class_create_instance("setfontsizedialogitem");
+					item.set_text(sizelist[i]);
+					item.set_html('<div style="margin:0 10px;line-height:'+sizelist[i]+'!important;font-size:'+sizelist[i]+';">'+sizelist[i]+'</div>');
+					self.append_child(item);
+				}
+				]]>
+			</initialize>
+			
+		</panel>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+	</panel>
+
+
+</jsml>

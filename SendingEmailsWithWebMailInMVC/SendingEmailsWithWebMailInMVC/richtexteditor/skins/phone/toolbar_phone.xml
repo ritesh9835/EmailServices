@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../../core/jsml.xsd">
+
+	<jsml-def name="toolbar_{toolbar}_{skin}_{color}">
+
+		<panel jsml-base="tbgroup_{skin}_{color}">
+			<attach name="editor_ready" arguments="je,editor">
+				<![CDATA[
+				self._editor=editor;
+				editor.AttachEvent("FullScreenChanged",function()
+				{
+					self.set_visible(editor.IsCommandActive("FullScreen"));
+				});
+				]]>
+			</attach>
+			<panel width="56" dock="left" cursor="pointer" padding="0" margin="0,5,0,5">
+				<image jsml-local="backbutton" jsml-base="image_{skin}_{color}" background="url()" border_width="0" width="56" height="32" padding="0" margin="0" dock="left" tooltip="@Back" imagename="m_back" />
+				<label dock="over" text_align="right" cursor="pointer" vertical_align="middle" padding="0,4,0,0" text="Back" font_size="13px" css_text="font-weight:bold;color:#666666" />
+				<attach name="click">
+					backbutton.find_editor().ExecUICommand(null,"FullScreen");
+				</attach>
+			</panel>
+
+			<!--
+			  <image jsml-base="image_{skin}_{color}" imagename="m_back" zoom="both">
+				<attach name="click">
+				  self.find_editor().ExecUICommand(null,"FullScreen");
+				</attach>
+			  </image>
+			  -->
+			<image jsml-base="image_{skin}_{color}" command="ExecPlugin" arguments="spellcheck" imagename="m_spell" zoom="both" />
+			<image jsml-base="image_{skin}_{color}" command="Find" imagename="m_find" zoom="both" />
+			<image jsml-base="image_{skin}_{color}" command="New" imagename="m_new"  zoom="both" />
+			<image jsml-base="image_{skin}_{color}" command="Undo" imagename="m_undo"/>
+			<image jsml-base="image_{skin}_{color}" command="Redo" imagename="m_redo"/>
+			<image jsml-base="image_{skin}_{color}" command="InvokeEvent" arguments="UICommand,UploadImage" imagename="m_upload" zoom="both" />
+		</panel>
+
+	</jsml-def>
+
+
+</jsml>
+

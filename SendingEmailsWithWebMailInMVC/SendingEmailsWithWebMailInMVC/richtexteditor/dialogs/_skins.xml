@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="frameskin_base">
+
+	</panel>
+	<panel jsml-class="frameskin_resizepanel">
+		<method name="get_sizetarget">
+			<![CDATA[
+			for(var p=self;p;p=p.get_jsml_parent())
+			{
+				if(p.instance_of("frameskin_base"))
+					return p._skinsizetarget;
+			}
+			]]>
+		</method>
+		<property name="resize_cursor">
+			<get>
+				return this._resize_cursor||"";
+			</get>
+			<set>
+				this._resize_cursor=value;
+			</set>
+		</property>
+		<property name="resize_edge">
+			<get>
+				return this._resize_edge||[0,0,0,0];
+			</get>
+			<set>
+				var arr=value.split(',');
+				this._resize_edge=arr;
+				self._stt=parseInt(arr[0]);
+				self._str=parseInt(arr[1]);
+				self._stb=parseInt(arr[2]);
+				self._stl=parseInt(arr[3]);
+			</set>
+		</property>
+		<attach name="mousehover">
+			this.set_unselectable(true);
+			var target=self.get_sizetarget();
+			if(target)self.set_cursor(self.get_resize_cursor());
+		</attach>
+		<attach name="mousedown" arguments="jevent,devent">
+			var target=self.get_sizetarget();
+			if(target)target.start_resize(devent,self._stt,self._str,self._stb,self._stl);
+		</attach>
+	</panel>
+
+	<panel jsml-class="frameskin_default" jsml-base="frameskin_base">
+		<panel dock="top" height="28" border_color="#D1D9DB" border_style="solid" border_width="0,1,0,1">
+			<panel dock="fill" padding="3,0,0,12" background="transparent url({folder}dialogs/skins/Default/top_middle.png)">
+				<label jsml-local="lbt" vertical_align="middle" dock="fill" cursor="move">
+					<initialize>
+						self._estyle.fontWeight="bold";
+					</initialize>
+					<attach name="mousedown,touchstart" arguments="jevent,devent">
+						if(instance._skinmovetarget)instance._skinmovetarget.start_move_offset(devent);
+					</attach>
+				</label>
+			</panel>
+		</panel>
+		<panel dock="fill" border_color="#D1D9DB" border_style="solid" border_width="1"></panel>
+		<method name="get_framepadding">
+			return [29,1,1,1];
+		</method>
+		<property name="text">
+			<get>
+				return lbt.get_text();
+			</get>
+			<set arguments="value">
+				lbt.set_text(value);
+			</set>
+		</property>
+	</panel>
+
+	<panel jsml-class="frameskin_blue" jsml-base="frameskin_base" border_width="1" border_color="#788EC0">
+		<panel dock="top" height="30" background="transparent url({folder}dialogs/skins/Blue/blue-bg.png) repeat-x">
+			<panel dock="top" height="4">
+				<panel dock="left" width="4" jsml-base="frameskin_resizepanel" resize_cursor="nw-resize" resize_edge="1,0,0,1"/>
+				<panel dock="right" width="4" jsml-base="frameskin_resizepanel" resize_cursor="ne-resize" resize_edge="1,1,0,0"/>
+				<panel dock="fill" width="4" jsml-base="frameskin_resizepanel" resize_cursor="n-resize" resize_edge="1,0,0,0"/>
+			</panel>
+			<label jsml-local="lbt" vertical_align="middle" dock="fill" margin="0,0,0,20" cursor="move">
+				<initialize>
+					self._estyle.fontWeight="bold";
+				</initialize>
+				<attach name="mousedown,touchstart" arguments="jevent,devent">
+					if(instance._skinmovetarget)instance._skinmovetarget.start_move_offset(devent);
+				</attach>
+			</label>
+			<panel top="9" right="9" width="16" height="16" cursor="pointer" tooltip="@CLOSE" background="transparent url({folder}dialogs/skins/Blue/blue-close.gif) no-repeat">
+				<attach name="click">
+					frameskin_blue.invoke_event("clickclose");
+				</attach>
+			</panel>
+		</panel>
+		<panel dock="fill" >
+			<panel dock="bottom" height="4" back_color="#C1D1F9">
+				<panel dock="left" width="4" jsml-base="frameskin_resizepanel" resize_cursor="sw-resize" resize_edge="0,0,1,1"/>
+				<panel dock="right" width="4" jsml-base="frameskin_resizepanel" resize_cursor="se-resize" resize_edge="0,1,1,0"/>
+				<panel dock="fill" width="4" jsml-base="frameskin_resizepanel" resize_cursor="s-resize" resize_edge="0,0,1,0"/>
+			</panel>
+			<panel dock="left" back_color="#C1D1F9" width="4" jsml-base="frameskin_resizepanel" resize_cursor="w-resize" resize_edge="0,0,0,1"/>
+			<panel dock="right" back_color="#C1D1F9" width="4" jsml-base="frameskin_resizepanel" resize_cursor="e-resize" resize_edge="0,1,0,0"/>
+			<panel dock="fill" border_color="#9CACD0" border_width="1" back_color="white">
+			</panel>
+		</panel>
+		<property name="text">
+			<get>
+				return lbt.get_text();
+			</get>
+			<set arguments="value">
+				lbt.set_text(value);
+			</set>
+		</property>
+		<method name="get_framepadding">
+			return [32,4,4,4];
+		</method>
+	</panel>
+
+	<panel jsml-class="frameskin_template" jsml-base="frameskin_base">
+		<panel jsml-member="tt" dock="top">
+			<panel jsml-member="tl" dock="left" jsml-base="frameskin_resizepanel" resize_cursor="nw-resize" resize_edge="1,0,0,1"/>
+			<panel jsml-member="tr" dock="right" jsml-base="frameskin_resizepanel" resize_cursor="ne-resize" resize_edge="1,1,0,0" />
+			<panel jsml-member="tc" dock="fill">
+				<panel dock="top" height="5" jsml-base="frameskin_resizepanel" resize_cursor="n-resize" resize_edge="1,0,0,0"/>
+				<label jsml-member="lt" dock="fill" vertical_align="middle" text="" cursor="move">
+					<attach name="mousedown,touchstart" arguments="jevent,devent">
+						if(instance._skinmovetarget)instance._skinmovetarget.start_move_offset(devent);
+					</attach>
+				</label>
+			</panel>
+		</panel>
+		<panel jsml-member="bb"  dock="bottom">
+			<panel jsml-member="bl" dock="left" jsml-base="frameskin_resizepanel" resize_cursor="sw-resize" resize_edge="0,0,1,1"/>
+			<panel jsml-member="br" dock="right" jsml-base="frameskin_resizepanel" resize_cursor="se-resize" resize_edge="0,1,1,0"/>
+			<panel jsml-member="bc" dock="fill" jsml-base="frameskin_resizepanel" resize_cursor="s-resize" resize_edge="0,0,1,0" />
+		</panel>
+		<panel jsml-member="ml" dock="left" width="15" jsml-base="frameskin_resizepanel" resize_cursor="w-resize" resize_edge="0,0,0,1"/>
+		<panel jsml-member="mr" dock="right" width="15" jsml-base="frameskin_resizepanel" resize_cursor="e-resize" resize_edge="0,1,0,0"/>
+		<method name="get_framepadding">
+			return [this.tth||0,this.mrw||0,this.bbh||0,this.mlw||0];
+		</method>
+		<method name="init_skinname" arguments="skinname,tth,tlw,trw,bbh,blw,brw,mlw,mrw">
+			<![CDATA[
+			var imgext="gif";
+			if(skinname=="seven")
+			{
+				var ua=navigator.userAgent;
+				if( ua.indexOf("MSIE 6.")==-1 && ua.indexOf("MSIE 5.")==-1 )
+					imgext="png";
+			}
+			this.tth=tth;
+			this.bbh=bbh;
+			this.mlw=mlw;
+			this.mrw=mrw;
+			this.tt.set_height(tth);
+			this.tl.set_width(tlw);
+			this.tr.set_width(trw);
+			this.bb.set_height(bbh);
+			this.bl.set_width(blw);
+			this.br.set_width(brw);
+			this.ml.set_width(mlw);
+			this.mr.set_width(mrw);
+			this.tl.set_background("transparent url({folder}dialogs/skins/"+skinname+"/top_left."+imgext+") no-repeat");
+			this.tr.set_background("transparent url({folder}dialogs/skins/"+skinname+"/top_right."+imgext+") no-repeat");
+			this.tc.set_background("transparent url({folder}dialogs/skins/"+skinname+"/top_center."+imgext+") repeat-x");
+			this.bl.set_background("transparent url({folder}dialogs/skins/"+skinname+"/btm_left."+imgext+") no-repeat");
+			this.br.set_background("transparent url({folder}dialogs/skins/"+skinname+"/btm_right."+imgext+") no-repeat");
+			this.bc.set_background("transparent url({folder}dialogs/skins/"+skinname+"/btm_center."+imgext+") repeat-x");
+			this.ml.set_background("transparent url({folder}dialogs/skins/"+skinname+"/mdl_left."+imgext+") repeat-y");
+			this.mr.set_background("transparent url({folder}dialogs/skins/"+skinname+"/mdl_right."+imgext+") repeat-y");
+			]]>
+		</method>
+		<property name="text">
+			<get>
+				return self.lt.get_text();
+			</get>
+			<set>
+				self.lt.set_text(value);
+			</set>
+		</property>
+		<property name="text_color">
+			<get>
+				return self.lt.get_text_color();
+			</get>
+			<set>
+				self.lt.set_text_color(value);
+			</set>
+		</property>
+	</panel>
+
+	<panel jsml-class="frameskin_royale" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("royale",17,3,3,3,3,3,3,3);
+			this.lt.set_margin([0,0,0,3]);
+			this.lt.set_text_color("white");
+		</initialize>
+	</panel>
+	<panel jsml-class="frameskin_classic" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("classic",5,5,5,5,5,5,5,5);
+		</initialize>
+	</panel>
+	<panel jsml-class="frameskin_indigo" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("indigo",5,5,5,5,5,5,5,5);
+		</initialize>
+	</panel>
+	<panel jsml-class="frameskin_macblue" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("macblue",22,81,47,14,12,16,1,1);
+		</initialize>
+	</panel>
+	<panel jsml-class="frameskin_macwhite" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("macwhite",22,76,33,22,8,8,1,1);
+		</initialize>
+	</panel>
+	<panel jsml-class="frameskin_normal" jsml-base="frameskin_template">
+		<initialize>
+			this.init_skinname("normal",3,3,3,3,3,3,3,3);
+		</initialize>
+	</panel>
+
+	<panel jsml-class="frameskin_seven" jsml-base="frameskin_template">
+		<panel jsml-member="cb" right="15" top="7" width="44" height="18" cursor="pointer" tooltip="@CLOSE" background="transparent url({folder}dialogs/skins/seven/close.gif) no-repeat">
+			<attach name="click">
+				frameskin_seven.invoke_event("clickclose");
+			</attach>
+		</panel>
+		<initialize>
+			<![CDATA[
+			this.init_skinname("seven",35,15,15,15,15,15,15,15);
+			this.lt.set_margin([2,0,0,6]);
+			]]>
+		</initialize>
+	</panel>
+
+	<panel jsml-class="frameskin_newgreen" jsml-base="frameskin_template" jsml-local="newgreen">
+		<panel jsml-member="icon" left="15" top="14" width="13" height="18" background="transparent url({folder}dialogs/skins/newgreen/icon_dialog.gif) no-repeat"></panel>
+		<panel jsml-member="cb" right="0" top="9" width="44" height="18" cursor="pointer" background="transparent url({folder}dialogs/skins/newgreen/closebtn.gif) no-repeat">
+			<attach name="mousehover">
+				//self.set_background('transparent url({folder}dialogs/skins/newgreen/closebtn_over.gif) no-repeat');
+				newgreen.cbover.set_visible("true");
+			</attach>
+		</panel>
+		<panel jsml-member="cbover" visible="false" right="0" top="9" width="44" height="18" cursor="pointer" background="transparent url({folder}dialogs/skins/newgreen/closebtn_over.gif) no-repeat">
+			<attach name="click">
+				frameskin_newgreen.invoke_event("clickclose");
+			</attach>
+			<attach name="mouseleave">
+				self.set_visible("false");
+			</attach>
+		</panel>
+		<initialize>
+			<![CDATA[
+			this.init_skinname("newgreen",33,13,13,13,13,13,13,13);
+			this.lt.set_margin([8,0,8,20]);
+			]]>
+		</initialize>
+	</panel>
+
+	<execute>
+		<![CDATA[
+		if(!jsml.class_exists("frameskin"))
+		{
+			var skin='seven';
+			var arr=(window.location.href.split('#')[0].split('?')[1]||'').split('&');
+			for(var i=0;i<arr.length;i++)
+			{
+				var kv=arr[i].split('=');
+				if(kv[0]=="dialogskin")
+					skin=kv[1];
+			}
+			jsml.class_define("frameskin","frameskin_"+skin);
+		}
+		]]>
+	</execute>
+
+
+</jsml>

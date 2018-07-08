@@ -1,0 +1,958 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{F3736695-1452-4F4B-84B8-152CB1B77FA2}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SendingEmailsWithWebMailInMVC</RootNamespace>
+    <AssemblyName>SendingEmailsWithWebMailInMVC</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\..\..\lcsk-master\src\Demo\Demo\bin\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Mvc.Core, Version=6.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.Core.6.0.0-rc1-final\lib\net451\Microsoft.AspNet.Mvc.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MvcSignaRChatDemo\MvcDemo\MvcDemo\bin\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Owin">
+      <HintPath>..\..\..\MvcSignaRChatDemo\MvcDemo\MvcDemo\bin\Microsoft.AspNet.SignalR.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\MvcSignaRChatDemo\MvcDemo\MvcDemo\bin\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.2.0.2\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.2.1.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=2.0.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="OpenPop, Version=2.0.6.1120, Culture=neutral, PublicKeyToken=6bdb97f144b7efc8, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenPop.NET.2.0.6.1120\lib\net40\OpenPop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.3\lib\net45\System.Web.Http.Owin.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_ReadMe\lcsk.readme.txt" />
+    <Content Include="Content\assets\bootstrap\css\bootstrap.min.css" />
+    <Content Include="Content\assets\bootstrap\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\assets\css\buttons.css" />
+    <Content Include="Content\assets\css\media-queries.css" />
+    <Content Include="Content\assets\css\style.css" />
+    <Content Include="Content\assets\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Content\assets\font-awesome\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\assets\ico\apple-touch-icon-114-precomposed.png" />
+    <Content Include="Content\assets\ico\apple-touch-icon-144-precomposed.png" />
+    <Content Include="Content\assets\ico\apple-touch-icon-57-precomposed.png" />
+    <Content Include="Content\assets\ico\apple-touch-icon-72-precomposed.png" />
+    <Content Include="Content\assets\ico\favicon.png" />
+    <Content Include="Content\assets\img\backgrounds\1.jpg" />
+    <Content Include="Content\assets\img\iphone-1%402x.png" />
+    <Content Include="Content\assets\img\iphone-1.png" />
+    <Content Include="Content\assets\img\iphone-2%402x.png" />
+    <Content Include="Content\assets\img\iphone-2.png" />
+    <Content Include="Content\assets\img\iphone-2a.png" />
+    <Content Include="Content\assets\img\iphone-3%402x.png" />
+    <Content Include="Content\assets\img\iphone-3.png" />
+    <Content Include="Content\assets\js\jquery-1.10.2.min.js" />
+    <Content Include="Content\assets\js\jquery.backstretch.min.js" />
+    <Content Include="Content\assets\js\retina-1.1.0.min.js" />
+    <Content Include="Content\assets\js\scripts.js" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\chat.css" />
+    <Content Include="Content\Dashboard\css\basic.css" />
+    <Content Include="Content\Dashboard\css\bootstrap-fileupload.min.css" />
+    <Content Include="Content\Dashboard\css\bootstrap-social.css" />
+    <Content Include="Content\Dashboard\css\bootstrap.css" />
+    <Content Include="Content\Dashboard\css\custom.css" />
+    <Content Include="Content\Dashboard\css\error.css" />
+    <Content Include="Content\Dashboard\css\font-awesome.css" />
+    <Content Include="Content\Dashboard\css\invoice.css" />
+    <Content Include="Content\Dashboard\css\prettyPhoto.css" />
+    <Content Include="Content\Dashboard\css\pricing.css" />
+    <Content Include="Content\Dashboard\css\wizard\jquery.steps.css" />
+    <Content Include="Content\Dashboard\css\wizard\normalize.css" />
+    <Content Include="Content\Dashboard\css\wizard\wizardMain.css" />
+    <Content Include="Content\Dashboard\fonts\fontawesome-webfont.svg" />
+    <Content Include="Content\Dashboard\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\Dashboard\img\demoUpload.jpg" />
+    <Content Include="Content\Dashboard\img\logo-invoice.png" />
+    <Content Include="Content\Dashboard\img\user.gif" />
+    <Content Include="Content\Dashboard\img\user.png" />
+    <Content Include="Content\Dashboard\js\bootstrap-fileupload.js" />
+    <Content Include="Content\Dashboard\js\bootstrap.js" />
+    <Content Include="Content\Dashboard\js\custom.js" />
+    <Content Include="Content\Dashboard\js\galleryCustom.js" />
+    <Content Include="Content\Dashboard\js\jquery-1.10.2.js" />
+    <Content Include="Content\Dashboard\js\jquery.metisMenu.js" />
+    <Content Include="Content\Dashboard\js\jquery.mixitup.min.js" />
+    <Content Include="Content\Dashboard\js\jquery.prettyPhoto.js" />
+    <Content Include="Content\Dashboard\js\wizard\jquery.cookie-1.3.1.js" />
+    <Content Include="Content\Dashboard\js\wizard\jquery.steps.js" />
+    <Content Include="Content\Dashboard\js\wizard\modernizr-2.6.2.min.js" />
+    <Content Include="Content\Site.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\assets\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\assets\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\assets\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\assets\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Content\assets\bootstrap\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\assets\bootstrap\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\assets\bootstrap\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\Dashboard\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\Dashboard\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\Dashboard\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\Dashboard\fonts\FontAwesome.otf" />
+    <Content Include="Content\Dashboard\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\Dashboard\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\Dashboard\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="LCSK\Agent.html" />
+    <Content Include="LCSK\agent.js" />
+    <Content Include="LCSK\assets\css\bootstrap-responsive.css" />
+    <Content Include="LCSK\assets\css\bootstrap.css" />
+    <Content Include="LCSK\assets\img\bootstrap-mdo-sfmoma-01.jpg" />
+    <Content Include="LCSK\assets\img\bootstrap-mdo-sfmoma-02.jpg" />
+    <Content Include="LCSK\assets\img\bootstrap-mdo-sfmoma-03.jpg" />
+    <Content Include="LCSK\assets\img\bs-docs-bootstrap-features.png" />
+    <Content Include="LCSK\assets\img\bs-docs-masthead-pattern.png" />
+    <Content Include="LCSK\assets\img\bs-docs-responsive-illustrations.png" />
+    <Content Include="LCSK\assets\img\bs-docs-twitter-github.png" />
+    <Content Include="LCSK\assets\img\glyphicons-halflings-white.png" />
+    <Content Include="LCSK\assets\img\glyphicons-halflings.png" />
+    <Content Include="LCSK\assets\img\grid-baseline-20px.png" />
+    <Content Include="LCSK\assets\img\less-logo-large.png" />
+    <Content Include="LCSK\assets\img\responsive-illustrations.png" />
+    <Content Include="LCSK\assets\js\bootstrap-affix.js" />
+    <Content Include="LCSK\assets\js\bootstrap-alert.js" />
+    <Content Include="LCSK\assets\js\bootstrap-button.js" />
+    <Content Include="LCSK\assets\js\bootstrap-carousel.js" />
+    <Content Include="LCSK\assets\js\bootstrap-collapse.js" />
+    <Content Include="LCSK\assets\js\bootstrap-dropdown.js" />
+    <Content Include="LCSK\assets\js\bootstrap-modal.js" />
+    <Content Include="LCSK\assets\js\bootstrap-popover.js" />
+    <Content Include="LCSK\assets\js\bootstrap-scrollspy.js" />
+    <Content Include="LCSK\assets\js\bootstrap-tab.js" />
+    <Content Include="LCSK\assets\js\bootstrap-tooltip.js" />
+    <Content Include="LCSK\assets\js\bootstrap-transition.js" />
+    <Content Include="LCSK\assets\js\bootstrap-typeahead.js" />
+    <Content Include="LCSK\assets\js\bootstrap.js" />
+    <Content Include="LCSK\assets\js\bootstrap.min.js" />
+    <Content Include="LCSK\assets\js\jquery.timeago.js" />
+    <Content Include="LCSK\assets\sounds\newchat.mp3" />
+    <Content Include="LCSK\assets\sounds\newmsg.mp3" />
+    <Content Include="LCSK\chat.js" />
+    <Content Include="LCSK\Install.html" />
+    <Content Include="LCSK\install.js" />
+    <Content Include="richtexteditor\blank.htm" />
+    <Content Include="richtexteditor\config\staticlinks.xml" />
+    <Content Include="richtexteditor\config\staticstyles.xml" />
+    <Content Include="richtexteditor\config\statictemplates.xml" />
+    <Content Include="richtexteditor\core\core.js" />
+    <Content Include="richtexteditor\core\jsml.js" />
+    <Content Include="richtexteditor\core\uploader.js" />
+    <Content Include="richtexteditor\dialogs\basic_alert.xml" />
+    <Content Include="richtexteditor\dialogs\basic_confirm.xml" />
+    <Content Include="richtexteditor\dialogs\basic_prompt.xml" />
+    <Content Include="richtexteditor\dialogs\browsedialogbase.xml" />
+    <Content Include="richtexteditor\dialogs\cleancode.xml" />
+    <Content Include="richtexteditor\dialogs\colorpicker.xml" />
+    <Content Include="richtexteditor\dialogs\editor_paste.xml" />
+    <Content Include="richtexteditor\dialogs\findandreplace.xml" />
+    <Content Include="richtexteditor\dialogs\foldertree.xml" />
+    <Content Include="richtexteditor\dialogs\htmlpreview.xml" />
+    <Content Include="richtexteditor\dialogs\imageeditor.xml" />
+    <Content Include="richtexteditor\dialogs\insertanchor.xml" />
+    <Content Include="richtexteditor\dialogs\insertdate.xml" />
+    <Content Include="richtexteditor\dialogs\insertdocument.xml" />
+    <Content Include="richtexteditor\dialogs\insertgallery.xml" />
+    <Content Include="richtexteditor\dialogs\insertimage.xml" />
+    <Content Include="richtexteditor\dialogs\insertimagemap.xml" />
+    <Content Include="richtexteditor\dialogs\insertimagemaplink.xml" />
+    <Content Include="richtexteditor\dialogs\insertlink.xml" />
+    <Content Include="richtexteditor\dialogs\insertlink_dropdown.xml" />
+    <Content Include="richtexteditor\dialogs\insertlink_findanchor.xml" />
+    <Content Include="richtexteditor\dialogs\insertlink_findurl.xml" />
+    <Content Include="richtexteditor\dialogs\inserttable.xml" />
+    <Content Include="richtexteditor\dialogs\inserttabletemplate.xml" />
+    <Content Include="richtexteditor\dialogs\inserttemplate.xml" />
+    <Content Include="richtexteditor\dialogs\inserttemplate_dropdown.xml" />
+    <Content Include="richtexteditor\dialogs\insertvideo.xml" />
+    <Content Include="richtexteditor\dialogs\menu_context.xml" />
+    <Content Include="richtexteditor\dialogs\menu_context_default.xml" />
+    <Content Include="richtexteditor\dialogs\menu_context_minimal.xml" />
+    <Content Include="richtexteditor\dialogs\menu_context_simple.xml" />
+    <Content Include="richtexteditor\dialogs\menu_dragdrop.xml" />
+    <Content Include="richtexteditor\dialogs\menu_styles.xml" />
+    <Content Include="richtexteditor\dialogs\menu_tagitem.xml" />
+    <Content Include="richtexteditor\dialogs\overriderename.xml" />
+    <Content Include="richtexteditor\dialogs\phone_common.xml" />
+    <Content Include="richtexteditor\dialogs\phone_format.xml" />
+    <Content Include="richtexteditor\dialogs\phone_insert.xml" />
+    <Content Include="richtexteditor\dialogs\phone_paragraph.xml" />
+    <Content Include="richtexteditor\dialogs\phone_select.xml" />
+    <Content Include="richtexteditor\dialogs\phone_text.xml" />
+    <Content Include="richtexteditor\dialogs\properties.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_background.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_block.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_border.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_box.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_font.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_layout.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_list.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_other.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_position.xml" />
+    <Content Include="richtexteditor\dialogs\properties_style_table.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_a.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_audio.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_button.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_common.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_div.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_form.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_input.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_select.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_table.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_textarea.xml" />
+    <Content Include="richtexteditor\dialogs\properties_tag_video.xml" />
+    <Content Include="richtexteditor\dialogs\setfontname.xml" />
+    <Content Include="richtexteditor\dialogs\setfontsize.xml" />
+    <Content Include="richtexteditor\dialogs\setparagraph.xml" />
+    <Content Include="richtexteditor\dialogs\setstyles.xml" />
+    <Content Include="richtexteditor\dialogs\storagelist.xml" />
+    <Content Include="richtexteditor\dialogs\uploadinfo.xml" />
+    <Content Include="richtexteditor\dialogs\uploadprogress.xml" />
+    <Content Include="richtexteditor\dialogs\_developer.xml" />
+    <Content Include="richtexteditor\dialogs\_dialog.xml" />
+    <Content Include="richtexteditor\dialogs\_skins.xml" />
+    <Content Include="richtexteditor\dialogs\__sample.xml" />
+    <Content Include="richtexteditor\downlevel\blank.htm" />
+    <Content Include="richtexteditor\downlevel\common.xml" />
+    <Content Include="richtexteditor\downlevel\downlevel.js" />
+    <Content Include="richtexteditor\downlevel\rtehtm.js" />
+    <Content Include="richtexteditor\downlevel\rtehtm.xml" />
+    <Content Include="richtexteditor\downlevel\rteubb.js" />
+    <Content Include="richtexteditor\downlevel\rteubb.xml" />
+    <Content Include="richtexteditor\downlevel\style.css" />
+    <Content Include="richtexteditor\help\fontname.png" />
+    <Content Include="richtexteditor\help\fontsize.png" />
+    <Content Include="richtexteditor\help\home.htm" />
+    <Content Include="richtexteditor\help\paragraph.png" />
+    <Content Include="richtexteditor\help\style.png" />
+    <Content Include="richtexteditor\help\toolbar.png" />
+    <Content Include="richtexteditor\images\accessibility.gif" />
+    <Content Include="richtexteditor\images\all.png" />
+    <Content Include="richtexteditor\images\anchor.gif" />
+    <Content Include="richtexteditor\images\anchor.png" />
+    <Content Include="richtexteditor\images\applystyles.png" />
+    <Content Include="richtexteditor\images\arj.gif" />
+    <Content Include="richtexteditor\images\arrow-l.png" />
+    <Content Include="richtexteditor\images\arrow-r.png" />
+    <Content Include="richtexteditor\images\arrow.gif" />
+    <Content Include="richtexteditor\images\arrow_down.gif" />
+    <Content Include="richtexteditor\images\arrow_r.gif" />
+    <Content Include="richtexteditor\images\arrow_up.gif" />
+    <Content Include="richtexteditor\images\asa.gif" />
+    <Content Include="richtexteditor\images\asax.gif" />
+    <Content Include="richtexteditor\images\ascx.gif" />
+    <Content Include="richtexteditor\images\asmx.gif" />
+    <Content Include="richtexteditor\images\asp.gif" />
+    <Content Include="richtexteditor\images\aspx.gif" />
+    <Content Include="richtexteditor\images\au.gif" />
+    <Content Include="richtexteditor\images\avi.gif" />
+    <Content Include="richtexteditor\images\b1.gif" />
+    <Content Include="richtexteditor\images\b1.png" />
+    <Content Include="richtexteditor\images\backcolor.png" />
+    <Content Include="richtexteditor\images\backspace.png" />
+    <Content Include="richtexteditor\images\bat.gif" />
+    <Content Include="richtexteditor\images\bg.gif" />
+    <Content Include="richtexteditor\images\blank20.png" />
+    <Content Include="richtexteditor\images\blockquote.png" />
+    <Content Include="richtexteditor\images\bmp.gif" />
+    <Content Include="richtexteditor\images\bold.png" />
+    <Content Include="richtexteditor\images\borders.png" />
+    <Content Include="richtexteditor\images\borders2.png" />
+    <Content Include="richtexteditor\images\bottomline.png" />
+    <Content Include="richtexteditor\images\box.png" />
+    <Content Include="richtexteditor\images\break.png" />
+    <Content Include="richtexteditor\images\bullist.png" />
+    <Content Include="richtexteditor\images\cab.gif" />
+    <Content Include="richtexteditor\images\cell.png" />
+    <Content Include="richtexteditor\images\center.png" />
+    <Content Include="richtexteditor\images\checkbox.png" />
+    <Content Include="richtexteditor\images\chm.gif" />
+    <Content Include="richtexteditor\images\cleanup.png" />
+    <Content Include="richtexteditor\images\close.gif" />
+    <Content Include="richtexteditor\images\Close2.gif" />
+    <Content Include="richtexteditor\images\closedfolder.gif" />
+    <Content Include="richtexteditor\images\code.png" />
+    <Content Include="richtexteditor\images\colorbox.gif" />
+    <Content Include="richtexteditor\images\com.gif" />
+    <Content Include="richtexteditor\images\copy.png" />
+    <Content Include="richtexteditor\images\cs.gif" />
+    <Content Include="richtexteditor\images\css.gif" />
+    <Content Include="richtexteditor\images\cut.png" />
+    <Content Include="richtexteditor\images\delcell.png" />
+    <Content Include="richtexteditor\images\delcol.png" />
+    <Content Include="richtexteditor\images\delete.png" />
+    <Content Include="richtexteditor\images\delrow.png" />
+    <Content Include="richtexteditor\images\design.png" />
+    <Content Include="richtexteditor\images\dir_ltr.gif" />
+    <Content Include="richtexteditor\images\dir_ltr.png" />
+    <Content Include="richtexteditor\images\dir_rtl.png" />
+    <Content Include="richtexteditor\images\disco.gif" />
+    <Content Include="richtexteditor\images\div.png" />
+    <Content Include="richtexteditor\images\dll.gif" />
+    <Content Include="richtexteditor\images\doc.gif" />
+    <Content Include="richtexteditor\images\document.png" />
+    <Content Include="richtexteditor\images\docx.gif" />
+    <Content Include="richtexteditor\images\dragcopy.gif" />
+    <Content Include="richtexteditor\images\dragmove.gif" />
+    <Content Include="richtexteditor\images\dropdownbox.png" />
+    <Content Include="richtexteditor\images\edit.gif" />
+    <Content Include="richtexteditor\images\exe.gif" />
+    <Content Include="richtexteditor\images\external.gif" />
+    <Content Include="richtexteditor\images\filter_c.gif" />
+    <Content Include="richtexteditor\images\filter_l.gif" />
+    <Content Include="richtexteditor\images\filter_m.gif" />
+    <Content Include="richtexteditor\images\filter_r.gif" />
+    <Content Include="richtexteditor\images\find.png" />
+    <Content Include="richtexteditor\images\fit.png" />
+    <Content Include="richtexteditor\images\flash.png" />
+    <Content Include="richtexteditor\images\flashholder.gif" />
+    <Content Include="richtexteditor\images\floatblock.gif" />
+    <Content Include="richtexteditor\images\floatleft.gif" />
+    <Content Include="richtexteditor\images\floatnone.gif" />
+    <Content Include="richtexteditor\images\floatright.gif" />
+    <Content Include="richtexteditor\images\flv.gif" />
+    <Content Include="richtexteditor\images\folder.png" />
+    <Content Include="richtexteditor\images\folders.png" />
+    <Content Include="richtexteditor\images\folder_up.png" />
+    <Content Include="richtexteditor\images\font-size.png" />
+    <Content Include="richtexteditor\images\font-type.png" />
+    <Content Include="richtexteditor\images\font.png" />
+    <Content Include="richtexteditor\images\forecolor.png" />
+    <Content Include="richtexteditor\images\formatcode.png" />
+    <Content Include="richtexteditor\images\formatpainter.png" />
+    <Content Include="richtexteditor\images\gallery.png" />
+    <Content Include="richtexteditor\images\gif.gif" />
+    <Content Include="richtexteditor\images\groupbox.png" />
+    <Content Include="richtexteditor\images\heading.png" />
+    <Content Include="richtexteditor\images\help.png" />
+    <Content Include="richtexteditor\images\hiddenfield.png" />
+    <Content Include="richtexteditor\images\hlp.gif" />
+    <Content Include="richtexteditor\images\horizontal.gif" />
+    <Content Include="richtexteditor\images\htm.gif" />
+    <Content Include="richtexteditor\images\html.gif" />
+    <Content Include="richtexteditor\images\html5.png" />
+    <Content Include="richtexteditor\images\htmlview.png" />
+    <Content Include="richtexteditor\images\icon_add.png" />
+    <Content Include="richtexteditor\images\image.png" />
+    <Content Include="richtexteditor\images\imagebutton.png" />
+    <Content Include="richtexteditor\images\imageeditor.png" />
+    <Content Include="richtexteditor\images\imageholder.gif" />
+    <Content Include="richtexteditor\images\ImageMap.png" />
+    <Content Include="richtexteditor\images\inc.gif" />
+    <Content Include="richtexteditor\images\indent.png" />
+    <Content Include="richtexteditor\images\ini.gif" />
+    <Content Include="richtexteditor\images\inscell.png" />
+    <Content Include="richtexteditor\images\inscol_l.png" />
+    <Content Include="richtexteditor\images\inscol_r.png" />
+    <Content Include="richtexteditor\images\insertDate.png" />
+    <Content Include="richtexteditor\images\insertform.png" />
+    <Content Include="richtexteditor\images\InsertPageBreak.png" />
+    <Content Include="richtexteditor\images\inserttable.png" />
+    <Content Include="richtexteditor\images\insrow_b.png" />
+    <Content Include="richtexteditor\images\insrow_t.png" />
+    <Content Include="richtexteditor\images\instable.png" />
+    <Content Include="richtexteditor\images\italic.png" />
+    <Content Include="richtexteditor\images\jpeg.gif" />
+    <Content Include="richtexteditor\images\jpg.gif" />
+    <Content Include="richtexteditor\images\justifyfull.png" />
+    <Content Include="richtexteditor\images\justifynone.png" />
+    <Content Include="richtexteditor\images\keyboard.png" />
+    <Content Include="richtexteditor\images\l1.gif" />
+    <Content Include="richtexteditor\images\l1.png" />
+    <Content Include="richtexteditor\images\l2.gif" />
+    <Content Include="richtexteditor\images\l2.png" />
+    <Content Include="richtexteditor\images\layer.png" />
+    <Content Include="richtexteditor\images\lcase.png" />
+    <Content Include="richtexteditor\images\left.png" />
+    <Content Include="richtexteditor\images\lineheight.png" />
+    <Content Include="richtexteditor\images\link.png" />
+    <Content Include="richtexteditor\images\listbox.png" />
+    <Content Include="richtexteditor\images\loading3.gif" />
+    <Content Include="richtexteditor\images\loading5.gif" />
+    <Content Include="richtexteditor\images\locked.gif" />
+    <Content Include="richtexteditor\images\log.gif" />
+    <Content Include="richtexteditor\images\map.png" />
+    <Content Include="richtexteditor\images\marginbottom.png" />
+    <Content Include="richtexteditor\images\margintop.png" />
+    <Content Include="richtexteditor\images\mdb.gif" />
+    <Content Include="richtexteditor\images\media.png" />
+    <Content Include="richtexteditor\images\menuleft.gif" />
+    <Content Include="richtexteditor\images\mid.gif" />
+    <Content Include="richtexteditor\images\midi.gif" />
+    <Content Include="richtexteditor\images\minus.gif" />
+    <Content Include="richtexteditor\images\mov.gif" />
+    <Content Include="richtexteditor\images\move.png" />
+    <Content Include="richtexteditor\images\movieholder.gif" />
+    <Content Include="richtexteditor\images\mp3.gif" />
+    <Content Include="richtexteditor\images\mp4.gif" />
+    <Content Include="richtexteditor\images\mpeg.gif" />
+    <Content Include="richtexteditor\images\mpg.gif" />
+    <Content Include="richtexteditor\images\mrgcell.png" />
+    <Content Include="richtexteditor\images\msgbox_alert.gif" />
+    <Content Include="richtexteditor\images\m_anchor.png" />
+    <Content Include="richtexteditor\images\m_arrow_right-up.png" />
+    <Content Include="richtexteditor\images\m_back.png" />
+    <Content Include="richtexteditor\images\m_backcolor.png" />
+    <Content Include="richtexteditor\images\m_blockquote.png" />
+    <Content Include="richtexteditor\images\m_bold.png" />
+    <Content Include="richtexteditor\images\m_borders.png" />
+    <Content Include="richtexteditor\images\m_bottomline.png" />
+    <Content Include="richtexteditor\images\m_break.png" />
+    <Content Include="richtexteditor\images\m_center.png" />
+    <Content Include="richtexteditor\images\m_cleanup.png" />
+    <Content Include="richtexteditor\images\m_copy.png" />
+    <Content Include="richtexteditor\images\m_cut.png" />
+    <Content Include="richtexteditor\images\m_div.png" />
+    <Content Include="richtexteditor\images\m_document.png" />
+    <Content Include="richtexteditor\images\m_edit.png" />
+    <Content Include="richtexteditor\images\m_find.png" />
+    <Content Include="richtexteditor\images\m_font.png" />
+    <Content Include="richtexteditor\images\m_fontsize.png" />
+    <Content Include="richtexteditor\images\m_forecolor.png" />
+    <Content Include="richtexteditor\images\m_groupbox.png" />
+    <Content Include="richtexteditor\images\m_hand.png" />
+    <Content Include="richtexteditor\images\m_help.png" />
+    <Content Include="richtexteditor\images\m_image.png" />
+    <Content Include="richtexteditor\images\m_indent.png" />
+    <Content Include="richtexteditor\images\m_insertDate.png" />
+    <Content Include="richtexteditor\images\m_insertdiv.png" />
+    <Content Include="richtexteditor\images\m_insertpagebreak.png" />
+    <Content Include="richtexteditor\images\m_italic.png" />
+    <Content Include="richtexteditor\images\m_justifyfull.png" />
+    <Content Include="richtexteditor\images\m_justifynone.png" />
+    <Content Include="richtexteditor\images\m_lcase.png" />
+    <Content Include="richtexteditor\images\m_left.png" />
+    <Content Include="richtexteditor\images\m_link.png" />
+    <Content Include="richtexteditor\images\m_map.png" />
+    <Content Include="richtexteditor\images\m_media.png" />
+    <Content Include="richtexteditor\images\m_menu.png" />
+    <Content Include="richtexteditor\images\m_new.png" />
+    <Content Include="richtexteditor\images\m_numlist.png" />
+    <Content Include="richtexteditor\images\m_outdent.png" />
+    <Content Include="richtexteditor\images\m_overline.png" />
+    <Content Include="richtexteditor\images\m_paragraph.png" />
+    <Content Include="richtexteditor\images\m_paste.png" />
+    <Content Include="richtexteditor\images\m_pastetext.png" />
+    <Content Include="richtexteditor\images\m_redo.png" />
+    <Content Include="richtexteditor\images\m_return.png" />
+    <Content Include="richtexteditor\images\m_right.png" />
+    <Content Include="richtexteditor\images\m_rule.png" />
+    <Content Include="richtexteditor\images\m_save.png" />
+    <Content Include="richtexteditor\images\m_select.png" />
+    <Content Include="richtexteditor\images\m_selectall.png" />
+    <Content Include="richtexteditor\images\m_selectbottom.png" />
+    <Content Include="richtexteditor\images\m_selectparagraph.png" />
+    <Content Include="richtexteditor\images\m_selecttop.png" />
+    <Content Include="richtexteditor\images\m_specialchar.png" />
+    <Content Include="richtexteditor\images\m_spell.png" />
+    <Content Include="richtexteditor\images\m_strike.png" />
+    <Content Include="richtexteditor\images\m_subscript.png" />
+    <Content Include="richtexteditor\images\m_superscript.png" />
+    <Content Include="richtexteditor\images\m_table.png" />
+    <Content Include="richtexteditor\images\m_text.png" />
+    <Content Include="richtexteditor\images\m_topline.png" />
+    <Content Include="richtexteditor\images\m_ucase.png" />
+    <Content Include="richtexteditor\images\m_under.png" />
+    <Content Include="richtexteditor\images\m_undo.png" />
+    <Content Include="richtexteditor\images\m_unformat.png" />
+    <Content Include="richtexteditor\images\m_upload.png" />
+    <Content Include="richtexteditor\images\m_youtube.png" />
+    <Content Include="richtexteditor\images\newdoc.png" />
+    <Content Include="richtexteditor\images\newfolder.gif" />
+    <Content Include="richtexteditor\images\newtag.png" />
+    <Content Include="richtexteditor\images\node-tree.png" />
+    <Content Include="richtexteditor\images\noneditable.gif" />
+    <Content Include="richtexteditor\images\numdown.gif" />
+    <Content Include="richtexteditor\images\numlist.png" />
+    <Content Include="richtexteditor\images\numup.gif" />
+    <Content Include="richtexteditor\images\openfolder.png" />
+    <Content Include="richtexteditor\images\optionbutton.png" />
+    <Content Include="richtexteditor\images\orderby.gif" />
+    <Content Include="richtexteditor\images\outdent.png" />
+    <Content Include="richtexteditor\images\overline.png" />
+    <Content Include="richtexteditor\images\p.png" />
+    <Content Include="richtexteditor\images\page.png" />
+    <Content Include="richtexteditor\images\paragraph.png" />
+    <Content Include="richtexteditor\images\parentfolder.png" />
+    <Content Include="richtexteditor\images\passwordfield.png" />
+    <Content Include="richtexteditor\images\paste.png" />
+    <Content Include="richtexteditor\images\pastetext.png" />
+    <Content Include="richtexteditor\images\pasteword.png" />
+    <Content Include="richtexteditor\images\pdf.gif" />
+    <Content Include="richtexteditor\images\png.gif" />
+    <Content Include="richtexteditor\images\ppt.gif" />
+    <Content Include="richtexteditor\images\preview.png" />
+    <Content Include="richtexteditor\images\print.png" />
+    <Content Include="richtexteditor\images\properties.png" />
+    <Content Include="richtexteditor\images\pushbutton.png" />
+    <Content Include="richtexteditor\images\r1.gif" />
+    <Content Include="richtexteditor\images\r1.png" />
+    <Content Include="richtexteditor\images\r2.gif" />
+    <Content Include="richtexteditor\images\r2.png" />
+    <Content Include="richtexteditor\images\rar.gif" />
+    <Content Include="richtexteditor\images\redo.png" />
+    <Content Include="richtexteditor\images\refresh.gif" />
+    <Content Include="richtexteditor\images\removetag.png" />
+    <Content Include="richtexteditor\images\reset.png" />
+    <Content Include="richtexteditor\images\ribbonpaste.png" />
+    <Content Include="richtexteditor\images\ribbontable.png" />
+    <Content Include="richtexteditor\images\right.png" />
+    <Content Include="richtexteditor\images\row.png" />
+    <Content Include="richtexteditor\images\rtf.gif" />
+    <Content Include="richtexteditor\images\rule.png" />
+    <Content Include="richtexteditor\images\ruler-horizontal.png" />
+    <Content Include="richtexteditor\images\ruler-vertical.png" />
+    <Content Include="richtexteditor\images\rulercorner.png" />
+    <Content Include="richtexteditor\images\save.png" />
+    <Content Include="richtexteditor\images\selectall.png" />
+    <Content Include="richtexteditor\images\selectnone.png" />
+    <Content Include="richtexteditor\images\Separator.gif" />
+    <Content Include="richtexteditor\images\slider-handle-up.png" />
+    <Content Include="richtexteditor\images\sort.gif" />
+    <Content Include="richtexteditor\images\sort_asc_arrow.gif" />
+    <Content Include="richtexteditor\images\sort_desc_arrow.gif" />
+    <Content Include="richtexteditor\images\specialchar.png" />
+    <Content Include="richtexteditor\images\spell.png" />
+    <Content Include="richtexteditor\images\spltcell.png" />
+    <Content Include="richtexteditor\images\stop.png" />
+    <Content Include="richtexteditor\images\strike.png" />
+    <Content Include="richtexteditor\images\submit.png" />
+    <Content Include="richtexteditor\images\subscript.png" />
+    <Content Include="richtexteditor\images\superscript.png" />
+    <Content Include="richtexteditor\images\swf.gif" />
+    <Content Include="richtexteditor\images\sys.gif" />
+    <Content Include="richtexteditor\images\t1.gif" />
+    <Content Include="richtexteditor\images\t1.png" />
+    <Content Include="richtexteditor\images\t2.gif" />
+    <Content Include="richtexteditor\images\t2.png" />
+    <Content Include="richtexteditor\images\t3.gif" />
+    <Content Include="richtexteditor\images\t3.png" />
+    <Content Include="richtexteditor\images\tbdown.gif" />
+    <Content Include="richtexteditor\images\template.png" />
+    <Content Include="richtexteditor\images\textarea.png" />
+    <Content Include="richtexteditor\images\textbox.png" />
+    <Content Include="richtexteditor\images\timer.png" />
+    <Content Include="richtexteditor\images\toolbarbutton.over.gif" />
+    <Content Include="richtexteditor\images\topline.png" />
+    <Content Include="richtexteditor\images\txt.gif" />
+    <Content Include="richtexteditor\images\ucase.png" />
+    <Content Include="richtexteditor\images\ul-circle.png" />
+    <Content Include="richtexteditor\images\ul-disc.png" />
+    <Content Include="richtexteditor\images\ul-square.png" />
+    <Content Include="richtexteditor\images\under.png" />
+    <Content Include="richtexteditor\images\undo.png" />
+    <Content Include="richtexteditor\images\unformat.png" />
+    <Content Include="richtexteditor\images\unknown.gif" />
+    <Content Include="richtexteditor\images\unlink.png" />
+    <Content Include="richtexteditor\images\unlocked.gif" />
+    <Content Include="richtexteditor\images\upload.gif" />
+    <Content Include="richtexteditor\images\uploadimage.png" />
+    <Content Include="richtexteditor\images\vb.gif" />
+    <Content Include="richtexteditor\images\vbs.gif" />
+    <Content Include="richtexteditor\images\video.png" />
+    <Content Include="richtexteditor\images\vsdisco.gif" />
+    <Content Include="richtexteditor\images\watermark.png" />
+    <Content Include="richtexteditor\images\wav.gif" />
+    <Content Include="richtexteditor\images\wbr.png" />
+    <Content Include="richtexteditor\images\wmv.gif" />
+    <Content Include="richtexteditor\images\wri.gif" />
+    <Content Include="richtexteditor\images\xls.gif" />
+    <Content Include="richtexteditor\images\xlsx.gif" />
+    <Content Include="richtexteditor\images\xml.gif" />
+    <Content Include="richtexteditor\images\youtube.png" />
+    <Content Include="richtexteditor\images\zip.gif" />
+    <Content Include="richtexteditor\lang\lang-da.js" />
+    <Content Include="richtexteditor\lang\lang-de.js" />
+    <Content Include="richtexteditor\lang\lang-es.js" />
+    <Content Include="richtexteditor\lang\lang-fr.js" />
+    <Content Include="richtexteditor\lang\lang-he.js" />
+    <Content Include="richtexteditor\lang\lang-it.js" />
+    <Content Include="richtexteditor\lang\lang-ja.js" />
+    <Content Include="richtexteditor\lang\lang-ko.js" />
+    <Content Include="richtexteditor\lang\lang-nl.js" />
+    <Content Include="richtexteditor\lang\lang-no.js" />
+    <Content Include="richtexteditor\lang\lang-pt.js" />
+    <Content Include="richtexteditor\lang\lang-sv.js" />
+    <Content Include="richtexteditor\lang\lang-zh-cn.js" />
+    <Content Include="richtexteditor\lang\lang-zh-tw.js" />
+    <Content Include="richtexteditor\lang\lang-zh.js" />
+    <Content Include="richtexteditor\lang\lang.js" />
+    <Content Include="richtexteditor\lang\more-da.js" />
+    <Content Include="richtexteditor\lang\more-de.js" />
+    <Content Include="richtexteditor\lang\more-es.js" />
+    <Content Include="richtexteditor\lang\more-fr.js" />
+    <Content Include="richtexteditor\lang\more-he.js" />
+    <Content Include="richtexteditor\lang\more-it.js" />
+    <Content Include="richtexteditor\lang\more-ja.js" />
+    <Content Include="richtexteditor\lang\more-ko.js" />
+    <Content Include="richtexteditor\lang\more-nl.js" />
+    <Content Include="richtexteditor\lang\more-no.js" />
+    <Content Include="richtexteditor\lang\more-pt.js" />
+    <Content Include="richtexteditor\lang\more-sv.js" />
+    <Content Include="richtexteditor\lang\more-zh-cn.js" />
+    <Content Include="richtexteditor\lang\more-zh-tw.js" />
+    <Content Include="richtexteditor\lang\more-zh.js" />
+    <Content Include="richtexteditor\lang\more.js" />
+    <Content Include="richtexteditor\player\flashplayer.swf" />
+    <Content Include="richtexteditor\player\googleplayer.swf" />
+    <Content Include="richtexteditor\player\play.png" />
+    <Content Include="richtexteditor\player\player.htm" />
+    <Content Include="richtexteditor\rtepaint4\dialog.htm" />
+    <Content Include="richtexteditor\rtepaint4\DrawImage.html4.aspx" />
+    <Content Include="richtexteditor\rtepaint4\ImageEditorLib.js" />
+    <Content Include="richtexteditor\rtepaint4\Language.aspx" />
+    <Content Include="richtexteditor\rtepaint4\menuimpl.js" />
+    <Content Include="richtexteditor\rtepaint4\refreshimage.aspx" />
+    <Content Include="richtexteditor\rtepaint4\SaveImage.html4.aspx" />
+    <Content Include="richtexteditor\rtepaint4\Style.css" />
+    <Content Include="richtexteditor\rtepaint5\common.xml" />
+    <Content Include="richtexteditor\rtepaint5\dialog.htm" />
+    <Content Include="richtexteditor\rtepaint5\effect.js" />
+    <Content Include="richtexteditor\core\jsml.xsx" />
+    <Content Include="richtexteditor\config\guest.config" />
+    <Content Include="richtexteditor\config\default.config" />
+    <Content Include="richtexteditor\config\admin.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <None Include="richtexteditor\core\jsml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="richtexteditor\rtepaint5\html5.js" />
+    <Content Include="richtexteditor\rtepaint5\html5ui.xml" />
+    <Content Include="richtexteditor\rtepaint5\Language.aspx" />
+    <Content Include="richtexteditor\rtepaint5\refreshimage.aspx" />
+    <Content Include="richtexteditor\rtepaint5\refreshimage.htm" />
+    <Content Include="richtexteditor\rtepaint5\tools.js" />
+    <Content Include="richtexteditor\rtepaint5\uielement.xml" />
+    <Content Include="richtexteditor\scripts\blank.htm" />
+    <Content Include="richtexteditor\scripts\blankhtml4.htm" />
+    <Content Include="richtexteditor\scripts\blankhtml5.htm" />
+    <Content Include="richtexteditor\scripts\blankxhtml.htm" />
+    <Content Include="richtexteditor\scripts\common.xml" />
+    <Content Include="richtexteditor\scripts\config.js" />
+    <Content Include="richtexteditor\scripts\editor.js" />
+    <Content Include="richtexteditor\scripts\ihtml5.js" />
+    <Content Include="richtexteditor\scripts\loader.js" />
+    <Content Include="richtexteditor\scripts\rtefc.swf" />
+    <Content Include="richtexteditor\scripts\tabview.js" />
+    <Content Include="richtexteditor\server\colorpicker.htm" />
+    <Content Include="richtexteditor\server\colorpicker.xml" />
+    <Content Include="richtexteditor\server\colorpicker_basic.htm" />
+    <Content Include="richtexteditor\server\colorpicker_more.htm" />
+    <Content Include="richtexteditor\server\colorpicker_more_ie.htm" />
+    <Content Include="richtexteditor\server\colorpicker_more_ns.htm" />
+    <Content Include="richtexteditor\server\insertchars.htm" />
+    <Content Include="richtexteditor\server\insertchars.xml" />
+    <Content Include="richtexteditor\server\Loader.aspx" />
+    <Content Include="richtexteditor\server\resx\ColorPicker_NS.css" />
+    <Content Include="richtexteditor\server\resx\dialog.css" />
+    <Content Include="richtexteditor\server\resx\Dialog_ColorPicker.js" />
+    <Content Include="richtexteditor\server\resx\Dialog_ColorPicker_IE.js" />
+    <Content Include="richtexteditor\server\resx\Dialog_ColorPicker_NS.js" />
+    <Content Include="richtexteditor\server\resx\insertchars.js" />
+    <Content Include="richtexteditor\server\resx\keyboard-data.js" />
+    <Content Include="richtexteditor\server\resx\keyboard-diacritic.js" />
+    <Content Include="richtexteditor\server\resx\keyboard-dialogue.js" />
+    <Content Include="richtexteditor\server\resx\keyboard-multihexa.js" />
+    <Content Include="richtexteditor\server\resx\shBrushCpp.js" />
+    <Content Include="richtexteditor\server\resx\shBrushCSharp.js" />
+    <Content Include="richtexteditor\server\resx\shBrushCss.js" />
+    <Content Include="richtexteditor\server\resx\shBrushDelphi.js" />
+    <Content Include="richtexteditor\server\resx\shBrushJava.js" />
+    <Content Include="richtexteditor\server\resx\shBrushJScript.js" />
+    <Content Include="richtexteditor\server\resx\shBrushPhp.js" />
+    <Content Include="richtexteditor\server\resx\shBrushPython.js" />
+    <Content Include="richtexteditor\server\resx\shBrushRuby.js" />
+    <Content Include="richtexteditor\server\resx\shBrushSql.js" />
+    <Content Include="richtexteditor\server\resx\shBrushVb.js" />
+    <Content Include="richtexteditor\server\resx\shBrushXml.js" />
+    <Content Include="richtexteditor\server\resx\shCore.js" />
+    <Content Include="richtexteditor\server\resx\sh_Core.js" />
+    <Content Include="richtexteditor\server\resx\spell.css" />
+    <Content Include="richtexteditor\server\resx\spell.js" />
+    <Content Include="richtexteditor\server\resx\virtualkeyboard.js" />
+    <Content Include="richtexteditor\server\SpellCheck.aspx" />
+    <Content Include="richtexteditor\server\spellcheck.xml" />
+    <Content Include="richtexteditor\server\syntaxhighlighter.htm" />
+    <Content Include="richtexteditor\server\syntaxhighlighter.xml" />
+    <Content Include="richtexteditor\server\virtualkeyboard.htm" />
+    <Content Include="richtexteditor\server\virtualkeyboard.xml" />
+    <Content Include="richtexteditor\skins\phone\skin.css" />
+    <Content Include="richtexteditor\skins\phone\skin.xml" />
+    <Content Include="richtexteditor\skins\phone\toolbar_phone.xml" />
+    <Content Include="richtexteditor\skins\phone\_layout.xml" />
+    <Content Include="richtexteditor\skins\smart\skin.css" />
+    <Content Include="richtexteditor\skins\smart\skin.xml" />
+    <Content Include="richtexteditor\skins\smart\toolbar_custom.xml" />
+    <Content Include="richtexteditor\skins\smart\toolbar_template.xml" />
+    <Content Include="richtexteditor\styles\richtexteditor.css" />
+    <Content Include="richtexteditor\styles\tabcode.css" />
+    <Content Include="richtexteditor\styles\tabedit.css" />
+    <Content Include="richtexteditor\styles\tabview.css" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\jquery-1.10.2.js" />
+    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.4.js" />
+    <Content Include="Scripts\jquery.signalR-1.1.4.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Web.config" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\SendEmailView.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Common\EncryptionService.cs" />
+    <Compile Include="Common\HtmlHelpers.cs" />
+    <Compile Include="Common\SessionContext.cs" />
+    <Compile Include="Common\SiteSession.cs" />
+    <Compile Include="Context\WebMailContext.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DashboardsController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SMTPController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="LCSK\Agent.cs" />
+    <Compile Include="LCSK\ChatHub.cs" />
+    <Compile Include="LCSK\Startup.cs" />
+    <Compile Include="Models\CnfiEmail.cs" />
+    <Compile Include="Models\PoPP.cs" />
+    <Compile Include="Models\Email.cs" />
+    <Compile Include="Models\Role.cs" />
+    <Compile Include="Models\SMTP.cs" />
+    <Compile Include="Models\User.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\POPEmail.cs" />
+    <Compile Include="ViewModels\SMTPemail.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Account\SignUp.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Shared\_Landing.cshtml" />
+    <Content Include="Views\Shared\_Dashboard.cshtml" />
+    <Content Include="Views\Dashboards\Index.cshtml" />
+    <Content Include="Views\Shared\_Login.cshtml" />
+    <Content Include="Views\Shared\_sideMenu.cshtml" />
+    <Content Include="Views\SMTP\Add.cshtml" />
+    <Content Include="Views\SMTP\Index.cshtml" />
+    <Content Include="Views\SMTP\ReadMail.cshtml" />
+    <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="richtexteditor\plugins\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>60447</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:60447/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.1.0.0\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\build\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

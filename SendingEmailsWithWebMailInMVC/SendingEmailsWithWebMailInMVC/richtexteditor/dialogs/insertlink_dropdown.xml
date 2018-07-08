@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="insertlinkdropdown_dialog" dock="fill" overflow="visible">
+		<groupbox text="@internallink" dock="top" overflow="visible" margin="3">
+			<panel width="280" height="210" overflow="scroll">
+				<htmlcontrol jsml-local="container" margin="2" padding="4" overflow="visible">
+				</htmlcontrol>
+			</panel>
+		</groupbox>
+		<initialize>
+			<![CDATA[
+			editor.LoadLinks(function(group)
+			{
+				self.loadgroupcontent(group,container._content);
+			});
+			]]>
+		</initialize>
+		<jsml-ref name="linktree"/>
+		<attach name="clicklink" arguments="je,link">
+			<![CDATA[
+			var tag=new $rte.LinkElement("a");
+			tag.SetAttribute("href",link.href);
+			if(editor.GetSelectionType()=="Point")
+			{
+				//TIPS:use link.text instead of the url
+				//tag.SetInnerText(link.text);
+				tag.SetInnerText(link.href);
+				editor.InsertNode(tag);
+				editor.SelectContent(tag);
+			}
+			else
+			{
+				if(editor.SurroundNode(tag))
+				{
+					editor.RemoveInnerLink(tag);
+					editor.SelectContent(tag);
+				}
+			}
+			dialog.close();
+			]]>
+		</attach>
+	</panel>
+
+	<panel jsml-base="insertlinkdropdown_dialog" />
+
+
+</jsml>

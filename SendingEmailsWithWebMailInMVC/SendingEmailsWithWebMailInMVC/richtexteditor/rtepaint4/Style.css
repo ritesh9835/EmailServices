@@ -1,0 +1,11 @@
+﻿span {font-size:13px;}
+.ImageEditor {border:1px solid #cccccc;}
+.ImageEditor .Toolbar {margin-right:5px; margin-left:3px;}
+.ImageEditor .Toolbar .Item {border:solid #8f8f8f 1px; background:#f6f6f6; padding:1px;}
+.ImageEditor .Toolbar .Over {background:#bfd6e6; border:solid #4290d9 1px;  padding:1px;}
+.ImageEditor .Frame {background:#cccccc; border:0px solid red;}
+.ImageEditor .Setting {margin-top:1px;}
+.ImageEditor .Setting .Tag {clear:both; padding:3px 5px 3px 5px;}
+.ImageEditor .Setting .Button {background:#f3f3f3; border:solid #999999 1px; margin-left:8px; color:#333333;}
+.ImageEditor .Setting .Input {width:100px; border:1px solid #cccccc;}
+.ImageEditor .Setting .Url {width:260px; border:1px solid #cccccc;}

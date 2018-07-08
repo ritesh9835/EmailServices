@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="phonecommondialog" dock="fill" overflow="visible" margin="0" padding="15">
+		<panel jsml-local="subbuttonpanel" dock="top" overflow="visible">
+			<panel jsml-base="phone_{skin}_{color}" command="Undo" imagename="m_undo" text="@Undo" />
+			<panel jsml-base="phone_{skin}_{color}" command="Redo" imagename="m_redo" text="@Redo" />
+
+			<panel jsml-base="phone_{skin}_{color}" command="Cut" imagename="m_cut" text="@CUT">
+				<attach name="mousehover">
+					self._ResetFCButton();
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" command="Copy" imagename="m_copy" text="@COPY">
+				<attach name="mousehover">
+					self._ResetFCButton();
+				</attach>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" imagename="m_paste" text="@Paste">
+				<initialize>
+				</initialize>
+			</panel>
+			<panel jsml-base="phone_{skin}_{color}" imagename="m_pastetext" text="@PasteFromDevice">
+				<attach name="click">
+					<![CDATA[
+					editor.ExecShowXmlDialog(self.get_element(), "phone_text.xml", {});
+					dialog.close();
+					]]>
+				</attach>
+			</panel>
+
+			<panel jsml-base="phone_{skin}_{color}" command="Find" imagename="m_find" text="@FINDANDREPLACE" />
+			<panel jsml-base="phone_{skin}_{color}" command="ToggleBorder" imagename="m_borders" text="@ToggleBorder" />
+			<panel jsml-base="phone_{skin}_{color}" command="Help" imagename="m_help"  text="@HELP" />
+
+		</panel>
+	</panel>
+
+	<panel jsml-base="phonecommondialog">
+	</panel>
+
+</jsml>

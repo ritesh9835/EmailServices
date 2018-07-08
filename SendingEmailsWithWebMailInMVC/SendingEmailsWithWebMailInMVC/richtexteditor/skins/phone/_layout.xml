@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../../core/jsml.xsd">
+
+	<panel jsml-class="_phone_layout_{skin}_{color}_toolbar" dock="fill" overflow="visible" jsml-append="false">
+
+		<jsml-ref name="rteborderstyle"/>
+
+		<initialize>
+			self.toggle_css_class("tbtoolbar_{skin}");
+			self.toggle_css_class("tbtoolbar_{color}");
+			self.toggle_css_class("tbtoolbar_{skin}_{color}");
+		</initialize>
+
+		<jsml-ref name="toolbar_{toolbar}_{skin}_{color}"/>
+
+	</panel>
+
+	<jsml-def name="_phone_layout_{skin}_{color}">
+
+		<initialize>
+			self.toggle_css_class("rteskin_{skin}");
+			self.toggle_css_class("rteskin_{color}");
+			self.toggle_css_class("rteskin_{skin}_{color}");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("rteskin_{skin}_"+name,mode);
+			self.toggle_css_class("rteskin_{color}_"+name,mode);
+			self.toggle_css_class("rteskin_{skin}_{color}_"+name,mode);
+		</attach>
+
+		<panel dock="top"  overflow_y="visible" padding="1" border_width="0">
+			<attach name="editor_ready" arguments="je,editor">
+				<![CDATA[
+				editor.AttachEvent("FullScreenChanged",function()
+				{
+					if(self.toolbarloaded)return;
+					self.toolbarloaded=true;
+					var ctrl=jsml.class_create_instance("_phone_layout_{skin}_{color}_toolbar");
+					self.append_child(ctrl);
+					ctrl.invoke_recursive("editor_ready",editor);
+				});
+				]]>
+			</attach>
+		</panel>
+
+		<panel jsml-local="editpanel" dock="fill" border_width="1,0,0,0" border_color="#7E9DB9" back_color="white">
+
+			<!--max_width="640"-->
+			<htmlcontrol jsml-member="editor_frame_container" dock="fill" margin="6,0,0,0" back_color="white" >
+
+			</htmlcontrol>
+
+			<panel jsml-local="mobile_touch_panel" dock="fill"  margin="6,0,0,0">
+
+			</panel>
+
+			<attach name="editor_ready" arguments="je,editor">
+				<![CDATA[
+				editor.LoadPlugin("mobilesidebar",function(plugin)
+				{
+					if(!plugin||!plugin.LoadUI)return;
+					plugin.LoadUI(self,mobile_touch_panel);
+				});
+				]]>
+			</attach>
+			
+		</panel>
+
+
+		<panel dock="over" visible="false">
+			<panel dock="over"  back_color="black" opacity="11"></panel>
+      <panel dock="fill" vertical_align="middle" horizontal_align="center">
+        <panel overflow="visible" height="40" jsml-base="panelbutton" horizontal_align="center" vertical_align="middle" border_color="#CDCDCD" back_color="#f7f7f7" padding="4,10,4,10" >
+          <image dock="right" jsml-base="image_{skin}_{color}" imagename="m_arrow_right-up" back_color="#f7f7f7" border_width="0" background="none" />
+          <label dock="left" vertical_align="middle" margin="0,5,0,5" text="Click Here to Edit" font_size="24px"></label>
+        </panel>
+      </panel>
+			<attach name="editor_ready" arguments="je,editor">
+				<![CDATA[
+				self._editor=editor;
+				editor.AttachEvent("FullScreenChanged",function()
+				{
+					var hide = !editor.IsCommandActive("FullScreen");
+					if(hide)editor.ExecCommand("SelectNone");
+					self.set_visible(hide);
+				});
+				self.set_visible(!editor.IsCommandActive("FullScreen"));
+				editor.Focus = function(){};
+				]]>
+			</attach>
+			<attach name="click">
+				if(!self._editor)return;
+				self._editor.ExecUICommand(null,"FullScreen");
+				if(self.touchinited)return;
+				self.touchinited=true;
+				self._editor.FireEvent("TouchInit",[mobile_touch_panel._element]);
+			</attach>
+
+		</panel>
+
+	</jsml-def>
+
+</jsml>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="rteubblayout" border_style="solid" border_width="1" border_color="#9abcd5">
+		<panel dock="top" overflow="visible" padding="1,0,1,2" border_width="0,0,1,0" border_color="#9abcd5" background="#F0F7FE url({folder}styles/images/tbribbon_lightblue.png) repeat-x left bottom">
+
+
+			<panel jsml-base="dlgroup">
+				<image jsml-base="dlimage" command="Undo" tooltip="@UNDO" />
+				<image jsml-base="dlimage" command="Redo" tooltip="@REDO" />
+			</panel>
+
+
+			<panel jsml-base="dlgroup">
+				<image jsml-base="dlimage" command="Bold" tooltip="@BOLD" />
+				<image jsml-base="dlimage" command="Italic" tooltip="@ITALIC" />
+				<image jsml-base="dlimage" command="Underline" tooltip="@UNDERLINE" imagename="under" />
+				<image jsml-base="dlimage" command="StrikeThrough" tooltip="@LINETHROUGH" imagename="strike" />
+			</panel>
+
+			<panel jsml-base="dlgroup">
+				<image jsml-base="dlimage" command="Superscript" tooltip="@SUPERSCRIPT"  />
+				<image jsml-base="dlimage" command="Subscript" tooltip="@SUBSCRIPT"  />
+			</panel>
+			
+			<panel jsml-base="dlgroup">
+				<image jsml-base="dlimage" command="removeformat" tooltip="@REMOVEFORMAT" imagename="unformat"  />
+			</panel>
+			
+			<panel jsml-base="dlgroup">
+				<image jsml-base="dlimage" command="JustifyLeft" tooltip="@JUSTIFYLEFT" imagename="left" />
+				<image jsml-base="dlimage" command="JustifyCenter" tooltip="@JUSTIFYCENTER" imagename="center" />
+				<image jsml-base="dlimage" command="JustifyRight" tooltip="@JUSTIFYRIGHT" imagename="right" />
+				<!--
+				<image jsml-base="dlimage" command="JustifyFull"/>
+				-->
+				<image jsml-base="dlimage" command="insertblockquote" tooltip="@INSERTBLOCKQUOTE" imagename="blockquote"  />
+			</panel>
+
+			<attach name="contextmenu" arguments="je,de">
+				de.cancel_default();
+			</attach>
+			<attach name="editor_ready" arguments="je,editor">
+				//alert(editor);
+			</attach>
+		</panel>
+
+		<panel jsml-member="editor_frame_container" dock="fill" back_color="white">
+
+		</panel>
+	</panel>
+
+
+
+
+</jsml>

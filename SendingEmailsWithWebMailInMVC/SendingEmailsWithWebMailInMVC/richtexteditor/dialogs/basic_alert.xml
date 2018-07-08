@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<panel jsml-class="alertdialogpanel" dock="fill" overflow="visible" margin="0" padding="15">
+		
+		<panel jsml-local="bottompanel" dock="bottom" horizontal_align="center">
+			<button width="82" text="@OK" jsml-local="okbtn">
+				<attach name="click">
+					dialog.close();
+				</attach>
+			</button>
+		</panel>
+
+		<panel dock="top" overflow="visible">
+			<image dock="left" src="{folder}images/msgbox_alert.gif" width="11" height="11" />
+			<label jsml-local="label" dock="fill" margin="0,5,15,5" word_wrap="true" vertical_align="middle" max_width="640" />
+		</panel>
+		
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)dialog.close();
+		</attach>
+		<initialize>
+			<![CDATA[
+			if(option.hideButtons)
+				bottompanel.set_visible(false);
+			label.set_text(option.message);
+			self.setDelegateTimeout(function()
+			{
+				okbtn.focus();
+				var dw=label.get_demand_content_width()
+				var dh=label.get_demand_content_height()
+				var cw=label.get_current_width();
+				var ch=label.get_current_height();
+				var w=dw-cw;
+				var h=dh-ch;
+				if(w>0||h>0)
+				{
+					if(w<0)w=0;
+					if(h<0)h=0;
+					//dialog.expandsize(w,h);
+				}
+			},1);
+			self.setDelegateTimeout(function(){okbtn.focus();},100);
+			]]>
+		</initialize>
+		<attach name="click">
+			okbtn.focus()
+		</attach>
+	</panel>
+
+	<object jsml-base="alertdialogpanel">
+
+	</object>
+
+</jsml>

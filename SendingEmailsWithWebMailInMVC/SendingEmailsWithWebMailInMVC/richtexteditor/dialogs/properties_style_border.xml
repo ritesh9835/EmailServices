@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_border" dock="fill">
+		<groupbox text="@BORDER" dock="top" overflow="visible" margin="4">
+			<panel dock="left" width="90">
+				<panel margin="3,3,3,3" height="18" dock="top">
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="top:" text_align="right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="right:" text_align="right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="bottom:" text_align="right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" vertical_align="middle" width="80" text="left:" text_align="right"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<label dock="left" width="80" text="@borderradius|:" vertical_align="middle" text_align="right"  />
+				</panel>
+			</panel>
+			<panel dock="left" width="110">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<label dock="left" vertical_align="middle" width="100" text="border-style:" />
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<checkbox dock="left" jsml-local="cbstyle" />
+					<label dock="left" vertical_align="middle" width="70" text="@SAMEFORALL" unselectable="true">
+						<attach name="click">
+							cbmargin.set_checked(!cbmargin.get_checked());
+							cbmargin.invoke_event("change");
+						</attach>
+					</label>
+
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:border-top-style" width="100" jsml-local="tbstyletop">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="dotted" text="dotted" />
+						<listitem value="dashed" text="dashed" />
+						<listitem value="solid" text="solid" />
+						<listitem value="double" text="double" />
+						<listitem value="groove" text="groove" />
+						<listitem value="ridge" text="ridge" />
+						<listitem value="inset" text="inset" />
+						<listitem value="outset" text="outset" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:border-right-style" width="100" jsml-local="tbstyleright">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="dotted" text="dotted" />
+						<listitem value="dashed" text="dashed" />
+						<listitem value="solid" text="solid" />
+						<listitem value="double" text="double" />
+						<listitem value="groove" text="groove" />
+						<listitem value="ridge" text="ridge" />
+						<listitem value="inset" text="inset" />
+						<listitem value="outset" text="outset" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:border-bottom-style" width="100" jsml-local="tbstylebottom">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="dotted" text="dotted" />
+						<listitem value="dashed" text="dashed" />
+						<listitem value="solid" text="solid" />
+						<listitem value="double" text="double" />
+						<listitem value="groove" text="groove" />
+						<listitem value="ridge" text="ridge" />
+						<listitem value="inset" text="inset" />
+						<listitem value="outset" text="outset" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropdropdown" propname="style:border-left-style" width="100" jsml-local="tbstyleleft">
+						<listitem value="" text="@NOTSET" />
+						<listitem value="none" text="none" />
+						<listitem value="hidden" text="hidden" />
+						<listitem value="dotted" text="dotted" />
+						<listitem value="dashed" text="dashed" />
+						<listitem value="solid" text="solid" />
+						<listitem value="double" text="double" />
+						<listitem value="groove" text="groove" />
+						<listitem value="ridge" text="ridge" />
+						<listitem value="inset" text="inset" />
+						<listitem value="outset" text="outset" />
+						<listitem value="inherit" text="inherit" />
+					</panel>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" width="100" jsml-base="rtepropnumupdown" propname="style:border-radius" suffix="px" min_value="0" />
+				</panel>
+			</panel>
+			<panel dock="left" width="110">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<label dock="left" vertical_align="middle" width="100" text="border-width:" />
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<checkbox dock="left" jsml-local="cbwidth" />
+					<label dock="left" vertical_align="middle" width="70" text="@SAMEFORALL" unselectable="true">
+						<attach name="click">
+							cbmargin.set_checked(!cbmargin.get_checked());
+							cbmargin.invoke_event("change");
+						</attach>
+					</label>
+
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:border-top-width" jsml-local="tbwidthtop"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:border-right-width" jsml-local="tbwidthright"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:border-bottom-width" jsml-local="tbwidthbottom"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:border-left-width" jsml-local="tbwidthleft"/>
+				</panel>
+			</panel>
+			<panel dock="left" width="110">
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<label dock="left" vertical_align="middle" width="100" text="border-color:" />
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<checkbox dock="left" jsml-local="cbcolor" />
+					<label dock="left" vertical_align="middle" width="70" text="@SAMEFORALL" unselectable="true">
+						<attach name="click">
+							cbmargin.set_checked(!cbmargin.get_checked());
+							cbmargin.invoke_event("change");
+						</attach>
+					</label>
+
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:border-top-color" jsml-local="tbcolortop"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:border-right-color" jsml-local="tbcolorright"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:border-bottom-color" jsml-local="tbcolorbottom"/>
+				</panel>
+				<panel margin="3,3,3,3" height="18" dock="top">
+					<panel dock="left" width="4" />
+					<panel dock="left" jsml-base="rtepropcolorbox" propname="style:border-left-color" jsml-local="tbcolorleft"/>
+				</panel>
+			</panel>
+		</groupbox>
+		<panel margin="3,3,1,3" height="18" dock="top">
+			<label dock="left" vertical_align="middle" text="*Requires a CSS 3 compliant browser to view" width="300"/>
+		</panel>
+
+
+		<method name="bindrectlogic" arguments="mainstyle,cb,a,b,c,d">
+			<![CDATA[
+			var arr=[a,b,c,d];
+			
+			function handletbchange()
+			{
+				if(cb.get_checked())
+				{
+					var v=a.get_node_value();
+					a.set_node_value(null);
+					option.targetnode.SetStyle("border-" + mainstyle,v);
+				}
+			}
+			function handlecbchange()
+			{
+				var v=option.targetnode.GetStyle("border-" + mainstyle)||a.get_node_value();
+				if(cb.get_checked())
+				{
+					option.targetnode.SetStyle("border-" + mainstyle,v);
+					for(var i=0;i<arr.length;i++)
+					{
+						arr[i].set_node_value(null);
+						arr[i].set_ctrl_value("");
+					}
+					a.set_node_value(null);
+					a.set_ctrl_value(v);
+				}
+				else
+				{
+          var attrs = ["border-top-" + mainstyle,"border-right-" + mainstyle,"border-bottom-" + mainstyle,"border-left-" + mainstyle];
+					for(var i=0;i<arr.length;i++)
+					{
+						arr[i].set_node_value(option.targetnode.GetStyle(attrs[i])||(!!cb._hasloaded?v:null));
+						arr[i].set_ctrl_value(option.targetnode.GetStyle(attrs[i])||(!!cb._hasloaded?v:""));
+					}
+					option.targetnode.SetStyle("border-" + mainstyle,null);
+				}
+				for(var i=0;i<arr.length;i++)
+				{
+					if(i>0)arr[i].set_disabled(cb.get_checked());
+				}
+			}
+			
+			cb.attach_event("change",handlecbchange);
+			
+			var anyval=null;
+			for(var i=0;i<arr.length;i++)
+			{
+				if(!anyval)anyval=arr[i].get_node_value();
+				arr[i].attach_event("change",handletbchange);
+			}
+			cb.set_checked(!anyval);
+			handlecbchange();
+			]]>
+		</method>
+		<method name ="bindallrect">
+			<![CDATA[
+			self.bindrectlogic("style",cbstyle,tbstyletop,tbstyleright,tbstylebottom,tbstyleleft);
+			self.bindrectlogic("width",cbwidth,tbwidthtop,tbwidthright,tbwidthbottom,tbwidthleft);
+			self.bindrectlogic("color",cbcolor,tbcolortop,tbcolorright,tbcolorbottom,tbcolorleft);
+			]]>
+		</method>
+
+		<initialize>
+			self.setDelegateTimeout(self.delegate(self.bindallrect),111);
+		</initialize>
+
+	</panel>
+
+	<panel jsml-base="properties_border" />
+
+
+</jsml>

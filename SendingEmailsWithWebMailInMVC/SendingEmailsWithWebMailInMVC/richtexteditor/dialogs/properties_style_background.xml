@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+
+	<panel jsml-class="properties_background" dock="fill">
+
+		<groupbox text="@background" dock="top" overflow="visible" margin="4">
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-color:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropcolorbox" propname="style:background-color" />
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-image:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="240" propname="style:background-image">
+					<method name="set_node_value" overrideas="base_set_value">
+						<![CDATA[
+						if(!value)
+						{
+							self.base_set_value("");
+						}
+						else
+						{
+							self.base_set_value("url("+value+")");
+						}
+						]]>
+					</method>
+					<method name="get_node_value" overrideas="base_get_value">
+						var url=self.base_get_value();
+						if(!url)return "";
+						return url.replace(/url\(["']?(.*)["']?\)/gi,"$1");
+					</method>
+				</panel>
+				<panel dock="left" width="4" />
+				<button dock="left" height="24" width="30" text="...">
+					<attach name="click">
+						instance.showuploadfile(self);
+					</attach>
+				</button>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-repeat:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-repeat">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="repeat" text="repeat" />
+					<listitem value="repeat-x" text="repeat-x" />
+					<listitem value="repeat-y" text="repeat-y" />
+					<listitem value="no-repeat" text="no-repeat" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-attachment:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-attachment">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="scroll" text="scroll" />
+					<listitem value="fixed" text="fixed" />
+					<listitem value="repeat-y" text="repeat-y" />
+					<listitem value="no-repeat" text="no-repeat" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-clip:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-clip">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="border-box" text="border-box" />
+					<listitem value="padding-box" text="padding-box" />
+					<listitem value="content-box" text="content-box" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="background-origin:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-origin">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="padding-box" text="padding-box" />
+					<listitem value="border-box" text="border-box" />
+					<listitem value="content-box" text="content-box" />
+				</panel>
+			</panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="(x) background-position:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-position" jsml-local="bgpvd">
+					<method name="get_node_value">
+						return instance.get_position_value(true,true);
+					</method>
+					<method name="set_node_value">
+						instance.set_position_value(true,value);
+						bgpvt.invoke_event("loadvalue");
+					</method>
+					<listitem value="" text="@NOTSET" />
+					<listitem value="top" text="@TOP" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="bottom" text="@BOTTOM" />
+				</panel>
+				<label dock="left" vertical_align="middle" width="20" text=" or "/>
+				<panel dock="left" jsml-base="rtepropunitbox" width="48" propname="style:background-position" jsml-local="bgpvt">
+					<method name="get_node_value">
+						return instance.get_position_value(true,false);
+					</method>
+					<method name="set_node_value">
+						instance.set_position_value(true,value);
+						bgpvd.invoke_event("loadvalue");
+					</method>
+				</panel>
+			</panel>
+			<panel margin="7,3,10,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="(y) background-position:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" propname="style:background-position" jsml-local="bgphd">
+					<method name="get_node_value">
+						return instance.get_position_value(false,true);
+					</method>
+					<method name="set_node_value">
+						instance.set_position_value(false,value);
+						bgpht.invoke_event("loadvalue");
+					</method>
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="center" text="@CENTER" />
+					<listitem value="right" text="@RIGHT" />
+				</panel>
+				<label dock="left" vertical_align="middle" width="20" text=" or "/>
+				<panel dock="left" jsml-base="rtepropunitbox" width="48" propname="style:background-position" jsml-local="bgpht">
+					<method name="get_node_value">
+						return instance.get_position_value(false,false);
+					</method>
+					<method name="set_node_value">
+						instance.set_position_value(false,value);
+						bgphd.invoke_event("loadvalue");
+					</method>
+				</panel>
+			</panel>
+		</groupbox>
+
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+		<method name="get_position_value" arguments="isvtc,dropdown">
+			<![CDATA[
+			var node=self.find_node();
+			var pos=node.GetStyle("background-position");
+			if(!pos)return null;
+			pos=pos.split(' ')[isvtc?0:1];
+			if(!pos)return null;
+			if(dropdown)
+			{
+				if(isNaN(parseInt(pos)))
+					return pos;
+			}
+			else
+			{
+				if(!isNaN(parseInt(pos)))
+					return pos;
+			}
+			return null;
+			]]>
+		</method>
+		<method name="set_position_value" arguments="isvtc,value">
+			<![CDATA[
+			var node=self.find_node();
+			var pos=node.GetStyle("background-position")||"";
+			var pair=pos.split(' ');
+			if(pair.length!=2)
+			{
+				if(!value)
+				{
+					node.SetStyle("background-position",null)
+					return;
+				}
+				pair=["0px","0px"];
+			}
+			pair[isvtc?0:1]=value||"0px";
+			pos=pair.join(" ");
+			if(pos=="0px 0px")
+				pos=null;
+			node.SetStyle("background-position",pos)
+			]]>
+		</method>
+
+		<method name="showuploadfile" arguments="anchor">
+			<![CDATA[
+			var img=new $rte.GenericElement("img");
+			var newoption={width:640,height:420,targetnode:img};
+			newoption.nestedmode=true;
+			newoption.callback=function(res)
+			{
+				if(!res)return;
+				option.targetnode.SetStyle("background-image","url("+img.GetAttribute("src")+")");
+				self.invoke_recursive("loadvalue");
+				self.bubble_event("rtepropsaved");
+			}
+			editor.ShowXmlDialog(editor.BuildDialogUrl("insertgallery.xml"),newoption);
+			]]>
+		</method>
+		
+	</panel>
+
+
+	<panel jsml-base="properties_background" />
+
+
+</jsml>

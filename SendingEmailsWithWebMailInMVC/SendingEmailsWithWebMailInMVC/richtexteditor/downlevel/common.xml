@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<execute>
+		<![CDATA[
+		jsml.brsw1=["border-top-width","border-right-width","border-bottom-width","border-left-width"];
+		jsml.brsw2=["borderTopWidth","borderRightWidth","borderBottomWidth","borderLeftWidth"];
+		]]>
+	</execute>
+
+	<jsml-def name="rteborderstyle">
+		<attach name="attach_dom">
+			<![CDATA[
+			if(self._border)return;
+			var sty=jsml.msie?self._element.currentStyle:window.getComputedStyle(self._element,null);
+			var arr=jsml.msie?jsml.brsw2:jsml.brsw1;
+			var bor=[];
+			for(var i=0;i<arr.length;i++)
+			{
+				var val=jsml.msie?sty[arr[i]]:sty.getPropertyValue(arr[i]);
+				bor[i]=parseInt(val)||0;
+			}
+			self.set_border_width(bor);
+			]]>
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtemousecontrol">
+		<jsml-ref name="rteborderstyle"/>
+		<initialize>
+			self._element.ondragstart=new Function("","return false");
+		</initialize>
+		<attach name="mousehover">
+			if(self._hovered)return;
+			self._hovered=true;
+			self.invoke_event("tooglecssclass","hovered",self._hovered);
+		</attach>
+		<attach name="mousedown" arguments="jevent,devent">
+			self._isclicked=true;
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+			if(devent)devent.cancel_default();
+		</attach>
+		<attach name="mouseup">
+			self._isclicked=false;
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+		</attach>
+		<attach name="mouseleave">
+			<![CDATA[
+			self._hovered=false;
+			self.setDelegateTimeout(function()
+			{
+				if(self._hovered)return;
+				self._isclicked=false;
+				self.invoke_event("tooglecssclass","hovered",self._hovered);
+				self.invoke_event("tooglecssclass","clicked",self._isclicked);
+			},1);
+			]]>
+		</attach>
+		<attach name="detach_dom">
+			self._hovered=false;
+			self._isclicked=false;
+			self.invoke_event("tooglecssclass","hovered",self._hovered);
+			self.invoke_event("tooglecssclass","clicked",self._isclicked);
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtebuttoncontrol">
+		<jsml-ref name="rtemousecontrol"/>
+		<initialize>
+			self.toggle_css_class("tbcontrol",true);
+		</initialize>
+		<property name="checked">
+			<get>return self._checked</get>
+			<set>self._checked=!!value;this.invoke_event("set_checked");</set>
+		</property>
+		<property name="disabled">
+			<get>return self._disabled</get>
+			<set>self._disabled=!!value;this.invoke_event("set_disabled");</set>
+		</property>
+		<attach name="set_checked">
+			self.invoke_event("tooglecssclass","checked",self._checked);
+		</attach>
+		<attach name="set_disabled">
+			self.invoke_event("tooglecssclass","disabled",self._disabled);
+		</attach>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("tbcontrol_"+name,mode);
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtecommandcontrol">
+		<property name="command">
+			<get>
+				return self._command;
+			</get>
+			<set>
+				self._command=value;
+				self.update_image();
+			</set>
+		</property>
+		<property name="arguments">
+			<get>
+				return self._arguments;
+			</get>
+			<set>
+				self._arguments=value;
+			</set>
+		</property>
+		<property name="imagename">
+			<get>
+				return self._imagename;
+			</get>
+			<set>
+				self._imagename=value;
+				self.update_image();
+			</set>
+		</property>
+		<method name="find_config">
+			<![CDATA[
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+				if(ctrl._rteconfig)return ctrl._rteconfig;
+			var editor=self.find_editor();
+			if(editor)return editor._config;
+			]]>
+		</method>
+		<method name="find_editor">
+			<![CDATA[
+			if(self._rteinstance)return self._rteinstance;
+			for(var ctrl=self;ctrl!=null;ctrl=ctrl.get_jsml_parent())
+			{
+				if(!ctrl._rteinstance)continue;
+				self._rteinstance=ctrl._rteinstance;
+				return ctrl._rteinstance;
+			}
+			]]>
+		</method>
+
+		<method name="change_src" arguments="image,value">
+			<![CDATA[
+			image.set_src(value);
+			]]>
+		</method>
+		<method name="update_image">
+			<![CDATA[
+			
+			var image=self.image||self;
+			
+			if(!self._dom_attached)return;
+			var imgname=self._imagename||self._command;
+			if(!imgname)
+				return;
+
+			imgname=imgname.toLowerCase();
+			var imgfile="images/"+imgname+".png";
+			
+			self.change_src(image,"{folder}"+imgfile);
+
+			]]>
+		</method>
+		<attach name="attach_dom">
+			self._config=self.find_config();
+
+			self.update_image();
+		</attach>
+		<attach name="click">
+			self.exec_command();
+		</attach>
+		<method name="exec_command" arguments="suffix,splitcmd">
+			<![CDATA[
+			var editor=self.find_editor();
+			if(!editor)return;
+			if(!splitcmd)
+			{
+				splitcmd=self.get_command();
+				if(!splitcmd)return;
+				if(suffix)splitcmd+=suffix;
+			}
+			var args=self.get_arguments();
+			if(!args)args=[];
+			else args=args.split(',');
+			var target=self._commandelement||self._element;
+			editor.ExecUICommand(target,splitcmd,args[0],args[1],args[2],args[3]);
+			]]>
+		</method>
+
+	</jsml-def>
+
+	<jsml-def name="rtetoolbarcontrol">
+
+		<jsml-ref name="rtecommandcontrol" />
+
+		<attach name="contextmenu" arguments="je,de">
+			de.cancel_default();
+		</attach>
+
+		<property name="noactive">
+			<get>return self._noactive;</get>
+			<set>self._noactive=value;</set>
+		</property>
+		<attach name="editor_ready" arguments="jevent,arg0">
+			<![CDATA[
+			self._rteinstance=arg0;
+			self._rteinstanceeventid=self._rteinstance.AttachEvent("UpdateUI",function(editor,e){
+				self.invoke_event("update_statusui");
+			});
+			self.invoke_event("update_statusui");
+			]]>
+		</attach>
+		<attach name="disposing">
+			if(self._rteinstanceeventid)self._rteinstance.DetachEvent("UpdateUI",self._rteinstanceeventid);
+		</attach>
+		<attach name="update_statusui">
+			<![CDATA[
+			var command=self.get_command();
+			if(!command)return;
+
+			var dc=!self._rteinstance.IsCommandReady(command)
+			if(dc!=(!!self._disabled))
+			{
+				self.set_disabled(dc);
+			}
+			var qc=this._noactive?false:(!!self._rteinstance.IsCommandActive(command));
+			if(qc!=(!!self._checked))
+			{
+				self.set_checked(qc);
+			}
+			]]>
+		</attach>
+	</jsml-def>
+
+	<jsml-def name="rtecommandcolor">
+		<panel id="colorpanel" width="16" height="4" left="2" bottom="2" back_color="black" />
+
+		<attach name="update_statusui">
+			<![CDATA[
+			var image=self.image;
+			var editor=self._rteinstance;
+			var cmdlower=self.get_command().toLowerCase();
+			var colorpanel=self.find_child("colorpanel");
+			if(cmdlower=='forecolor')
+			{
+				var color=editor.current_forecolor||editor._config.default_forecolor;
+				colorpanel.set_back_color(color);
+			}
+			if(cmdlower=='backcolor')
+			{
+				var color=editor.current_backcolor||editor._config.default_backcolor;
+				colorpanel.set_back_color(color);
+			}
+			]]>
+		</attach>
+	</jsml-def>
+
+
+	<image jsml-class="dlimage" cursor="pointer" width="22" height="20" overflow="none" dock="left">
+		<jsml-ref name="rtebuttoncontrol" />
+		<jsml-ref name="rtetoolbarcontrol"/>
+		<initialize>
+			self.toggle_css_class("dlimage");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("dlimage_"+name,mode);
+		</attach>
+	</image>
+
+	<panel jsml-class="dlgroup" dock="flow" overflow_x="visible" margin="2,3,3,1" height="22" width="20" padding="0,-1,0,-1">
+
+		<jsml-ref name="rteborderstyle"/>
+		
+		<initialize>
+			self.toggle_css_class("dlgroup");
+		</initialize>
+		<attach name="tooglecssclass" arguments="jevent,name,mode">
+			self.toggle_css_class("dlgroup_"+name,mode);
+		</attach>
+	</panel>
+
+
+
+	<execute>
+		<![CDATA[
+		jsml.rtecommonlibraryloaded=true;
+		]]>
+	</execute>
+
+</jsml>

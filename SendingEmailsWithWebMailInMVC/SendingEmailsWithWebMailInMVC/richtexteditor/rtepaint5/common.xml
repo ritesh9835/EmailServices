@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+	<panel jsml-class="floatbox" width="100" height="61" border_color="darkgray" border_style="solid" border_width="1" back_color="white" overflow="visible">
+		<initialize>
+			self._element._floatboxinstance=self;
+		</initialize>
+		<method name="show" arguments="parentElement,x,y,option">
+			<![CDATA[
+			
+			if(!x)x=0;if(!y)y=0;
+			if(!option)option={};
+			
+			
+			self._showtime=new Date().getTime();
+			
+			self._fbOwner=parentElement;
+			
+			var pose=parentElement||document.body;
+			var pare;
+	
+			if(parentElement)
+			{
+				pare=parentElement.parentNode;
+				while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+			}
+			
+			if(pare!=null)
+			{
+				self._parentfloatbox=pare._floatboxinstance;
+				self._parentfloatbox._onchildshow(self);
+			}
+			else
+			{
+				if(window._currentfloatbox)
+					window._currentfloatbox._onothershow(self);
+				window._currentfloatbox=self;
+			}
+			
+			
+			var s=self._element.style;
+			
+			s.boxShadow="3px 3px 12px #999999";
+			self._dommode='absolute';
+			self.set_parent(document.body);
+
+			var pos=jsml.calc_position(self._element,pose);
+			var ods;
+			var odsborder;
+			
+			if(parentElement)
+			{
+				var w=self.get_width();
+				var h=self.get_height();
+				var pew=pose.offsetWidth;
+				var peh=pose.offsetHeight;
+				
+				if(!self._overdiv&&!option.stopOverlay)
+				{
+					self._overdiv=document.createElement("DIV");
+					self._overdiv.setAttribute("unselectable","on");
+					self._overdiv.onselectstart=jsml.cancel_event_function;
+					ods=self._overdiv.style;
+					ods.position='absolute';
+					ods.top=pos.top+"px";
+					ods.left=pos.left+"px";
+					ods.width=pew-2+"px";
+					ods.height=peh-2+"px";
+					ods.border="solid 1px "+(self.get_border_color()||"darkgray");
+					
+					if(false)
+					{
+						var trans=document.createElement("DIV");
+						self._overdiv.appendChild(trans);
+						trans.style.backgroundColor='white';
+						jsml.set_opacity(trans,1);
+					}
+					else
+					{
+						ods.backgroundColor=(self.get_back_color()||"white");
+						ods.overflow='hidden';
+						self._overdiv.innerHTML=parentElement.innerHTML;
+						if(parentElement.style.textAlign != "left")
+							self._overdiv.style.textAlign = parentElement.style.textAlign;
+					}
+					
+					document.body.appendChild(self._overdiv);
+					
+					if(option.stopToggle)
+					{
+						self._overdiv.onmousedown=jsml.cancel_bubble_function;
+					}
+					if(option.buttonClick)
+					{
+						self._overdiv.onclick=option.buttonClick
+					}
+					if(self._parentfloatbox)
+					{
+						self._overdiv.onmouseover=function()
+						{
+							self._parentfloatbox.clearclosechildtimer();
+						}
+					}
+				}
+				
+			}
+			
+			jsml.set_opacity(self._element,1);
+			if(self._overdiv)jsml.set_opacity(self._overdiv,1);
+			
+			function ResetBorderColor()
+			{
+				if(ods&&odsborder&&self.get_opacity()>50)
+				{
+					var bordercolor=self.get_border_color();
+					ods.borderLeftColor=bordercolor;
+					ods.borderTopColor=bordercolor;
+					ods.borderRightColor=bordercolor;
+					ods.borderBottomColor=bordercolor;
+					ods[odsborder]=(self.get_back_color()||"white");
+				}
+			}
+			
+			var opacity=-40;
+			function NextOpacity()
+			{
+				clearTimeout(self.nextopacitytimerid);
+				
+				opacity+=20;
+				if(opacity>=self.get_opacity())
+				{
+					opacity=self.get_opacity();
+				}
+				else
+				{
+					self.nextopacitytimerid=self.setDelegateTimeout(NextOpacity,30);
+				}
+				if(opacity>0)
+				{
+					jsml.set_opacity(self._element,opacity);
+					if(self._overdiv)jsml.set_opacity(self._overdiv,opacity);
+					ResetBorderColor();
+				}
+			}
+			
+			function SetPosition()
+			{
+				pos=jsml.calc_position(self._element,pose);
+				
+				pos.srcleft=pos.left;
+				pos.srctop=pos.top;
+
+				odsborder=null;
+				
+				var nomovex=false;
+				var nomovey=false;
+				
+				if(parentElement)
+				{
+					switch(option.floatMode)
+					{
+						case "l-t":
+							nomovex=true;
+							pos.left+=-w;
+							pos.top+=peh-h;
+							break;
+						case "t-l":
+							nomovey=true;
+							pos.left+=-w;
+							pos.top+=peh-h;
+							break;
+						case "l-b":
+							nomovex=true;
+							pos.left+=-w;
+							break;
+						case "b-l":
+							nomovey=true;
+							pos.left+=pew-w;
+							pos.top+=peh;
+							break;
+						case "r-t":
+							nomovex=true;
+							pos.left+=pew;
+							pos.top+=peh-h;
+							break;
+						case "t-r":
+							nomovey=true;
+							pos.top+=-h;
+							break;
+						case "r-b":
+							nomovex=true;
+							pos.left+=pew;
+							if(ods)
+							{
+								ods.width=pew-1+"px";
+								odsborder="borderRightColor";
+							}
+							break;
+						default:
+						case 'b-r':
+							nomovey=true;
+							pos.top+=peh;
+							if(ods)
+							{
+								ods.height=peh-1+"px";
+								odsborder="borderBottomColor";
+							}
+							break;
+						case 'none':
+							break;
+					}
+				}
+
+				if(option.floatMirror!==false)
+				{
+					jsml.adjust_mirror(self._element,pose.nodeName=="BODY"?null:pose,pos,nomovex,nomovey);
+					if(pos.xflip)
+					{
+						if(odsborder=='borderRightColor')
+						{
+							odsborder='borderLeftColor';
+							pos.left+=1;
+						}
+					}
+					if(pos.yflip)
+					{
+						if(odsborder=='borderBottomColor')
+						{
+							odsborder='borderTopColor';
+							pos.top+=1;
+						}
+						ResetBorderColor();
+					}
+				}
+				
+				s.left=(pos.left+x)+"px";
+				s.top=(pos.top+y)+"px";
+			}
+			
+			self._reposfunc=SetPosition;
+			self.setDelegateTimeout(NextOpacity,20);
+			self.setDelegateTimeout(SetPosition,10);
+			
+			]]>
+		</method>
+		<attach name="resize">
+			if(!self._reposfunc)return;
+			self.setDelegateTimeout(function(){if(self._reposfunc)self._reposfunc();},1);
+		</attach>
+		<property name="title">
+			<get>return self.get_text();</get>
+			<set>self.set_text(value);</set>
+		</property>
+		<property name="manualclose">
+			<get>return self._manualclose;</get>
+			<set>self._manualclose = value;</set>
+		</property>
+		<method name="dispose" overrideas="panel_dispose">
+			self.close("dispose");
+		</method>
+		<method name="close" arguments="reason">
+			<![CDATA[
+			if(window._currentfloatbox==self)
+				window._currentfloatbox=null;
+			if(self._jsml_disposed)
+				return;
+			self.close_child();
+			self.set_visible(false);
+			self.setDelegateTimeout(function(){
+				self.panel_dispose();
+				if(self._overdiv)
+				{
+					self._overdiv.parentNode.removeChild(self._overdiv);
+					self._overdiv=null;
+				}
+			},1);
+			self.invoke_event("closing");
+			]]>
+		</method>
+		<method name="startclosechildtimer">
+			<![CDATA[
+			var currentchild=self._childfloatbox;
+			clearTimeout(self._cctimerid);
+			self._cctimerid=self.setDelegateTimeout(function(){
+				if(currentchild==self._childfloatbox)
+					self.close_child();
+			},value||500);
+			]]>
+		</method>
+		<method name="clearclosechildtimer">
+			clearTimeout(self._cctimerid);
+		</method>
+		<attach name="mousehover">
+			if(self._parentfloatbox)self._parentfloatbox.clearclosechildtimer();
+		</attach>
+		<method name="close_child">
+			self.clearclosechildtimer();
+			if(!self._childfloatbox)return;
+			self._childfloatbox.close("close_child");
+			self._childfloatbox=null;
+		</method>
+		<method name="_onchildshow" arguments="childfloatbox">
+			self.clearclosechildtimer();
+			if(self._childfloatbox==childfloatbox)return;
+			if(self._childfloatbox)self._childfloatbox._onothershow();
+			self._childfloatbox=childfloatbox;
+		</method>
+		<method name="_onothershow" arguments="otherfloatbox">
+			self.close("other_show");
+		</method>
+		<method name="_onouterclick">
+			if(self.get_manualclose()) return;
+			self.close("outer_click");
+		</method>
+		<method name="_onmenuclick">
+			self.close("menu_click");
+		</method>
+		<method name="resize" arguments="width,height">
+			if(width)self.set_width(width);
+			if(height)self.set_height(height);
+		</method>
+	</panel>
+
+	<execute>
+		<![CDATA[
+		jsml.rtecommonlibraryloaded=true;
+		function tryclosefloatbox(e)
+		{
+			if(!window._currentfloatbox)return;
+			var e=e||window.event;
+			var pare=e.srcElement||e.target;
+			while(pare!=null&&!pare._floatboxinstance)pare=pare.parentNode;
+			if(pare)return;
+			window._currentfloatbox._onouterclick();
+		}
+		jsml.dom_attach_event(document,'mousedown',tryclosefloatbox);
+		jsml.dom_attach_event(document,'keydown',function(e)
+		{
+			var e=e||window.event;
+			if(e.keyCode!=27)return;
+			tryclosefloatbox(e)
+		});
+		]]>
+	</execute>
+
+
+</jsml>

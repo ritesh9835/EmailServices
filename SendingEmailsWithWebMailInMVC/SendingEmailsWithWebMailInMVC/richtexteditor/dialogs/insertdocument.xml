@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<include src="{folder}dialogs/browsedialogbase.xml?{timems}" />
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTDOCUMENT"));
+	</execute>
+
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+			class insertdocumentdialog
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+	<panel jsml-class="insertdocumentdialog" jsml-base="browsedialogbase" dock="fill" margin="3">
+
+
+		<panel dock="top"  height="210" margin="3" jsml-local="toparea">
+			<panel dock="left" border_width="1" border_color="#a0a0a0" border_style="solid" padding="1,0,1,1" width="355">
+				<!-- Items Header -->
+				<panel dock="top" height="21" back_color="#eeeeee" border_width="0,0,1,0" border_color="white">
+					<checkbox dock="left" jsml-local="checkbox" width="20" padding="1,0,-1,0">
+						<attach name="change">
+							instance.checkallitems(self.get_checked());
+						</attach>
+					</checkbox>
+					<panel dock="left" width="1" back_color="white"/>
+					<image dock="left" width="19" overflow="none" src="{folder}images/refresh.gif" tooltip="@REFRESH"  padding="1,-1,-1,1" jsml-base="imagebutton">
+						<attach name="click">
+							instance.call_reload(self);
+						</attach>
+					</image>
+					<label dock="right" width="17" border_width="0,0,0,1" border_color="white"  />
+					<label dock="right" width="21" border_width="0,0,0,1" border_color="white" />
+					<panel dock="right" width="59" border_width="0,0,0,1" border_color="white">
+						<label dock="left" width="42" text="Size" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" horizontal_align="right" cursor="pointer" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Size");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortsizeicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+					<panel dock="left" width="30" overflow_x="visible" border_width="0,0,0,1" border_color="white" >
+						<label dock="left" width="15" text="Name" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" cursor="pointer" overflow_x="visible" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Name");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortnameicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+
+				</panel>
+				<!-- Items List -->
+				<panel jsml-base="scrollitemspanel" dock="fill" jsml-local="itemspanel" back_color="white">
+				</panel>
+				<label dock="fill" jsml-local="noitemlabel" visible="false" text="@empty" vertical_align="middle" horizontal_align="center">
+				</label>
+				<panel dock="over" visible="false" jsml-local="loadingmask">
+					<image dock="fill" vertical_align="middle" horizontal_align="center"  src="{folder}images/loading5.gif" />
+					<panel dock="over"  opacity="10" back_color="gray" jsml-enable="0"></panel>
+				</panel>
+			</panel>
+			<panel dock="fill" border_width="1,1,1,0" border_color="#a0a0a0" border_style="solid" back_color="white">
+				<!-- Preview previewframe -->
+				<htmlcontrol jsml-local="previewframe" dock="fill" zoom="out" margin="3">
+					<attach name="resize">
+						<![CDATA[
+						var iframe=self._content.firstChild;
+						if(!iframe||iframe.nodeName!="IFRAME")return;
+						iframe.style.width=self.get_client_width()+"px";
+						iframe.style.height=self.get_client_height()+"px";
+						]]>
+					</attach>
+					<attach name="disposing">
+						self._content.innerHTML="";
+					</attach>
+				</htmlcontrol>
+			</panel>
+		</panel>
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						if(!option.targetnode.GetAttribute("href"))return;
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+	<groupbox dock="left" text="@ATTRIBUTES" overflow="visible">
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@ATTR_TARGET|:" text_align="right" width="50"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropdropdown" propname="target" width="80">
+		  <listitem value="" text="@NOTSET" />
+		  <listitem value="_blank" text="@ATTR_TARGETBLANK" />
+		  <listitem value="_parent" text="@ATTR_TARGETPARENT" />
+		</panel>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@COLOR|:" width="50" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropcolorbox" propname="style:color" width="80" />
+	  </panel>
+
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="ID:" text_align="right" width="50"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="id" width="80"/>
+	  </panel>
+
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@CSSCLASS|:" text_align="right" width="50"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="class" width="80"/>
+	  </panel>
+
+	</groupbox>
+
+	<groupbox dock="fill" text="@INSERT" overflow="visible">
+	  <panel margin="7,3,1,3" height="18" dock="top" >
+		<label dock="left" vertical_align="middle" text="@URL|:" text_align="right" width="50"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="href" width="500" jsml-local="tbhref" />
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top" >
+		<label dock="left" vertical_align="middle" text_align="right" width="50" text="@CURSOR|:"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropdropdown" propname="style:cursor">
+		  <listitem value="" text="@NOTSET" />
+		  <listitem value="auto" text="auto" />
+		  <listitem value="pointer" text="pointer" />
+		  <listitem value="default" text="default" />
+		  <listitem value="text" text="text" />
+		  <listitem value="wait" text="wait" />
+		  <listitem value="move" text="move" />
+		  <listitem value="help" text="help" />
+		  <listitem value="crosshair" text="crosshair" />
+		  <listitem value="progress" text="progress" />
+		  <listitem value="e-resize" text="e-resize" />
+		  <listitem value="n-resize" text="n-resize" />
+		  <listitem value="ne-resize" text="ne-resize" />
+		  <listitem value="nw-resize" text="nw-resize" />
+		  <listitem value="s-resize" text="s-resize" />
+		  <listitem value="se-resize" text="se-resize" />
+		  <listitem value="sw-resize" text="sw-resize" />
+		  <listitem value="w-resize" text="w-resize" />
+		</panel>
+		<panel dock="left" width="8" />
+		<label dock="left" vertical_align="middle" text="@ACCESSKEY|:" text_align="right" width="50"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="accesskey"  width="60"/>
+		<panel dock="left" width="8" />
+      <label dock="left" vertical_align="middle" text="@TABINDEX|:" text_align="right" width="50"/>
+      <panel jsml-base="rteproptextbox" dock="left" propname="tabindex"  width="30"/>
+		<panel dock="left" width="8" />
+		<panel dock="left" jsml-base="rtepropcheckbox" propname="rel" truestring="nofollow" falsestring="" jsml-local="cbnofollow" />
+		<label dock="left" vertical_align="middle" width="32" text="@NOFOLLOW" unselectable="true">
+		  <attach name="click,dblclick">
+			cbnofollow.toggle_checked();
+		  </attach>
+		</label>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top" >
+		  <label dock="left" vertical_align="middle" text="@LINKTEXT|:" text_align="right" width="50"/>
+		  <panel dock="left" width="4" />
+		  <panel jsml-base="rteproptextbox" dock="left" propname="text" width="500" jsml-local="tbtext">
+			<method name="get_node_value">
+			  var node=self.find_node();
+			  return node.GetInnerText();
+			</method>
+			<method name="set_node_value">
+			  var node=self.find_node();
+			  node.SetInnerText(value);
+			</method>
+			<attach name="change">
+			  instance.stopsynctext();
+			</attach>
+		  </panel>
+	  </panel>
+	  <panel margin="7,3,8,3" height="18" dock="top" >
+					<label dock="left" vertical_align="middle" text="@TOOLTIP|:" text_align="right" width="50"/>
+		  <panel dock="left" width="4" />
+					<panel jsml-base="rteproptextbox" dock="left" propname="title" width="500" />
+	  </panel>
+	</groupbox>
+
+		<!-- # # # # # # # # # # # # # # # # 
+			dialog code
+		 # # # # # # # # # # # # # # # # -->
+
+
+		<initialize>
+			self.setDelegateTimeout(self.delegate(self.initsynctext),100);
+		</initialize>
+		<method name="stopsynctext">
+			self.initsynctext();
+		</method>
+		<method name="initsynctext">
+			<![CDATA[
+			self._synctotext=false;
+			var text=tbtext.get_ctrl_value();
+			if(text==editor._config.default_link_text)
+				self._synctotext=true;
+			else if(text==option.targetnode.GetAttribute("href"))
+				self._synctotext=true;
+			]]>
+		</method>
+		<method name="syncurltotext">
+			<![CDATA[
+			if(!self._synctotext)return;
+			option.targetnode.SetInnerText(option.targetnode.GetAttribute("href")||"")
+			tbtext.invoke_event("loadvalue");
+			]]>
+		</method>
+
+		<method name="setisloading">
+			loadingmask.set_visible(value);
+		</method>
+
+		<attach name="updateui_itemcount">
+			noitemlabel.set_visible(self.itemcount==0);
+		</attach>
+		<attach name="updateui_itemscheck">
+			<![CDATA[
+			itemspanel.foreach_slot(function(ctrl)
+			{
+				ctrl.update_check();
+			});
+			]]>
+		</attach>
+
+		<method name="clearitemcontrols">
+			itemspanel.reset_items();
+		</method>
+		<method name="additemcontrols" arguments="arr">
+			<![CDATA[
+			itemspanel.add_items(arr,function(item)
+			{
+				var ctrl;
+				if(item.IsFolder)
+					ctrl=jsml.class_create_instance("browserdialogfolder");
+				else
+					ctrl=jsml.class_create_instance("browserdialogfile");
+				ctrl.bind_item(item,self);
+				return ctrl;
+			});
+			]]>
+		</method>
+
+		<initialize>
+			<![CDATA[
+			self._category="Document";
+			self._getoption={GetSize:true,GetTime:true};
+			
+			self._rtenode=option.targetnode;
+			
+			if(option.targetnode.GetNameLower()=="area")
+			{
+		///		aprops.set_visible(false);
+			}
+
+			self.change_folder("/");
+			]]>
+		</initialize>
+
+
+		<method name="select_file">
+			<![CDATA[
+			var src=self._folderitem.UrlPrefix+self._currdir+value.Name;
+
+			tbhref.set_text(src);
+			self.do_preview(src);
+			
+			self.syncurltotext();
+			
+			//tbwidth.set_text("");
+			//tbheight.set_text("");
+			]]>
+		</method>
+		<method name="do_preview" arguments="src">
+			<![CDATA[
+			
+			if(!src||src=='http://')
+			{
+				previewframe._content.innerHTML="";
+				return;
+			}
+
+			var url=editor.GetPlayerUrl()+"?type=document&backcolor=white&autoplay=1&file="+encodeURIComponent(src)
+			var w=previewframe.get_client_width()+"px";
+			var h=previewframe.get_client_height()+"px";
+			previewframe._content.innerHTML="<iframe src='"+jsml.html_encode(url)+"' style='width:"+w+";height:"+h+"' frameborder='0'></iframe>";
+			]]>
+		</method>
+
+		<initialize>
+			<![CDATA[
+			var img=option.targetnode;
+			var w=parseInt(img.GetStyle("width")||img.GetAttribute("width"));
+			var h=parseInt(img.GetStyle("height")||img.GetAttribute("height"));
+			if(w&&h)
+			{
+				self._lastwidth=w;
+				self._lastheight=h;
+			}
+			]]>
+		</initialize>
+		<method name="onpreviewload" arguments="w,h">
+			self._lastwidth=w;
+			self._lastheight=h;
+			if(!tbwidth.get_text())tbwidth.set_text(w+"px");
+			if(!tbheight.get_text())tbheight.set_text(h+"px");
+		</method>
+		<method name="onwidthchange">
+			<![CDATA[
+			option.targetnode.RemoveAttribute("width");
+			if(self._dimunlocked||!self._lastwidth||!self._lastheight)return;
+			var w=parseInt(tbwidth.get_ctrl_value());
+			if(!w)
+			{
+				tbheight.set_text("");
+				return;
+			}
+			var h=Math.floor(w*self._lastheight/self._lastwidth);
+			tbheight.set_text(h+"px");
+			]]>
+		</method>
+		<method name="onheightchange">
+			<![CDATA[
+			option.targetnode.RemoveAttribute("height");
+			if(self._dimunlocked||!self._lastwidth||!self._lastheight)return;
+			var h=parseInt(tbheight.get_ctrl_value());
+			if(!h)
+			{
+				tbwidth.set_text("");
+				return;
+			}
+			var w=Math.floor(h*self._lastwidth/self._lastheight);
+			tbwidth.set_text(w+"px");
+			]]>
+		</method>
+
+		<attach name="updateui_sort">
+			<![CDATA[
+			if(self._sortmode=="Name")
+			{
+				sortnameicon.set_opacity(100);
+				sortnameicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortnameicon.set_opacity(0);
+			}
+			if(self._sortmode=="Size")
+			{
+				sortsizeicon.set_opacity(100);
+				sortsizeicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortsizeicon.set_opacity(0);
+			}
+			]]>
+		</attach>
+
+
+	</panel>
+
+	<panel jsml-base="insertdocumentdialog" />
+
+</jsml>

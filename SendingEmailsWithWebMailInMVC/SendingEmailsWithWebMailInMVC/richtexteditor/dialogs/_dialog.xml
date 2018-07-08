@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<include src="{folder}dialogs/_skins.xml?{timems}" />
+
+	<panel jsml-class="dialogcontainer">
+		<panel dock="over" jsml-member="mask" back_color="black" opacity="5"></panel>
+		<!--a button for form default..-->
+		<button text="default" width="1px" height="1px" left="-10" top="-10" />
+		<panel jsml-local="dialogframe" width="620" height="420">
+			<panel jsml-local="skin" jsml-base="frameskin_seven" dock="over">
+				<attach name="clickclose">
+					if(instance._panel)instance._panel.invoke_event("clickclose");
+				</attach>
+			</panel>
+		</panel>
+		<initialize>
+			<![CDATA[
+			skin.set_css_class("jsml_dialogskin");
+			dialogframe.set_padding(skin.get_framepadding());
+			skin._skinmovetarget=dialogframe;
+			skin._skinsizetarget=dialogframe;
+
+			//self._element.onmousedown=jsml.cancel_bubble_function;
+			
+			self.set_parent(document.body);
+			var style=self._estyle;
+			style.zIndex=editor._config.dialog_zindex;
+			style.position="absolute";
+
+			function repos()
+			{
+				if(self._jsml_disposed)return;
+
+				var rect=jsml.get_body_rect();
+				if(jsml.mobile)
+				{
+					rect.top=0;
+					rect.left=0;
+				}
+				else
+				{
+					self.setDelegateTimeout(repos,100);
+				}
+				style.top=rect.top+"px";
+				style.left=rect.left+"px";
+				self.set_width(rect.width);
+				self.set_height(rect.height);
+			}
+			repos();
+			]]>
+		</initialize>
+		<property name="title">
+			<get>
+				return skin.get_text();
+			</get>
+			<set>
+				skin.set_text(value);
+			</set>
+		</property>
+
+		<method name="SetPanel">
+			self._panel=value;
+			dialogframe.append_child(value);
+			self.MoveCenter();
+			//self._timeline=jsml.new_timeline()
+			//instance.set_opacity(30);
+			//self._timeline.add_onprogress(jsml.tween.make_number_property(instance,"opacity",70))
+			//self._timeline.set_timespan(500);
+			//self._timeline.start();
+		</method>
+		<attach name="disposing">
+			if(!self._timeline)return
+			self._timeline.pause();
+			self._timeline.dispose();
+		</attach>
+		<method name="MoveCenter">
+			var value=self._panel;
+			var padding=dialogframe.get_padding();
+			var w=value.get_width()+padding[1]+padding[3];
+			var h=value.get_height()+padding[0]+padding[2];
+			var rect=jsml.get_body_rect();
+			if(jsml.mobile)
+			{
+				dialogframe.set_top(rect.top)
+				dialogframe.set_left(rect.left)
+			}
+			else
+			{
+				dialogframe.set_top(Math.floor( Math.max(0,rect.height-h)/2 ))
+				dialogframe.set_left(Math.floor( Math.max(0,rect.width-w)/2 ))
+			}
+			dialogframe.set_width(Math.min(w,rect.width));
+			dialogframe.set_height(Math.min(h,rect.height));
+		</method>
+		<method name="resize" arguments="width,height">
+			<![CDATA[
+				var padding=dialogframe.get_padding();
+				if(width)
+					dialogframe.set_width(width+padding[1]+padding[3]);
+				if(height)
+					dialogframe.set_height(height+padding[0]+padding[2]);
+				self.MoveCenter();
+			]]>
+		</method>
+	</panel>
+	
+	<panel dock="fill" back_color="white">
+		<initialize>
+			self._dialogcontainer=jsml.new_dialogcontainer();
+			self._dialogcontainer.SetPanel(self);
+		</initialize>
+		<attach name="keydown" arguments="je,e">
+			if(e.keyCode==27)self.invoke_event("clickclose");
+		</attach>
+		<attach name="clickclose">
+			<![CDATA[
+			if(self.onqueryclose)
+				if(false===self.onqueryclose())
+					return;
+			self.close();
+			]]>
+		</attach>
+		<method name="close">
+			self._dialogcontainer.set_visible(false);
+			self.setDelegateTimeout(function(){self._dialogcontainer.dispose();},1);
+			self.invoke_event("closing");
+		</method>
+		<property name="title">
+			<get>
+				return self._dialogcontainer.get_title();
+			</get>
+			<set>
+				self._dialogcontainer.set_title(value);
+			</set>
+		</property>
+		<method name="hidemask">
+			self._dialogcontainer.mask.set_visible(false);
+		</method>
+		<method name="resize" arguments="width,height">
+			jsml.suppend_layout();
+			self.set_width(width);
+			self.set_height(height);
+			self._dialogcontainer.resize(width,height);
+			jsml.resume_layout();
+		</method>
+		<method name="adjustsize">
+			<![CDATA[
+			jsml.suppend_layout();
+			var sw=self.get_width();
+			var sh=self.get_height();
+			var w=self.get_demand_content_width();
+			var h=self.get_demand_content_height();
+			if(w>sw||h>sh)
+			{
+				self.resize(Math.max(w,sw),Math.max(h,sh));
+				//recalc the height for flow controls
+				self.resize(Math.max(w,sw),self.get_demand_content_height());
+			}
+			jsml.resume_layout();
+			]]>
+		</method>
+		<method name="expandsize" arguments="width,height">
+			var rect=jsml.get_body_rect();
+			var maxw=Math.floor(rect.width*0.8);
+			var maxh=Math.floor(rect.height*0.8);
+			self.resize( Math.min(width+self.get_width(),maxw) , Math.min(height+self.get_height(),maxh) )
+		</method>
+
+	</panel>
+
+</jsml>

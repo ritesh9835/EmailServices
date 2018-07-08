@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+	<panel jsml-class="properties_tagtextarea" dock="fill">
+
+		<groupbox text="Button" dock="top" overflow="visible" margin="3">
+
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@NAME|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="name" width="100" />
+	  </panel>
+			<panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@TEXT|:" width="100" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rteproptextbox" width="320">
+					<method name="set_node_value">
+						option.targetnode.SetInnerText(value);
+					</method>
+					<method name="get_node_value">
+						return option.targetnode.GetInnerText();
+					</method>
+				</panel>
+			</panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="ID:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="id" width="100" />
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" width="100" text="@CSSCLASS|:" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel jsml-base="rteproptextbox" dock="left" propname="class" width="100" />
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" text="@WIDTH|:" width="100" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropunitbox" propname="style:width" width="100"/>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@HEIGHT|:" width="100" text_align="right"/>
+		<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:height"/>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<label dock="left" vertical_align="middle" text="@TYPE|:" width="100" text_align="right"/>
+		<panel dock="left" width="4" />
+		<panel dock="left" jsml-base="rtepropdropdown" propname="type" width="100">
+		  <listitem value="" text="@NOTSET" />
+		  <listitem value="button" text="button" />
+		  <listitem value="reset" text="reset" />
+		  <listitem value="submit" text="submit" />
+		</panel>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+		<panel dock="left" width="100" />
+		<panel dock="left" jsml-base="rtepropcheckbox" propname="disabled" truestring="1" falsestring="" />
+		<label dock="left" vertical_align="middle" width="80" text="@disabled"/>
+	  </panel>
+	  <panel margin="7,3,1,3" height="18" dock="top">
+	  </panel>
+		</groupbox>
+
+		
+	</panel>
+
+	<panel jsml-base="properties_tagtextarea" />
+
+
+</jsml>

@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<include src="{folder}dialogs/browsedialogbase.xml?{timems}" />
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTTEMPLATE"));
+	</execute>
+
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+			class inserttemplatedialog
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+	<panel jsml-class="inserttemplatedialog" jsml-base="browsedialogbase" dock="fill" margin="3">
+
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						instance.loadselectedfile();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+		
+		
+		<panel dock="top" height="340" margin="3" jsml-local="toparea">
+			<panel dock="left" border_width="1" border_color="#a0a0a0" border_style="solid" padding="1,0,1,1" width="355">
+				<!-- Items Header -->
+				<panel dock="top" height="21" back_color="#eeeeee" border_width="0,0,1,0" border_color="white">
+					<checkbox dock="left" jsml-local="checkbox" width="20" padding="1,0,-1,0">
+						<attach name="change">
+							instance.checkallitems(self.get_checked());
+						</attach>
+					</checkbox>
+					<panel dock="left" width="1" back_color="white"/>
+					<image dock="left" width="19" overflow="none" src="{folder}images/refresh.gif" tooltip="@REFRESH"  padding="1,-1,-1,1" jsml-base="imagebutton">
+						<attach name="click">
+							instance.call_reload(self);
+						</attach>
+					</image>
+					<label dock="right" width="17" border_width="0,0,0,1" border_color="white"  />
+					<label dock="right" width="21" border_width="0,0,0,1" border_color="white" />
+					<panel dock="right" width="59" border_width="0,0,0,1" border_color="white">
+						<label dock="left" width="42" text="Size" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" horizontal_align="right" cursor="pointer" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Size");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortsizeicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+					<panel dock="left" width="30" overflow_x="visible" border_width="0,0,0,1" border_color="white" >
+						<label dock="left" width="15" text="Name" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" cursor="pointer" overflow_x="visible" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Name");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortnameicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+
+				</panel>
+				<!-- Items List -->
+				<panel jsml-base="scrollitemspanel" dock="fill" jsml-local="itemspanel" back_color="white">
+				</panel>
+				<label dock="fill" jsml-local="noitemlabel" visible="false" text="@empty" vertical_align="middle" horizontal_align="center">
+				</label>
+				<panel dock="over" visible="false" jsml-local="loadingmask">
+					<image dock="fill" vertical_align="middle" horizontal_align="center"  src="{folder}images/loading5.gif" />
+					<panel dock="over"  opacity="10" back_color="gray" jsml-enable="0"></panel>
+				</panel>
+			</panel>
+			<panel dock="fill" border_width="1,1,1,0" border_color="#a0a0a0" border_style="solid" back_color="white">
+				<!-- Preview previewframe -->
+				<htmlcontrol jsml-local="previewframe" dock="fill">
+					<attach name="resize">
+						<![CDATA[
+						var iframe=self._content.firstChild;
+						if(!iframe||iframe.nodeName!="IFRAME")return;
+						iframe.style.width=self.get_client_width()+"px";
+						iframe.style.height=self.get_client_height()+"px";
+						]]>
+					</attach>
+					<attach name="disposing">
+						self._content.innerHTML="";
+					</attach>
+				</htmlcontrol>
+			</panel>
+		</panel>
+
+		<!--
+		<panel dock="fill" margin="6" overflow="visible">
+			<panel jsml-base="panelbutton" overflow="visible">
+				<label text="Save current document to template" vertical_align="middle" dock="fill" margin="1,5,1,5"/>
+			</panel>
+		</panel>
+		-->
+
+		<!-- # # # # # # # # # # # # # # # # 
+			dialog code
+		 # # # # # # # # # # # # # # # # -->
+
+
+		<method name="setisloading">
+			loadingmask.set_visible(value);
+		</method>
+
+		<attach name="updateui_itemcount">
+			noitemlabel.set_visible(self.itemcount==0);
+		</attach>
+		<attach name="updateui_itemscheck">
+			<![CDATA[
+			itemspanel.foreach_slot(function(ctrl)
+			{
+				ctrl.update_check();
+			});
+			]]>
+		</attach>
+
+		<method name="clearitemcontrols">
+			itemspanel.reset_items();
+		</method>
+		<method name="additemcontrols" arguments="arr">
+			<![CDATA[
+			itemspanel.add_items(arr,function(item)
+			{
+				var ctrl;
+				if(item.IsFolder)
+					ctrl=jsml.class_create_instance("browserdialogfolder");
+				else
+					ctrl=jsml.class_create_instance("browserdialogfile");
+				ctrl.bind_item(item,self);
+				return ctrl;
+			});
+			]]>
+		</method>
+
+		<initialize>
+			<![CDATA[
+			self._category="Template";
+			self._getoption={GetSize:true,GetTime:true};
+			
+			//self._rtenode=option.targetnode;
+
+			self.change_folder("/");
+			]]>
+		</initialize>
+
+
+		<method name="select_file">
+			<![CDATA[
+			var src=self._folderitem.UrlPrefix+self._currdir+value.Name;
+
+			self._selectedfile=value;
+			
+			self.do_preview(src);
+			
+			//tbwidth.set_text("");
+			//tbheight.set_text("");
+			]]>
+		</method>
+		<method name="do_preview" arguments="src">
+			<![CDATA[
+			
+			if(!src||src=='http://')
+			{
+				previewframe._content.innerHTML="";
+				return;
+			}
+
+			var url=editor.GetPlayerUrl()+"?type=template&backcolor=white&autoplay=1&file="+encodeURIComponent(src)
+			var w=previewframe.get_client_width()+"px";
+			var h=previewframe.get_client_height()+"px";
+			previewframe._content.innerHTML="<iframe src='"+jsml.html_encode(url)+"' style='width:"+w+";height:"+h+"' frameborder='0'></iframe>";
+			]]>
+		</method>
+
+		<method name="onpreviewload" arguments="w,h">
+		</method>
+		<method name="onwidthchange">
+			<![CDATA[
+			
+			]]>
+		</method>
+		<method name="onheightchange">
+			<![CDATA[
+			
+			]]>
+		</method>
+
+		<attach name="updateui_sort">
+			<![CDATA[
+			if(self._sortmode=="Name")
+			{
+				sortnameicon.set_opacity(100);
+				sortnameicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortnameicon.set_opacity(0);
+			}
+			if(self._sortmode=="Size")
+			{
+				sortsizeicon.set_opacity(100);
+				sortsizeicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortsizeicon.set_opacity(0);
+			}
+			]]>
+		</attach>
+
+		<method name="handleloadtemplate" arguments="res">
+			<![CDATA[
+			if(res.Error)
+			{
+				self.reportError(res.Error.message);
+				return true;
+			}
+			var code=res.ReturnValue;
+			if(code)
+			{
+				var ns=self._selectedfile.Name.split('.');
+				var ext=ns.length>1?ns[ns.length-1]:"";
+				ext=ext.toLowerCase();
+				if(ext=="txt")
+					code=jsml.html_encode(code);
+				editor.InsertHTML(code=editor.FilterForPaste(code,"InsertTemplate"));
+				dialog.result=true;
+				dialog.close();
+			}
+			]]>
+		</method>
+		<method name="loadselectedfile">
+			<![CDATA[
+			if(!self._selectedfile)return;
+			
+			var s=self._selectedstorage;
+			var folder={Category:s.Category,ID:s.ID,Name:s.Name,UrlPath:self._folderitem.UrlPath};
+			editor.CallAjax("AjaxLoadTemplate",self.delegate(self.handleloadtemplate),folder,self._selectedfile.Name);
+			
+			]]>
+		</method>
+
+	</panel>
+
+	<panel jsml-base="inserttemplatedialog" />
+
+</jsml>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+
+
+	<panel jsml-class="properties_background" dock="fill">
+		<groupbox text="@TABLE" dock="top" overflow="visible" margin="4">
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="table-layout:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:table-layout">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="auto" text="auto" />
+					<listitem value="fixed" text="fixed" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="border-collapse:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:border-collapse">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="collapse" text="collapse" />
+					<listitem value="separate" text="separate" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="border-spacing:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropunitbox" width="100" propname="style:border-spacing"/>
+			</panel>
+
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="empty-cells:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:empty-cells">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="hide" text="hide" />
+					<listitem value="show" text="show" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,4,3" height="18" dock="top">
+				<label dock="left" vertical_align="middle" width="120" text="caption-side:" text_align="right"/>
+				<panel dock="left" width="4" />
+				<panel dock="left" jsml-base="rtepropdropdown" width="100" propname="style:caption-side">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="top" text="top" />
+					<listitem value="bottom" text="bottom" />
+					<listitem value="inherit" text="inherit" />
+				</panel>
+			</panel>
+			<panel margin="7,3,30,3" height="18" dock="top">
+			</panel>
+		</groupbox>
+
+
+		<method name="find_node">
+			<![CDATA[
+			for(var p=self;p&&p.get_parent;p=p.get_parent())
+				if(p._rtenode)
+					return p._rtenode;
+			]]>
+		</method>
+		<method name="get_position_value" arguments="isvtc,dropdown">
+			<![CDATA[
+			var node=self.find_node();
+			var pos=node.GetStyle("background-position");
+			if(!pos)return null;
+			pos=pos.split(' ')[isvtc?0:1];
+			if(!pos)return null;
+			if(dropdown)
+			{
+				if(isNaN(parseInt(pos)))
+					return pos;
+			}
+			else
+			{
+				if(!isNaN(parseInt(pos)))
+					return pos;
+			}
+			return null;
+			]]>
+		</method>
+		<method name="set_position_value" arguments="isvtc,value">
+			<![CDATA[
+			var node=self.find_node();
+			var pos=node.GetStyle("background-position")||"";
+			var pair=pos.split(' ');
+			if(pair.length!=2)
+			{
+				if(!value)
+				{
+					node.SetStyle("background-position",null)
+					return;
+				}
+				pair=["0px","0px"];
+			}
+			pair[isvtc?0:1]=value||"0px";
+			pos=pair.join(" ");
+			if(pos=="0px 0px")
+				pos=null;
+			node.SetStyle("background-position",pos)
+			]]>
+		</method>
+	</panel>
+
+
+	<panel jsml-base="properties_background" />
+
+
+</jsml>

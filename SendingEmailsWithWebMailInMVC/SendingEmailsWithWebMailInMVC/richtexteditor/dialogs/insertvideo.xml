@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<include src="{folder}dialogs/browsedialogbase.xml?{timems}" />
+
+	<execute>
+		dialog.set_back_color("#F9F9F9");
+		dialog.set_title(editor.GetLangText("INSERTVIDEO"));
+	</execute>
+
+
+	<!-- # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+			class insertvideodialog
+	 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # -->
+	<panel jsml-class="insertvideodialog" jsml-base="browsedialogbase" dock="fill" margin="3">
+
+
+		<panel dock="top"  height="210" margin="3" jsml-local="toparea">
+			<panel dock="left" border_width="1" border_color="#a0a0a0" border_style="solid" padding="1,0,1,1" width="355">
+				<!-- Items Header -->
+				<panel dock="top" height="21" back_color="#eeeeee" border_width="0,0,1,0" border_color="white">
+					<checkbox dock="left" jsml-local="checkbox" width="20" padding="1,0,-1,0">
+						<attach name="change">
+							instance.checkallitems(self.get_checked());
+						</attach>
+					</checkbox>
+					<panel dock="left" width="1" back_color="white"/>
+					<image dock="left" width="19" overflow="none" src="{folder}images/refresh.gif" tooltip="@REFRESH"  padding="1,-1,-1,1" jsml-base="imagebutton">
+						<attach name="click">
+							instance.call_reload(self);
+						</attach>
+					</image>
+					<label dock="right" width="17" border_width="0,0,0,1" border_color="white"  />
+					<label dock="right" width="21" border_width="0,0,0,1" border_color="white" />
+					<panel dock="right" width="59" border_width="0,0,0,1" border_color="white">
+						<label dock="left" width="42" text="Size" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" horizontal_align="right" cursor="pointer" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Size");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortsizeicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+					<panel dock="left" width="30" overflow_x="visible" border_width="0,0,0,1" border_color="white" >
+						<label dock="left" width="15" text="Name" padding="-2,0,2,1" tooltip="click to sort" vertical_align="middle" cursor="pointer" overflow_x="visible" >
+							<initialize>
+								self._content.style.textDecoration="underline";
+							</initialize>
+							<attach name="click">
+								instance.toggle_sort("Name");
+							</attach>
+						</label>
+						<image dock="left" width="16" jsml-local="sortnameicon" vertical_align="middle" opacity="0" overflow="none" />
+					</panel>
+
+				</panel>
+				<!-- Items List -->
+				<panel jsml-base="scrollitemspanel" dock="fill" jsml-local="itemspanel" back_color="white">
+				</panel>
+				<label dock="fill" jsml-local="noitemlabel" visible="false" text="@empty" vertical_align="middle" horizontal_align="center">
+				</label>
+				<panel dock="over" visible="false" jsml-local="loadingmask">
+					<image dock="fill" vertical_align="middle" horizontal_align="center"  src="{folder}images/loading5.gif" />
+					<panel dock="over"  opacity="10" back_color="gray" jsml-enable="0"></panel>
+				</panel>
+			</panel>
+			<panel dock="fill" border_width="1,1,1,0" border_color="#a0a0a0" border_style="solid" back_color="white">
+				<!-- Preview previewframe -->
+				<htmlcontrol jsml-local="previewframe" dock="fill">
+					<attach name="resize">
+						<![CDATA[
+						var iframe=self._content.firstChild;
+						if(!iframe||iframe.nodeName!="IFRAME")return;
+						iframe.style.width=self.get_client_width()+"px";
+						iframe.style.height=self.get_client_height()+"px";
+						]]>
+					</attach>
+					<attach name="disposing">
+						self._content.innerHTML="";
+					</attach>
+				</htmlcontrol>
+			</panel>
+		</panel>
+
+		<panel dock="bottom" margin="3" padding="6" overflow="visible">
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(!option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@CLOSE">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+			<panel dock="right" margin="3" overflow="visible">
+				<initialize>
+					if(option.nestedmode)self.set_visible(false);
+				</initialize>
+				<button dock="left" width="82" height="24"  text="@OK" margin="0,12,0,0">
+					<initialize>
+						if(option.oktext)self.set_text(option.oktext);
+					</initialize>
+					<attach name="click">
+						if(!option.targetnode.GetAttribute("src"))return;
+						dialog.result=true;
+						dialog.close();
+					</attach>
+				</button>
+				<button dock="left" width="82" height="24"  text="@CANCEL">
+					<attach name="click">
+						dialog.close();
+					</attach>
+				</button>
+			</panel>
+
+		</panel>
+
+		<groupbox dock="left" text="@LAYOUT" overflow="visible">
+
+
+			<panel dock="top" overflow="visible">
+
+				<panel dock="left" overflow="visible">
+					<panel dock="top" margin="2" padding="2" height="22">
+						<label dock="left" width="60" text="@WIDTH|:" vertical_align="middle" text_align="right"  />
+						<panel dock="left" width="3" />
+						<panel jsml-base="rtepropunitbox" jsml-local="tbwidth" dock="left" propname="style:width" border_width="1" border_color="#cccccc">
+							<attach name="change">
+								instance.onwidthchange();
+							</attach>
+						</panel>
+					</panel>
+					<panel dock="top" margin="2" padding="2" height="22">
+						<label dock="left" width="60" text="@HEIGHT|:" vertical_align="middle" text_align="right"  />
+						<panel dock="left" width="3" />
+						<panel jsml-base="rtepropunitbox" jsml-local="tbheight" dock="left" propname="style:height" border_width="1" border_color="#cccccc">
+							<attach name="change">
+								instance.onheightchange();
+							</attach>
+						</panel>
+					</panel>
+				</panel>
+				<panel dock="fill" width="25" vertical_align="middle">
+					<image src="{folder}images/locked.gif" cursor="pointer">
+						<attach name="click">
+							instance._dimunlocked=!instance._dimunlocked;
+							self.set_src(instance._dimunlocked?"{folder}images/unlocked.gif":"{folder}images/locked.gif");
+						</attach>
+					</image>
+				</panel>
+			</panel>
+			<panel dock="top" margin="2" overflow="visible">
+				<label dock="left" width="60" text="@FLOAT|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel jsml-base="rtebtngroup_float" dock="top" />
+			</panel>
+
+			<!--<panel dock="top" margin="2" padding="2" height="22">
+				<label dock="left" width="60" text="@ALIGNMENT|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="85" jsml-base="rtepropdropdown" propname="align">
+					<listitem value="" text="@NOTSET" />
+					<listitem value="left" text="@LEFT" />
+					<listitem value="right" text="@RIGHT" />
+				</panel>
+			</panel>-->
+
+			<panel dock="top" margin="2" overflow="visible">
+				<label dock="left" vertical_align="middle" width="62" text="@BACKCOLOR|:" text_align="right" unselectable="true" />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="82" jsml-base="rtepropcolorbox" propname="backcolor" jsml-local="tbbackcolor">
+					<method name="get_node_value">
+						return rtb_src.findparam("backcolor");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+
+				<label dock="left" width="60" text="@MARGIN|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="60" jsml-base="rtepropnumupdown" propname="style:margin" suffix="px" />
+				<image dock="left" width="20" cursor="pointer" src="{folder}images/box.png">
+					<attach name="click">
+						marginfloatbox._rtenode=option.targetnode;
+						marginfloatbox.invoke_recursive("editor_ready",editor);
+						marginfloatbox._estyle.zIndex=editor._config.dialog_zindex;
+						marginfloatbox.show({control:self,stopDispose:true});
+					</attach>
+				</image>
+				<attach name="disposing">
+					marginfloatbox.dispose();
+				</attach>
+				<panel jsml-base="floatbox" jsml-local="marginfloatbox" jsml-append="false" height="180" padding="18">
+					<panel dock="bottom" margin="5">
+						<button text="@RESET" right="0">
+							<attach name="click">
+								option.targetnode.SetStyle("margin-left",null);
+								option.targetnode.SetStyle("margin-right",null);
+								option.targetnode.SetStyle("margin-top",null);
+								option.targetnode.SetStyle("margin-bottom",null);
+								marginfloatbox.invoke_recursive("loadvalue");
+							</attach>
+						</button>
+					</panel>
+
+					<panel dock="left" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="1" overflow="visible" text="@LEFT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-left" suffix="px" />
+						</panel>
+					</panel>
+
+					<panel dock="right" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@RIGHT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-right" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="top" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@TOP|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-top" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="bottom" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@BOTTOM|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:margin-bottom" suffix="px" />
+						</panel>
+					</panel>
+				</panel>
+			</panel>
+		</groupbox>
+
+		<groupbox dock="fill" text="@INSERT" overflow="visible">
+			<panel dock="top" margin="2" padding="2" height="22">
+				<label dock="left" width="52" text="@URL|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="550"  jsml-base="rteproptextbox" propname="src" jsml-local="rtb_src">
+					<attach name="attach_dom,change,loadvalue,savevalue">
+						self.setDelegateTimeout(function()
+						{
+						instance.do_preview(self.get_node_value());
+						},100);
+					</attach>
+					<method name="findparam">
+						<![CDATA[
+						var src=self.find_node().GetAttribute("src")||""
+						var qs=(src.split('#')[0].split('?')[1]||"").split('&');
+						for(var i=0;i<qs.length;i++)
+							if(qs[i].split('=')[0]==value)
+								return decodeURIComponent(qs[i].substring(value.length+1));
+						]]>
+					</method>
+					<method name="get_node_value">
+						return self.findparam("file");
+					</method>
+					<method name="set_node_value">
+						self.find_node().SetAttribute("src",instance.calc_url(value||""));
+					</method>
+				</panel>
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+				<panel dock="left" width="53" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="autoplay" truestring="1" falsestring="" jsml-local="cbautoplay">
+					<method name="get_node_value">
+						return rtb_src.findparam("autoplay");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@AUTOPLAY" unselectable="true">
+					<attach name="click,dblclick">
+						cbautoplay.toggle_checked();
+						cbautoplay.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="autoloop" truestring="1" falsestring="" jsml-local="cbautoloop">
+					<method name="get_node_value">
+						return rtb_src.findparam("autoloop");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@AUTOLOOP" unselectable="true">
+					<attach name="click,dblclick">
+						cbautoloop.toggle_checked();
+						cbautoloop.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="allowfullscreen" truestring="1" falsestring="" jsml-local="cballowfullscreen">
+					<method name="get_node_value">
+						return rtb_src.findparam("allowfullscreen");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@ALLOWFULLSCREEN" unselectable="true">
+					<attach name="click,dblclick">
+						cballowfullscreen.toggle_checked();
+						cballowfullscreen.invoke_event("change");
+					</attach>
+				</label>
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+				<panel dock="left" width="53" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="allowmenu" truestring="1" falsestring="" jsml-local="cballowmenu">
+					<method name="get_node_value">
+						return rtb_src.findparam("allowmenu");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@ALLOWMENU" unselectable="true">
+					<attach name="click,dblclick">
+						cballowmenu.toggle_checked();
+						cballowmenu.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="showcontrols" truestring="1" falsestring="" jsml-local="cbshowcontrols">
+					<method name="get_node_value">
+						return rtb_src.findparam("showcontrols");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@SHOWCONTROLS" unselectable="true">
+					<attach name="click,dblclick">
+						cbshowcontrols.toggle_checked();
+						cbshowcontrols.invoke_event("change");
+					</attach>
+				</label>
+				<panel dock="left" width="12" />
+				<panel dock="left" jsml-base="rtepropcheckbox" propname="transparency" truestring="1" falsestring="" jsml-local="cbtransparency">
+					<method name="get_node_value">
+						return rtb_src.findparam("transparency");
+					</method>
+					<method name="set_node_value">
+						rtb_src.invoke_event("savevalue");
+					</method>
+				</panel>
+				<label dock="left" vertical_align="middle" width="70" text="@TRANSPARENCY" unselectable="true">
+					<attach name="click,dblclick">
+						cbtransparency.toggle_checked();
+						cbtransparency.invoke_event("change");
+					</attach>
+				</label>
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+				<label dock="left" width="52" text="@TOOLTIP|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="220"  jsml-base="rteproptextbox" propname="title" />
+				<label dock="left" width="50" text="@CSSCLASS|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="80"  jsml-base="rteproptextbox" propname="class" />
+			</panel>
+
+			<panel dock="top" margin="2" padding="2" height="22">
+				<label dock="left" width="52" text="@BORDER|:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="60" jsml-base="rtepropnumupdown" propname="style:border-width" suffix="px" min_value="0">
+					<attach name="change">
+						<![CDATA[
+						var size=parseInt(self.get_text());
+						if(isNaN(size))
+							ddborderstyle.set_text("");
+						else if(size&&!ddborderstyle.get_text())
+							ddborderstyle.set_text("solid");
+						]]>
+					</attach>
+				</panel>
+				<image dock="left" width="20" cursor="pointer" src="{folder}images/box.png">
+					<attach name="click">
+						borderfloatbox._rtenode=option.targetnode;
+						borderfloatbox.invoke_recursive("editor_ready",editor);
+						borderfloatbox._estyle.zIndex=editor._config.dialog_zindex;
+						borderfloatbox.show({control:self,stopDispose:true});
+					</attach>
+				</image>
+				<attach name="disposing">
+					borderfloatbox.dispose();
+				</attach>
+				<panel jsml-base="floatbox" jsml-local="borderfloatbox" jsml-append="false" height="180" padding="18">
+					<panel dock="bottom" margin="5">
+						<button text="@RESET" right="0">
+							<attach name="click">
+								option.targetnode.SetStyle("border-left-width",null);
+								option.targetnode.SetStyle("border-right-width",null);
+								option.targetnode.SetStyle("border-top-width",null);
+								option.targetnode.SetStyle("border-bottom-width",null);
+								borderfloatbox.invoke_recursive("loadvalue");
+							</attach>
+						</button>
+					</panel>
+
+					<panel dock="left" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="1" overflow="visible" text="@LEFT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:border-left-width" suffix="px" />
+						</panel>
+					</panel>
+
+					<panel dock="right" overflow="visible" vertical_align="middle">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@RIGHT|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:border-right-width" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="top" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@TOP|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:border-top-width" suffix="px" />
+						</panel>
+					</panel>
+					<panel dock="bottom" overflow="visible" horizontal_align="center">
+						<panel overflow_x="visible" height="20">
+							<label dock="left" width="60" text="@BOTTOM|:" vertical_align="middle" text_align="right"  />
+							<panel dock="left" jsml-base="rtepropnumupdown" propname="style:border-bottom-width" suffix="px" />
+						</panel>
+					</panel>
+
+				</panel>
+
+				<panel dock="left" width="72" jsml-base="rtepropcolorbox" propname="style:border-color" />
+
+				<panel dock="left" width="62" jsml-local="ddborderstyle" margin="0,0,0,4" jsml-base="rtepropdropdown" propname="style:border-style">
+					<listitem value="" text="@BORDER_NOTSET" />
+					<listitem value="solid" text="@BORDER_SOLID" />
+					<listitem value="dotted" text="@BORDER_DOTTED" />
+					<listitem value="dashed" text="@BORDER_DASHED" />
+					<listitem value="outset" text="@BORDER_OUTSET" />
+					<listitem value="inset" text="@BORDER_INSET" />
+				</panel>
+
+				<label dock="left" width="52" text="ID:" vertical_align="middle" text_align="right"  />
+				<panel dock="left" width="3" />
+				<panel dock="left" width="80"  jsml-base="rteproptextbox" propname="id" />
+
+			</panel>
+
+		</groupbox>
+
+
+		<!-- # # # # # # # # # # # # # # # # 
+			dialog code
+		 # # # # # # # # # # # # # # # # -->
+
+		<method name="calc_url" arguments="value">
+			<![CDATA[
+			var node=option.targetnode;
+			var src=node.GetAttribute("src")
+			var path;
+			var qs;
+			if(src)
+			{
+				var parts=src.split('#')[0].split('?');
+				path=parts[0];
+				qs=parts[1];
+			}
+			else
+			{
+				path=editor.GetPlayerUrl();
+			}
+			qs=(qs||("type="+instance._category.toLowerCase())).split('&');
+			var map={}
+			for(var i=0;i<qs.length;i++)
+			{
+				var pair=qs[i].split('=');
+				map[pair[0]]=pair[1];
+			}
+			if(editor._config.urltype=="absolute")
+				value=editor.MakeAbsoluteUrl(value,true);
+			map["file"]=encodeURIComponent(value);
+			map["autoplay"]=cbautoplay.get_ctrl_value();
+			map["autoloop"]=cbautoloop.get_ctrl_value();
+			map["allowmenu"]=cballowmenu.get_ctrl_value();
+			map["showcontrols"]=cbshowcontrols.get_ctrl_value();
+			map["transparency"]=cbtransparency.get_ctrl_value();
+			map["allowfullscreen"]=cballowfullscreen.get_ctrl_value();
+			map["backcolor"]=encodeURIComponent(tbbackcolor.get_ctrl_value());
+			qs=[];
+			for(var p in map)if(map[p])qs.push(p+"="+map[p]);
+			return path+"?"+qs.join("&");
+			]]>
+		</method>
+
+		<method name="setisloading">
+			loadingmask.set_visible(value);
+		</method>
+
+		<attach name="updateui_itemcount">
+			noitemlabel.set_visible(self.itemcount==0);
+		</attach>
+		<attach name="updateui_itemscheck">
+			<![CDATA[
+			itemspanel.foreach_slot(function(ctrl)
+			{
+				ctrl.update_check();
+			});
+			]]>
+		</attach>
+
+		<method name="clearitemcontrols">
+			itemspanel.reset_items();
+		</method>
+		<method name="additemcontrols" arguments="arr">
+			<![CDATA[
+			itemspanel.add_items(arr,function(item)
+			{
+				var ctrl;
+				if(item.IsFolder)
+					ctrl=jsml.class_create_instance("browserdialogfolder");
+				else
+					ctrl=jsml.class_create_instance("browserdialogfile");
+				ctrl.bind_item(item,self);
+				return ctrl;
+			});
+			]]>
+		</method>
+
+		<initialize>
+			<![CDATA[
+			self._category="Video";
+			self._getoption={GetSize:true,GetTime:true};
+			
+			self._rtenode=option.targetnode;
+
+			self.change_folder("/");
+			]]>
+		</initialize>
+
+
+		<method name="select_file">
+			<![CDATA[
+			var src=self._folderitem.UrlPrefix+self._currdir+value.Name;
+
+			rtb_src.set_text(src);
+			self.do_preview(src);
+			
+			//tbwidth.set_text("");
+			//tbheight.set_text("");
+			]]>
+		</method>
+		<method name="do_preview" arguments="src">
+			<![CDATA[
+			if(!src)
+			{
+				previewframe._content.innerHTML="";
+				return;
+			}
+			var tn=option.targetnode._cloneNode(true);
+			tn.SetAttribute("src",self.calc_url(src));
+			tn.SetStyle("width",previewframe.get_client_width()+"px");
+			tn.SetStyle("height",previewframe.get_client_height()+"px");
+			previewframe._content.innerHTML=tn.GetHtmlCode();
+			]]>
+		</method>
+
+		<initialize>
+			<![CDATA[
+			var img=option.targetnode;
+			var w=parseInt(img.GetStyle("width")||img.GetAttribute("width"));
+			var h=parseInt(img.GetStyle("height")||img.GetAttribute("height"));
+			if(w&&h)
+			{
+				self._lastwidth=w;
+				self._lastheight=h;
+			}
+			]]>
+		</initialize>
+		<method name="onpreviewload" arguments="w,h">
+			self._lastwidth=w;
+			self._lastheight=h;
+			if(!tbwidth.get_text())tbwidth.set_text(w+"px");
+			if(!tbheight.get_text())tbheight.set_text(h+"px");
+		</method>
+		<method name="onwidthchange">
+			<![CDATA[
+			option.targetnode.RemoveAttribute("width");
+			if(self._dimunlocked||!self._lastwidth||!self._lastheight)return;
+			var w=parseInt(tbwidth.get_ctrl_value());
+			if(!w)
+			{
+				tbheight.set_text("");
+				return;
+			}
+			var h=Math.floor(w*self._lastheight/self._lastwidth);
+			tbheight.set_text(h+"px");
+			]]>
+		</method>
+		<method name="onheightchange">
+			<![CDATA[
+			option.targetnode.RemoveAttribute("height");
+			if(self._dimunlocked||!self._lastwidth||!self._lastheight)return;
+			var h=parseInt(tbheight.get_ctrl_value());
+			if(!h)
+			{
+				tbwidth.set_text("");
+				return;
+			}
+			var w=Math.floor(h*self._lastwidth/self._lastheight);
+			tbwidth.set_text(w+"px");
+			]]>
+		</method>
+
+		<attach name="updateui_sort">
+			<![CDATA[
+			if(self._sortmode=="Name")
+			{
+				sortnameicon.set_opacity(100);
+				sortnameicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortnameicon.set_opacity(0);
+			}
+			if(self._sortmode=="Size")
+			{
+				sortsizeicon.set_opacity(100);
+				sortsizeicon.set_src("{folder}images/arrow_"+(self._sortdesc?"down":"up")+".gif");
+			}
+			else
+			{
+				sortsizeicon.set_opacity(0);
+			}
+			]]>
+		</attach>
+
+
+	</panel>
+
+	<panel jsml-base="insertvideodialog" />
+
+</jsml>

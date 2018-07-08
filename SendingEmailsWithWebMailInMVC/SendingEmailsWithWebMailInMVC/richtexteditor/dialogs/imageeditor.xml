@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<jsml xmlns="http://cutesoft.net/jsml"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://cutesoft.net/jsml ../core/jsml.xsd">
+
+	<execute>
+		dialog.set_title(editor.GetLangText("imageeditor"));
+	</execute>
+
+	<panel jsml-class="imageeditor_dialog" dock="fill" overflow="visible">
+		<htmlcontrol dock="fill" jsml-local="hc">
+		</htmlcontrol>
+		<attach name="attach_dom">
+			<![CDATA[
+			self.setDelegateTimeout(function()
+			{
+				if(self.iframe)return;
+				
+				window.rteimageeditoreditor=editor;
+				window.rteimageeditordialog=dialog;
+				window.rteimageeditoroption=option;
+				
+				dialog.attach_event("closing",function()
+				{
+					window.rteimageeditoreditor=null;
+					window.rteimageeditordialog=null;
+					window.rteimageeditoroption=null;
+				});
+				
+				var iframe=document.createElement("IFRAME");
+				var canvas=document.createElement("CANVAS");
+				if(canvas.getContext)
+					iframe.setAttribute("src","{folder}rtepaint5/dialog.htm?{timems}");
+				else if(editor._config.servertype=="AspNet")
+					iframe.setAttribute("src","{folder}rtepaint4/dialog.htm?{timems}");
+				else
+					return alert("Require HTML5 browser")+":"+dialog.close();
+				iframe.setAttribute("frameBorder","0");
+				hc._content.appendChild(iframe);
+				self.iframe=iframe;
+				self.invoke_event("resize");
+			},10);
+			]]>
+		</attach>
+		<attach name="disposing">
+			if(!self.iframe)return;
+			var win=self.iframe.contentWindow;
+			if(!win)return;
+			var doc=win.document;
+			if(!doc)return;
+			doc.open("text/html");
+			doc.write("empty");
+			doc.close();
+		</attach>
+		<attach name="resize">
+			if(!self.iframe)return;
+			self.iframe.style.width=hc.get_client_width()+"px";
+			self.iframe.style.height=hc.get_client_height()+"px";
+		</attach>
+	</panel>
+
+	<panel jsml-base="imageeditor_dialog" />
+
+
+</jsml>

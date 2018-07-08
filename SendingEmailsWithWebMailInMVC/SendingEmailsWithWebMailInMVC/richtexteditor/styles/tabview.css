@@ -1,0 +1,15 @@
+﻿body
+{
+	margin:3px;
+}
+body,table
+{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+p,div
+{
+	font:inherits;
+}
+
+
